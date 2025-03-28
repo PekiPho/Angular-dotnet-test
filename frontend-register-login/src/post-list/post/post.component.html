@@ -8,20 +8,16 @@
         <div *ngIf="!isLink" class="post-description">{{ post.description }}</div>
     </div>
 
-    <!-- Post Actions (Vote and Share) -->
     <div class="post-actions">
         <div class="vote-buttons">
-            <!-- Upvote Button with triangle symbol -->
+
             <button class="upvote-btn" (click)="upvotePost()">▲</button>
 
-            <!-- Vote count in the middle -->
             <div class="vote-count">{{ post.vote }}</div>
 
-            <!-- Downvote Button with inverted triangle symbol -->
             <button class="downvote-btn" (click)="downvotePost()">▼</button>
         </div>
 
-        <!-- Share Button -->
         <button class="share-btn">
             🔗Share
         </button>

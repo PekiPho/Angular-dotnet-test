@@ -12,7 +12,7 @@ export interface Post {
     comments?: number[];
     username: string;
     vote?: number;
-    dateOfPost?: string; // Date as ISO string
+    dateOfPost?: string; 
   }
 
   export interface PostToSend {
@@ -23,5 +23,5 @@ export interface Post {
     comments?: Comment[];
     user?: User;
     vote?: number;
-    dateOfPost?: string; // Date as ISO string
+    dateOfPost?: string; 
   }
