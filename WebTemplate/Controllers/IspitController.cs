@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
@@ -55,7 +56,24 @@ public class IspitController : ControllerBase
             return BadRequest("Wrong email or password");
         }
 
-        return Ok(user);
+        var claims=new[]{
+            new Claim(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Sub,user.Email),
+            new Claim(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Jti,user.Id.ToString())
+        };
+
+        var token=new JwtSecurityToken(
+            issuer:"http://localhost:4200",
+            audience:"http://localhost:4200",
+            claims:claims,
+            expires:DateTime.Now.AddDays(7),
+            signingCredentials:new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Super-Duper-Tajan-Kljuc-Ide-Gas-Brate-Najjace-Peki-App-LOoooool")),SecurityAlgorithms.HmacSha256)
+        );
+
+        return Ok(new{
+            token = new JwtSecurityTokenHandler().WriteToken(token),
+            expiration=token.ValidTo,
+        });
+       
     }
 
     [HttpPost("AddUser")]
@@ -97,5 +115,24 @@ public class IspitController : ControllerBase
         Context.Users.Remove(user);
         return Ok("User deleted");
     }
+    
+    [Authorize]
+    [HttpGet("GetEntry")]
+    public async Task<ActionResult> GetEntry(){
+        var userId=User.FindFirst("jti")?.Value;
+
+        if(userId==null)
+            return Unauthorized("No userId");
+        
+        var user=await Context.Users.FindAsync(int.Parse(userId));
+
+        return Ok(user);
+    }
+
+    // --- Everything to do with subscriptions
+
+
+    
+
     
 }

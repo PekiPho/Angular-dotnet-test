@@ -152,6 +152,7 @@ E:\angular\prooooj\WebTemplate\bin\Debug\net8.0\Azure.Core.dll
 E:\angular\prooooj\WebTemplate\bin\Debug\net8.0\Azure.Identity.dll
 E:\angular\prooooj\WebTemplate\bin\Debug\net8.0\Castle.Core.dll
 E:\angular\prooooj\WebTemplate\bin\Debug\net8.0\Humanizer.dll
+E:\angular\prooooj\WebTemplate\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 E:\angular\prooooj\WebTemplate\bin\Debug\net8.0\Microsoft.AspNetCore.OpenApi.dll
 E:\angular\prooooj\WebTemplate\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
 E:\angular\prooooj\WebTemplate\bin\Debug\net8.0\Microsoft.CodeAnalysis.dll
@@ -266,6 +267,7 @@ E:\angular\prooooj\WebTemplate\obj\Debug\net8.0\WebTemplate.AssemblyInfo.cs
 E:\angular\prooooj\WebTemplate\obj\Debug\net8.0\WebTemplate.csproj.CoreCompileInputs.cache
 E:\angular\prooooj\WebTemplate\obj\Debug\net8.0\WebTemplate.MvcApplicationPartsAssemblyInfo.cs
 E:\angular\prooooj\WebTemplate\obj\Debug\net8.0\WebTemplate.MvcApplicationPartsAssemblyInfo.cache
+E:\angular\prooooj\WebTemplate\obj\Debug\net8.0\WebTemplate.sourcelink.json
 E:\angular\prooooj\WebTemplate\obj\Debug\net8.0\scopedcss\bundle\WebTemplate.styles.css
 E:\angular\prooooj\WebTemplate\obj\Debug\net8.0\staticwebassets.build.json
 E:\angular\prooooj\WebTemplate\obj\Debug\net8.0\staticwebassets.development.json
@@ -282,4 +284,5 @@ E:\angular\prooooj\WebTemplate\obj\Debug\net8.0\refint\WebTemplate.dll
 E:\angular\prooooj\WebTemplate\obj\Debug\net8.0\WebTemplate.pdb
 E:\angular\prooooj\WebTemplate\obj\Debug\net8.0\WebTemplate.genruntimeconfig.cache
 E:\angular\prooooj\WebTemplate\obj\Debug\net8.0\ref\WebTemplate.dll
-E:\angular\prooooj\WebTemplate\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+E:\angular\prooooj\WebTemplate\bin\Debug\net8.0\AutoMapper.dll
+E:\angular\prooooj\WebTemplate\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
