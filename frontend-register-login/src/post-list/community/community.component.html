@@ -1,0 +1,19 @@
+<div class="parent">
+    <div class="content border-end border-light">
+        <div *ngIf="community!=null" class="card of text-white ps-4 comm-card">
+                <p class="card-text" style="font-size: 3rem;">{{community!.name}}</p>
+                <p class="card-text"style="font-size: 0.8rem;" *ngIf="community.description!=null">{{community!.description}}</p>
+                <p>{{subs}}</p>
+            
+          </div>
+          <div class="posts-section">
+            <posts></posts>
+          </div>
+        
+    </div>
+    <div class="sidebar">
+        <community-info></community-info>
+    </div>
+</div>
+
+

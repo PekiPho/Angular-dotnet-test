@@ -1,0 +1,18 @@
+<navigation-bar></navigation-bar>
+
+<div class="d-flex align-items-center justify-content-center size">
+    <form class="card p-4" style="width:30vw;">
+        <h1>Log In</h1>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email address</label>
+          <input type="email" class="form-control" id="email" aria-describedby="emailHelp" value="pekipro03@gmail.com">
+        </div>
+        <div class="mb-3">
+          <label for="pass" class="form-label">Password</label>
+          <input type="password" class="form-control" id="pass" value="Zokigoki32">
+        </div>
+        <div *ngIf="!this.checked" style="color:red;">Wrong E-mail or password</div>
+        <hr/>
+        <button (click)="checkLoginInfo()" type="button" class="btn btn-primary">Submit</button>
+      </form>
+</div>

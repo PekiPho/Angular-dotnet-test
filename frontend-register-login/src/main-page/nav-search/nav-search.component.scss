@@ -1,0 +1,102 @@
+.input-search{
+    border-radius: 20px;
+    border-color: white;
+    border-width: 1px;
+    color: white;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.input-search::placeholder{
+    color:gainsboro;
+}
+.input-search:focus{
+    color:white;
+}
+
+nav{
+    height: 100%;
+}
+
+.post{
+    border-radius: 5px;
+    border: 2px solid white;
+}
+.post:hover{
+    border: 2px solid orangered;
+    color: black;
+    background-color: aliceblue;
+    transition: 0.5s;
+}
+
+// --- Modal related css ---
+
+.add-modal{
+    display: block;
+
+    position: absolute;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    //width:30vw;
+}
+
+h5,.modal-color{
+    color:black;
+}
+
+.back{
+    border:3px solid orangered;
+    width: 30vw;
+}
+
+.but{
+    background-color: orangered;
+    color: aliceblue;
+    border: 1px solid black;
+}
+.but:hover{
+    color: black;
+    background-color: lighten($color: orangered, $amount: 5);
+    transition: 0.7s;
+}
+
+img:hover,p:hover{
+    transform: scale(1.25);
+
+    transition: 0.4s;
+}
+
+p{
+    margin: 0;
+}
+
+// input[type="file"]{
+//     width: 50%;
+//     //position: absolute;
+//     //bottom:10%;
+//     //left:5%;
+//     //width: 25%;
+//     font-size: 14px;
+// }
+.pad{
+    //padding-top:16px;
+    padding: 0;
+    //height: 10%;
+}
+
+.el{
+    padding: 12px;
+    width: 20%;
+    height: 75%;
+}
+
+.el:hover{
+    //transform: scale(1.1);
+    background-color: #2d2d2d;
+    color:aliceblue;
+    //border: 1px solid orangered;
+    border-radius: 5%;
+    transition: 0.7s;
+}

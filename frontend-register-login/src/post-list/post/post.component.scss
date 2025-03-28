@@ -1,0 +1,108 @@
+.post {
+    width: 75%;
+    max-width: 90%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #2d2d2d;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    border: 1px solid orangered;
+    height: 150px; /* Fixed height */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden; /* Ensure content overflow is hidden */
+    padding-left: 30px;
+    padding-right: 10px;
+}
+
+/* Header (Title and description) */
+.post-header {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Title */
+.post .title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap; /* Truncate if title is too long */
+}
+
+/* Description */
+.post-description {
+    font-size: 0.9rem;
+    color: white;
+    flex-grow: 1; /* Let the description take up remaining space */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Limit to 3 lines, adjust as needed */
+    -webkit-box-orient: vertical;
+}
+
+/* Link */
+.post-link {
+    font-size: 0.8rem;
+    color: #007bff;
+}
+
+/* Post preview (like image or iframe) */
+.post-preview {
+    margin-top: 10px;
+}
+
+/* Post actions container (vote and share buttons) */
+.post-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    //margin-top: 10px;
+}
+
+/* Vote buttons (upvote, downvote) */
+.vote-buttons {
+    display: flex;
+    align-items: center;
+}
+
+.vote-buttons button {
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.upvote-btn:hover {
+    color: orangered;
+}
+.downvote-btn:hover{
+    color: #007bff;
+}
+
+/* Vote count */
+.vote-count {
+    font-size: 16px;
+    margin: 0 10px;
+}
+
+/* Share button */
+.share-btn {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.share-btn:hover {
+    color: #007bff;
+}
+
+button{
+    color: aliceblue;
+}

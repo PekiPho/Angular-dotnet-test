@@ -1,0 +1,73 @@
+<nav class="navbar navbar-expand-lg border-bottom border-light d-flex justify-content-between align-items-center">
+    <div class="container-fluid">
+        <div class="d-flex align-items-center">
+            <img src="p_transparent.png" alt="Logo" style="width: 50px;height:50px;" [routerLink]="['/mainPage']">
+            <p style="margin: 0;">App</p>
+        </div>
+        <div class="input-group" style="max-width: 30%;">
+            <input type="text" class="form-control bg-dark input-search" placeholder="Search" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+              <button class="btn btn-outline-success" type="button">Search</button>
+            </div>
+        </div>
+        <div class="right d-flex">
+            
+            <p class="d-flex justify-content-center align-items-center" style="width:100px;" [routerLink]="['./profile/'+user]">
+              {{user}}
+            </p>
+            <div class="post p-2" (click)="showPostModal();">
+                Create post
+            </div>
+        </div>
+        
+
+    </div>
+  </nav>
+
+  <div *ngIf="this.createPost" class="modal add-modal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content back">
+        <div class="modal-header d-flex justify-content-between">
+          <h5 class="modal-title" id="exampleModalLabel">Create new Post</h5>
+          <button type="button" class="close" aria-label="Close" (click)="disablePostModal();">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-header pad d-flex flex-row justify-content-around">
+          <div class="modal-color d-flex justify-content-center el" (click)="textClick();">
+            Text
+          </div>
+          <div class="modal-color d-flex justify-content-center el" (click)="imgVidClick();">
+            Image/Video
+          </div>
+          <div class="modal-color d-flex justify-content-center el" (click)="linkClick();">
+            Link
+          </div>
+        </div>
+        <div class="modal-body d-flex flex-column gap-2">
+            <div class="modal-color d-flex flex-row gap-2 w-100 justify-content-between">
+                <label for="title">Title:</label>
+                <input type="text" id="title" placeholder="Title" class="w-50">
+            </div>
+            <div class="modal-color d-flex flex-row gap-2 w-100 justify-content-between">
+                <label for="community">Community name:</label>
+                <input type="text" id="community" placeholder="Community" class="w-50">
+              </div>
+              <div *ngIf="text" class="modal-color d-flex flex-column gap-1 w-100">
+                <label for="description">Description:</label>
+                <textarea class="w-100" type="text" id="description" placeholder="Type.." rows="5"></textarea>
+              </div>
+                <div *ngIf="link" class="modal-color d-flex flex-row gap-2 w-100 justify-content-between">
+                  <label for="link">Link URL:</label>
+                  <input type="text" id="link" placeholder="URL" class="w-50">
+                </div>
+              <input *ngIf="imgVid" type="file" accept="image/*,video/*" id="imgVideo" class="form-control w-20 mt-4" multiple>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="disablePostModal();">Close</button>
+          <button type="button" class="btn but" (click)="addPost();" >Save changes</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>

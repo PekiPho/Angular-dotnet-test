@@ -1,0 +1,40 @@
+<div class="bar border-end border-light">
+    <div class="element d-flex justify-content-center" id="create" (click)="openModal();">
+        Create Community
+    </div>
+    <div class="element d-flex justify-content-center" *ngIf="communities.length==0;else addComunities">No communities</div>
+    <ng-template #addComunities>
+        <div class="element d-flex justify-content-center" [routerLink]="['./community/'+community.name]" *ngFor="let community of communities">
+            {{community.name}}
+        </div>
+    </ng-template>
+</div>
+
+
+  
+  <div *ngIf="this.modal" class="modal add-modal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content back">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Create new Community</h5>
+          <button type="button" class="close" aria-label="Close" (click)="closeModal();">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body d-flex flex-column">
+            <div class=" modal-color">
+                <label for="name" class="me-2">Name:</label>
+                <input type="text" id="name" placeholder="Name">
+            </div>
+            <div class="d-flex flex-column mt-3 modal-color">
+                <label for="description" class="mb-1">Description:</label>
+                <textarea id="description" placeholder="Description" rows="5"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal();">Close</button>
+          <button type="button" class="btn but" (click)="createModal();">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>

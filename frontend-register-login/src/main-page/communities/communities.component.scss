@@ -1,0 +1,58 @@
+.bar{
+    height:90vh;
+    width:100%;
+    padding-left: 20px;
+    padding-top:20px;
+}
+#create{
+    font-size: small;
+    margin-bottom: 1rem;
+}
+.element{
+
+    height:30px;
+    width:80%;
+
+    border-radius: 20px;
+    border: 1px solid white;
+
+    margin-bottom: 0.5rem;
+}
+
+.element:hover{
+    //color: black;
+    //background-color: aliceblue;
+    border: 1px solid orangered;
+    color: orangered;
+    background-color: #2d2d2d;
+    transition: 0.25s;
+}
+
+h5,.modal-color{
+    color:black;
+}
+
+.add-modal{
+    display: block;
+
+    position: absolute;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.back{
+    border:3px solid orangered;
+}
+
+.but{
+    background-color: orangered;
+    color: aliceblue;
+    border: 1px solid black;
+}
+.but:hover{
+    color: black;
+    background-color: lighten($color: orangered, $amount: 5);
+    transition: 0.7s;
+}
