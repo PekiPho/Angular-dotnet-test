@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { User } from '../interfaces/user';
+import { User, UserFull } from '../interfaces/user';
 import { BehaviorSubject, tap } from 'rxjs';
 
 @Injectable({
@@ -12,6 +12,13 @@ export class UserServiceService {
 
   constructor(private http: HttpClient) { 
     this.url = 'https://localhost:7080';
+  }
+
+  public userSource=new BehaviorSubject<User | null>(null);
+  userr$=this.userSource.asObservable();
+  
+  setUser(user:User){
+    this.userSource.next(user);
   }
 
   

@@ -43,9 +43,9 @@ export class CommunitiesComponent {
         description
       };
     
-      console.log(this.userID);
+      //console.log(this.userID);
       try{
-        console.log(this.userID);
+        //console.log(this.userID);
         const comm=await firstValueFrom(this.communityService.createCommunity(community)) as Community;
         const sub=await firstValueFrom(this.subscribeService.subscribeToCommunity(this.userID,comm.id));
         const mod=await firstValueFrom(this.subscribeService.addToModerateCommunity(this.userID,comm.id));
@@ -59,7 +59,7 @@ export class CommunitiesComponent {
   }
 
   navigateToCommunity(name:string){
-    console.log("workds");
+    //console.log("workds");
     this.router.navigate(['/mainPage/community',name]);
   }
 }

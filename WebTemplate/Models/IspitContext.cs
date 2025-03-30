@@ -15,6 +15,8 @@ public class IspitContext : DbContext
 
     public DbSet<Media> Media { get; set; }
 
+    public DbSet<Vote> Votes { get; set; }
+
     public IspitContext(DbContextOptions options) : base(options)
     {
         

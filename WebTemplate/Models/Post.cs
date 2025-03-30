@@ -48,7 +48,21 @@ public class Post
 
     //public int UserId { get; set; }
 
-    public int Vote { get; set; }=1;
+    public int Vote { get; set; }=0;
 
     public DateTime DateOfPost { get; set; }=DateTime.Now;
+
+    public List<Vote> Votes{get;set;}= new();
+
+    [NotMapped]
+    public int Upvotes => Votes!.Count(c=>c.VoteValue);
+
+    [NotMapped]
+    public int Downvotes => Votes!.Count(c=>!c.VoteValue);
+
+    [NotMapped]
+    public int TotalVotes => Votes!.Count;
+
+    [NotMapped]
+    public double Ratio => TotalVotes == 0 ? 0 : (double)Upvotes/TotalVotes;
 }

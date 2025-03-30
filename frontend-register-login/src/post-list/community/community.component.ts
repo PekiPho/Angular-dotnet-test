@@ -7,6 +7,7 @@ import { CommunityService } from '../../services/community.service';
 import { ActivatedRoute } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
+import { PostService } from '../../services/post.service';
 
 @Component({
   selector: 'community',
@@ -22,7 +23,7 @@ export class CommunityComponent implements OnInit{
 
   public subs:number = -1;
 
-  constructor(private communityService:CommunityService,private activatedRoute:ActivatedRoute ){}
+  constructor(private communityService:CommunityService,private activatedRoute:ActivatedRoute,private postService:PostService ){}
 
   ngOnInit(): void {
     this.activatedRoute.url.subscribe(url=>{
@@ -56,5 +57,27 @@ export class CommunityComponent implements OnInit{
       });
       }
     });
+  }
+
+  public sort:boolean=false;
+
+
+  public selectedSort:string='Hot';
+
+  setSort(name:string){
+    this.selectedSort=name;
+
+    if(name=='Top')
+      this.sort=true;
+    else{
+      this.sort=false;
+      this.selectedTime='Today';
+    }
+  }
+
+  public selectedTime:string='Today';
+
+  setTime(name:string){
+    this.selectedTime=name;
   }
 }

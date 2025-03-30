@@ -1,6 +1,10 @@
 .rand {
-    height: 75%; 
-    overflow-y: auto; 
+    height: 100%; 
     padding: 10px;
     background-color: black;
+}
+
+.overfloww{
+    overflow-y: auto; 
+    overflow-x: hidden;
 }

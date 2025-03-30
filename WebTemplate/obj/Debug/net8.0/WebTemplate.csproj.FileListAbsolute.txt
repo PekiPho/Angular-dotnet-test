@@ -148,6 +148,8 @@ E:\angular\prooooj\WebTemplate\bin\Debug\net8.0\WebTemplate.deps.json
 E:\angular\prooooj\WebTemplate\bin\Debug\net8.0\WebTemplate.runtimeconfig.json
 E:\angular\prooooj\WebTemplate\bin\Debug\net8.0\WebTemplate.dll
 E:\angular\prooooj\WebTemplate\bin\Debug\net8.0\WebTemplate.pdb
+E:\angular\prooooj\WebTemplate\bin\Debug\net8.0\AutoMapper.dll
+E:\angular\prooooj\WebTemplate\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 E:\angular\prooooj\WebTemplate\bin\Debug\net8.0\Azure.Core.dll
 E:\angular\prooooj\WebTemplate\bin\Debug\net8.0\Azure.Identity.dll
 E:\angular\prooooj\WebTemplate\bin\Debug\net8.0\Castle.Core.dll
@@ -284,5 +286,3 @@ E:\angular\prooooj\WebTemplate\obj\Debug\net8.0\refint\WebTemplate.dll
 E:\angular\prooooj\WebTemplate\obj\Debug\net8.0\WebTemplate.pdb
 E:\angular\prooooj\WebTemplate\obj\Debug\net8.0\WebTemplate.genruntimeconfig.cache
 E:\angular\prooooj\WebTemplate\obj\Debug\net8.0\ref\WebTemplate.dll
-E:\angular\prooooj\WebTemplate\bin\Debug\net8.0\AutoMapper.dll
-E:\angular\prooooj\WebTemplate\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll

@@ -6,6 +6,7 @@ import { CommunityService } from '../../services/community.service';
 import { Community } from '../../interfaces/community';
 import { NgIf } from '@angular/common';
 import { RouterModule, RouterOutlet } from '@angular/router';
+import { User } from '../../interfaces/user';
 
 @Component({
   selector: 'main-page',
@@ -20,6 +21,7 @@ export class MainPageComponent implements OnInit {
   public id:number=-1;
 
   public communities:Community[]=[];
+  public UserSmall:User | null=null;
 
   ngOnInit(): void {
     this.getUsername();
@@ -54,6 +56,12 @@ export class MainPageComponent implements OnInit {
         var dejta=JSON.parse(data);
         this.id=dejta.id;
         this.user=dejta.username;
+        this.UserSmall ={
+          username:dejta.username,
+          email:dejta.email,
+          password:dejta.password
+        };
+        this.userService.setUser(this.UserSmall);
         //console.log(this.id);
       },
       error:(err)=>{

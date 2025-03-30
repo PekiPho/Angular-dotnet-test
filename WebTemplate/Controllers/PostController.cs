@@ -82,6 +82,7 @@ public class PostController:ControllerBase{
         
     }
 
+
     [HttpPut("UpdateTitle/{communityID}/{postID}/{title}")]
     public async  Task<ActionResult> UpdateTitle(int communityID,Guid postID,string title){
 
@@ -135,5 +136,62 @@ public class PostController:ControllerBase{
         await Context.SaveChangesAsync();
 
         return Ok($"Post  with ID: {postID} removed");
+    }
+
+    [HttpGet("GetPostsBySort/{communityName}/{sort}/{page}/{limit}/{time}")]
+    public async Task<ActionResult> GetPostsBySort(string communityName,string sort,int page,int limit,string? time){
+
+        var posts=Context.Posts.Include(c=>c.Community)
+                                    .Where(c=>c.Community!.Name==communityName);
+
+        if(sort=="Top"){
+            var sortTime=DateTime.MinValue;
+            switch(time){
+                case "Today":
+                    sortTime=DateTime.Now.AddDays(-1);
+                    break;
+                case "This week":
+                    sortTime=DateTime.Now.AddDays(-7);
+                    break;
+                case "This month":
+                    sortTime=DateTime.Now.AddMonths(-1);
+                    break;
+                case "This year":
+                    sortTime=DateTime.Now.AddYears(-1);
+                    break;
+                case "All time":
+                    sortTime=DateTime.MinValue;
+                    break;
+                default:
+                    return BadRequest("Wrong time parameter");
+            }
+
+            posts=posts.Where(c=>c.DateOfPost >=sortTime);
+        }
+        
+        switch(sort){
+            case "Top":
+                posts=posts.OrderByDescending(c=>c.Vote);
+                break;
+            case "New":
+                posts=posts.OrderByDescending(c=>c.DateOfPost);
+                break;
+            case "Hot":
+                posts=posts.Select(c=>new{
+                    Post=c,
+                    HotScore=Math.Log(Math.Abs(c.Vote))+(DateTime.Now-c.DateOfPost).TotalSeconds/4500
+                })
+                .OrderByDescending(a=>a.HotScore)
+                .Select(a=>a.Post);
+                break;
+
+            default: return BadRequest("No such sort");
+        }
+
+        var skip=limit*(page-1);
+        var postss=posts.Skip(skip).Take(limit).ToListAsync();
+
+        return Ok(postss);
+
     }
 }

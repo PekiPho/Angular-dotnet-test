@@ -4,7 +4,7 @@ import { Media, MediaSmall } from "./media";
 import { User } from "./user";
 
 export interface Post {
-    id: number;
+    id: string;
     communityName: string; 
     title: string;
     description?: string;
@@ -24,4 +24,9 @@ export interface Post {
     user?: User;
     vote?: number;
     dateOfPost?: string; 
+  }
+
+  export interface Vote{
+    votes:number;
+    ratio:number;
   }

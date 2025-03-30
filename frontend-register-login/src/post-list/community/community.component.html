@@ -4,12 +4,37 @@
                 <p class="card-text" style="font-size: 3rem;">{{community!.name}}</p>
                 <p class="card-text"style="font-size: 0.8rem;" *ngIf="community.description!=null">{{community!.description}}</p>
                 <p>{{subs}}</p>
-            
-          </div>
-          <div class="posts-section">
-            <posts></posts>
-          </div>
+        </div>
+
+        <div class="sort-container">
+            <div class="dropdown">
+                <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{ selectedSort }}
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" (click)="setSort('Top');">Top</a></li>
+                    <li><a class="dropdown-item" (click)="setSort('New');">New</a></li>
+                    <li><a class="dropdown-item" (click)="setSort('Hot');">Hot</a></li>
+                </ul>
+            </div>
         
+            <div *ngIf="sort === true" class="dropdown">
+                <button class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{ selectedTime }}
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" (click)="setTime('Today');">Today</a></li>
+                    <li><a class="dropdown-item" (click)="setTime('This week');">This week</a></li>
+                    <li><a class="dropdown-item" (click)="setTime('This month');">This month</a></li>
+                    <li><a class="dropdown-item" (click)="setTime('This year');">This year</a></li>
+                    <li><a class="dropdown-item" (click)="setTime('All time');">All time</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="posts-section">
+            <posts></posts>
+        </div>
     </div>
     <div class="sidebar">
         <community-info></community-info>

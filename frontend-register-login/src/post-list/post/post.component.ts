@@ -1,7 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Post, PostToSend } from '../../interfaces/post';
-import { NgIf } from '@angular/common';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { Post, PostToSend, Vote } from '../../interfaces/post';
+import { formatDate, NgIf } from '@angular/common';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { PostService } from '../../services/post.service';
+import { UserServiceService } from '../../services/user-service.service';
+import { User } from '../../interfaces/user';
 
 @Component({
   selector: 'post',
@@ -11,7 +14,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 })
 export class PostComponent implements OnInit{
 
-  constructor(private sanitizer:DomSanitizer){}
+  constructor(private sanitizer:DomSanitizer,private userService:UserServiceService, private postService:PostService){}
 
   @Input() public post= {} as Post;
 
@@ -19,8 +22,38 @@ export class PostComponent implements OnInit{
 
   public isLink:boolean=false;
 
+  private user:User | null = null;
+
+  public voted:boolean|null=null;
+
+  public date:any;
+
   ngOnInit(): void {
-    console.log(this.post);
+
+    this.userService.userr$.subscribe((user: User | null)=>{
+      if(user){
+        this.user=user;
+      }
+    });
+
+    this.date = this.post.dateOfPost ? (new Date(this.post!.dateOfPost)).toLocaleDateString('en-GB') : null;
+
+    this.postService.getCurrentVote(this.post,this.user!.username).subscribe({
+      next:(data)=>{
+        if(data!=null)
+        {
+          if(data)
+            this.voted=true;
+          else this.voted=false;
+        }
+      },
+      error:(err)=>{
+        console.log(err);
+      },
+      complete:()=>{}
+    });
+
+   //console.log(this.post);
     if(this.post.description==null){
 
     }
@@ -43,11 +76,29 @@ export class PostComponent implements OnInit{
     return regex.test(name);
   }
 
-  upvotePost(){
-
-  }
-
-  downvotePost(){
-    
+  voteOnPost(votee:boolean){
+    //console.log(votee);
+    this.postService.addVote(this.post,this.user!.username,votee).subscribe({
+      next:(data)=>{
+        console.log(data);
+        //this.voted=votee;
+        var vote=JSON.parse(data) as Vote;
+        this.post.vote= vote.votes;
+        
+        //console.log(this.voted + " " +votee);
+        if(this.voted===votee){
+          this.voted=null;
+          console.log(this.voted);
+        }
+        else{
+          this.voted=votee;
+        }
+        
+      },
+      error:(err)=>{
+        console.log(err);
+      },
+      complete:()=>{}
+    });
   }
 }
