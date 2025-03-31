@@ -34,17 +34,20 @@ export class PostsComponent implements OnInit,OnChanges{
       next:(data)=>{
         if(data)
           this.community=data;
+
+          this.posts=[];
+          this.page=1;
+          this.hasMorePosts=true;
+          this.getPostsBySort();
       },
       error:(err)=>{
         console.log(err);
       },
       complete:()=>{}
     }
-      // if(community){
-      //   this.community=community;
-      //   this.getPostsBySort();
-      // }
     )
+
+    this.getPostsBySort();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
