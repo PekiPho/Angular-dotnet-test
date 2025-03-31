@@ -31,4 +31,8 @@ export class PostService {
   getCurrentVote(post:Post,username:string){
     return this.http.get(`${this.url}/Vote/GetCurrentVote/${post.id}/${username}`);
   }
+
+  getPostsBySort(communityName:string,type:string,page:number,limit:number,time?:string){
+    return this.http.get<Post[]>(`${this.url}/Post/GetPostsBySort/${communityName}/${type}/${page}/${limit}/${time}`);
+  }
 }

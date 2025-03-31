@@ -3,7 +3,7 @@
         Create Community
     </div>
     <div class="element d-flex justify-content-center" *ngIf="communities.length==0;else addComunities">No communities</div>
-    <ng-template #addComunities>
+    <ng-template #addComunities cl>
         <div class="element d-flex justify-content-center" [routerLink]="['./community/'+community.name]" *ngFor="let community of communities">
             {{community.name}}
         </div>

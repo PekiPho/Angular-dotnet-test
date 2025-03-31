@@ -148,16 +148,16 @@ public class PostController:ControllerBase{
             var sortTime=DateTime.MinValue;
             switch(time){
                 case "Today":
-                    sortTime=DateTime.Now.AddDays(-1);
+                    sortTime=DateTime.UtcNow.Date;
                     break;
                 case "This week":
-                    sortTime=DateTime.Now.AddDays(-7);
+                    sortTime=DateTime.UtcNow.AddDays(-7);
                     break;
                 case "This month":
-                    sortTime=DateTime.Now.AddMonths(-1);
+                    sortTime=DateTime.UtcNow.AddMonths(-1);
                     break;
                 case "This year":
-                    sortTime=DateTime.Now.AddYears(-1);
+                    sortTime=DateTime.UtcNow.AddYears(-1);
                     break;
                 case "All time":
                     sortTime=DateTime.MinValue;
@@ -177,21 +177,27 @@ public class PostController:ControllerBase{
                 posts=posts.OrderByDescending(c=>c.DateOfPost);
                 break;
             case "Hot":
-                posts=posts.Select(c=>new{
-                    Post=c,
-                    HotScore=Math.Log(Math.Abs(c.Vote))+(DateTime.Now-c.DateOfPost).TotalSeconds/4500
+                var res=await posts.ToListAsync();
+                var hot = res.Select(c => new {
+                    Post = c,
+                    HotScore = Math.Log(Math.Max(1, Math.Abs(c.Vote))) - (DateTime.UtcNow - c.DateOfPost).TotalSeconds / 4500
                 })
-                .OrderByDescending(a=>a.HotScore)
-                .Select(a=>a.Post);
-                break;
+                .OrderByDescending(a => a.HotScore)
+                .Select(a => a.Post)
+                .Skip(limit*(page-1)).Take(limit).ToList();
+
+                var postsDto=Mapper.Map<List<PostDto>>(hot);
+
+                return Ok(postsDto);
 
             default: return BadRequest("No such sort");
         }
 
         var skip=limit*(page-1);
-        var postss=posts.Skip(skip).Take(limit).ToListAsync();
+        var postss= await posts.Skip(skip).Take(limit).ToListAsync();
 
-        return Ok(postss);
+        var postDto = Mapper.Map<List<PostDto>>(postss);
+        return Ok(postDto);
 
     }
 }
