@@ -19,3 +19,24 @@ public class PostDto{
 
     public DateTime DateOfPost { get; set; }
 }
+
+
+public class UserDto{
+
+
+    public int Id { get; set; }
+
+    public string? Username { get; set; }
+
+    public string? Email { get; set; }
+
+    public List<string>? SubscribedTo { get; set; }
+
+    public List<string>? Moderating { get; set; }
+
+    public List<Guid>? PostIds { get; set; }
+
+    public List<Guid>? CommentIds { get; set; }
+
+    public DateTime DateOfAccountCreated { get; set; }
+}

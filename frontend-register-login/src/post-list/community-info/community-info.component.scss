@@ -1,0 +1,119 @@
+.whole{
+    width: 100%;
+    height:100%;
+    display: flex;
+    justify-content: center;
+    padding-top: 2rem;
+}
+
+.community-info{
+    width:90%;
+    border-radius: 20px;
+    background-color: #2d2d2d;
+    height: auto;
+
+}
+
+.check{
+    width: 100%;
+    height:50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+    padding-bottom: 1rem;
+    padding-top: 0.5rem;
+}
+
+.smol{
+    font-size: 0.8rem;
+    width: 40%;
+    height: fit-content;
+}
+
+.info{
+    width: 80%;
+    height: fit-content;
+    text-wrap: wrap;
+}
+.moderators{
+    display: flex;
+    flex-direction: column;
+    gap:5px;
+
+    padding-left: 10px;
+}
+.moderator{
+    border-radius: 10px;
+    background-color: black;
+    font-size: 1.25rem;
+    width: 80%;
+    height: 40px;
+    padding-left: 5%;
+    // display: flex;
+    // align-items: center;
+
+    color: orangered;
+}
+.name{
+    all:unset;
+
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+.content{
+    padding-left: 10px;
+    padding-top: 3rem;
+
+}
+
+//modal css
+
+.add-modal{
+    display: block;
+
+    position: absolute;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    //width:30vw;
+}
+
+.back{
+    border:3px solid orangered;
+    width: 30vw;
+}
+
+.modal-color{
+    color:black;
+}
+
+.el2{
+    //width: 100%;
+
+    display: flex;
+    align-items: center;
+    text-wrap: nowrap;
+
+    padding: 12px;
+    width: 40%;
+    height: 90%;
+}
+
+.el2:hover{
+    background-color: black;
+    color: aliceblue;
+    border-radius: 5px;
+}
+.header-whole{
+    width: 100%;
+    height: 20px;
+}
+
+.add{
+    width: 100%;
+}

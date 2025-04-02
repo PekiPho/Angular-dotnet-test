@@ -180,7 +180,7 @@ public class PostController:ControllerBase{
                 var res=await posts.ToListAsync();
                 var hot = res.Select(c => new {
                     Post = c,
-                    HotScore = Math.Log(Math.Max(1, Math.Abs(c.Vote))) - (DateTime.UtcNow - c.DateOfPost).TotalSeconds / 4500
+                    HotScore = Math.Log(Math.Max(1, Math.Abs(c.Vote))) - (DateTime.UtcNow - c.DateOfPost).TotalSeconds / 45000
                 })
                 .OrderByDescending(a => a.HotScore)
                 .Select(a => a.Post)

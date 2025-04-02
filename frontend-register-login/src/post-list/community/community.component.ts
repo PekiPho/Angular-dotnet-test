@@ -33,6 +33,7 @@ export class CommunityComponent implements OnInit{
         this.communityService.getCommunityByName(urlPath[1]).subscribe({
           next:(data)=>{
             this.community=data as Community;
+            this.communityService.setFullCommunity(this.community);
             //console.log(this.community);
 
             this.communitySending.name=this.community.name;
@@ -48,6 +49,7 @@ export class CommunityComponent implements OnInit{
       this.communityService.getSubscriberCount(urlPath[1]).subscribe({
         next:(data)=>{
           this.subs=data as number;
+          this.communityService.setSubCount(this.subs);
           //console.log(this.subs);
         },
         error:(err)=>{

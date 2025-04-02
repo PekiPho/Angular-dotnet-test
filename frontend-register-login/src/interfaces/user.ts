@@ -11,3 +11,9 @@ export interface UserFull{
         password:string,
         email:string
 }
+
+export interface UserWithoutPass{
+        id:number,
+        username:string,
+        email:string,
+}

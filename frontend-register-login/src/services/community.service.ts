@@ -21,6 +21,22 @@ export class CommunityService {
        this.communitySource.next(community);
     }
 
+    public subsCount = new BehaviorSubject<number>(-1);
+    subCount$=this.subsCount.asObservable();
+
+    setSubCount(count:number){
+      this.subsCount.next(count);
+    }
+
+
+    public fullCommunity=new BehaviorSubject<Community | null>(null);
+    fullCommunity$=this.fullCommunity.asObservable();
+
+    setFullCommunity(name:Community){
+      this.fullCommunity.next(name);
+    }
+
+
    getCommunity(userID:number){
 
     return this.http.get<Community[]>(this.url+'/Subscribe/GetCommunitiesFromUser/'+userID);

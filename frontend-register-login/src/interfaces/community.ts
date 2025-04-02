@@ -15,6 +15,8 @@ export interface Community {
     moderators: any | null; 
     subscribers: Subscriber[]; 
     posts: Post; 
+    communityInfo:string|null;
+
 }
   export interface Subscriber {
     id: number;

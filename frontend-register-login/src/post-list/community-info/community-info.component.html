@@ -1,1 +1,77 @@
-<p>community-info works!</p>
+<div class="whole">
+    <div class="community-info">
+        <div class="check" *ngIf="isModerating">
+            <div class="btn btn-dark smol" (click)="setModerator(true);">Edit moderators</div>
+            <div class="btn btn-dark smol" (click)="setCommunityEdit(true);">Edit community</div>
+        </div>
+        <div class="content">
+            <h3>{{community?.name}}</h3>
+            <p>{{subs}}</p>
+            <p>{{community?.description}}</p>
+        </div>
+        <div class="info" *ngIf="community?.communityInfo!=null">
+            {{community?.communityInfo}}
+        </div>
+        <div class="moderators" *ngIf="moderators!=null && moderators.length>0">
+            <p class="text">Moderators:</p>
+            <div class="moderator" *ngFor="let moderator of moderators">
+                <p class="name" [routerLink]="['/mainPage/profile', moderator.username]">{{moderator.username}}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div *ngIf="editCommunity || editModerators" class="modal add-modal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content back">
+        <div class="modal-header d-flex justify-content-between">
+            <h5 class="modal-color" *ngIf="editCommunity">
+                Edit Community
+            </h5>
+            <h5 class="modal-color" *ngIf="editModerators">
+                Edit Moderators
+            </h5>
+            <button type="button" class="close" aria-label="Close" (click)="setCommunityEdit(false); setModerator(false);">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-header">
+            <div class="d-flex flex-row justify-content-around header-whole" *ngIf="editModerators">
+                <div class="modal-color d-flex align-items-center justify-content-center el2" (click)="setAdd(true);">
+                    Add Moderator
+                </div>
+                <div class="modal-color  d-flex align-items-center justify-content-center el2" (click)="setAdd(false);">
+                    Remove Moderator
+                </div>
+            </div>
+        </div>
+        <div class="modal-body d-flex flex-column gap-2 " >
+            <div class="modal-color" *ngIf="editModerators">
+                <div class="modal-color add d-flex flex-column gap-3" *ngIf="isAdd">
+                    <p class="d-flex justify-content-center">Add a new Moderator</p>
+                    <div class="modal-color d-flex gap-2">
+                        <label for="AddMod">Name:</label>
+                        <input type="text" id="mod" placeholder="Enter Username">
+                    </div>
+                    <button type="button" class="btn btn-success align-self-end" style="width: 30%;" (click)="addModerator();">Add</button>
+                    
+                </div>
+
+                <div class="modal-color add d-flex flex-column gap-3" *ngIf="!isAdd">
+                    <p class="d-flex justify-content-center" style="width: 100%;">Remove a moderator</p>
+                    <div class="modal-color d-flex gap-2">
+                        <label for="removeMod">Name:</label>
+                        <input type="text" id="removeMod" placeholder="Enter Username">
+                    </div>
+                    <button type="button" class="btn btn-danger align-self-end" style="width: 30%;" (click)="removeModerator();">Remove</button>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer" *ngIf="!editModerators">
+          
+        </div>
+        
+      </div>
+    </div>
+  </div>

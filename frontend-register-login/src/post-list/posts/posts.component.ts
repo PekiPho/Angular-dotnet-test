@@ -88,7 +88,7 @@ export class PostsComponent implements OnInit,OnChanges{
     this.loading.set(true);
 
     var comm=this.community.name;
-    console.log(comm);
+    //console.log(comm);
     if(comm==null){
       this.loading.set(false);
       return;
@@ -100,8 +100,8 @@ export class PostsComponent implements OnInit,OnChanges{
           this.hasMorePosts=false;
         this.posts=[...this.posts,...data];
         this.page++;
-        console.log(this.posts);
-        console.log(this.loading());
+        //console.log(this.posts);
+        //console.log(this.loading());
       },
       error:(err)=>{
         console.log(err);

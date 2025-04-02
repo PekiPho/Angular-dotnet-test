@@ -1,3 +1,6 @@
+using AutoMapper;
+using WebTemplate.Dtos;
+
 namespace WebTemplate.Controllers;
 
 
@@ -8,8 +11,11 @@ public class SubscribeController:ControllerBase{
 
     public IspitContext Context{get;set;}
 
-    public SubscribeController(IspitContext context){
+    private readonly IMapper Mapper;
+
+    public SubscribeController(IspitContext context,IMapper mapper){
         Context=context;
+        Mapper=mapper;
     }
 
     [HttpGet("GetCommunitiesFromUser/{userID}")]
@@ -104,5 +110,76 @@ public class SubscribeController:ControllerBase{
         await Context.SaveChangesAsync();
 
         return Ok($"Removed User: {userID} from moderating community: {communityID}");
+    }
+
+    [HttpPost("AddUserToMod/{username}/{communityName}")]
+    public async Task<ActionResult> AddUserToMod(string username,string communityName){
+
+        var user=await Context.Users.Include(c=>c.Moderator).Where(c=>c.Username==username).FirstOrDefaultAsync();
+
+        var community=await Context.Communities.Where(c=>c.Name==communityName).FirstOrDefaultAsync();
+
+        if(user==null || community==null)
+            return BadRequest("User or Community don't exist");
+
+        user.Moderator ??=new List<Community>();
+
+        user.Moderator.Add(community);
+
+        await Context.SaveChangesAsync();
+
+        return Ok($"Added moderator: {user.Username} to the community {community.Name}");
+    }
+
+
+    [HttpDelete("RemoveModFromCommunity/{username}/{communityName}")]
+    public async Task<ActionResult> RemoveModFromCommunity(string username,string communityName){
+
+        var user=await Context.Users.Include(c=>c.Moderator).Where(c=>c.Username== username).FirstOrDefaultAsync();
+
+        var community=await Context.Communities.Where(c=>c.Name==communityName).FirstOrDefaultAsync();
+
+        if(community==null || user == null){
+            return BadRequest("User or community dont exist");
+        }
+
+         if(user.Moderator==null || !user.Moderator.Contains(community))
+            return BadRequest("User not moderator of community");
+
+        user.Moderator.Remove(community);
+
+        await Context.SaveChangesAsync();
+
+        return Ok("User successfully removed from moderating community");
+    }
+
+    [HttpGet("FindModeratorsFromCommunity/{communityName}")]
+    public async Task<ActionResult> FindModeratorsFromCommunity(string communityName){
+
+        var community=await Context.Communities.Include(c=>c.Moderators).Where(c=>c.Name==communityName).FirstOrDefaultAsync();
+
+        if(community==null)
+            return BadRequest("Community with given name does not exist");
+
+        if(community.Moderators==null || !community.Moderators.Any())
+            return Ok(null);
+
+
+        var commDto= Mapper.Map<List<UserDto>>(community.Moderators);
+        
+        return Ok(commDto);
+    }
+
+    [HttpGet("IsUserModerating/{communityName}/{username}")]
+    public async Task<ActionResult> IsUserModerating(string communityName,string username){
+
+        var community=await Context.Communities.Include(c=>c.Moderators).Where(c=>c.Name==communityName).FirstOrDefaultAsync();
+
+        if(community==null)
+            return BadRequest("Community does not exist");
+
+        bool check = community.Moderators?.Any(c=>c.Username==username) ?? false;
+
+        return Ok(check);
     }
 }

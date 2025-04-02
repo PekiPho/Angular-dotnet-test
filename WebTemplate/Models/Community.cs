@@ -22,4 +22,7 @@ public class Community{
     public List<User>? Subscribers { get; set; }
 
     public List<Post>? Posts { get; set; }
+
+
+    public string? CommInfo { get; set; }
 }

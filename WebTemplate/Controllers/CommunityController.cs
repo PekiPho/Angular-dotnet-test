@@ -76,6 +76,42 @@ public class CommunityController:ControllerBase{
 
     }
 
+    [HttpPut("UpdateCommunityDescription/{name}/{description}")]
+    public async Task<ActionResult> UpdateCommunityDescription(string name,string description){
+
+        var community=await Context.Communities.Where(c=>c.Name==name).FirstOrDefaultAsync();
+
+        if(community == null){
+            return BadRequest("Community with given name does not exist");
+        }
+
+        community.Description=description;
+
+        Context.Communities.Update(community);
+
+        await Context.SaveChangesAsync();
+
+        return Ok($"Updated description successfully. Community name: {community.Name}");
+    }
+
+    [HttpPut("UpdateCommInfo/{name}/{commInfo}")]
+    public async Task<ActionResult> UpdateCommInfo(string name,string commInfo){
+
+        var community=await Context.Communities.Where(c=>c.Name==name).FirstOrDefaultAsync();
+
+        if(community==null){
+            return BadRequest("Community with given name does not exist");
+        }
+
+        community.CommInfo=commInfo;
+
+        Context.Communities.Update(community);
+
+        await Context.SaveChangesAsync();
+
+        return Ok($"Community Info updated. Community name : {community.Name}");
+    }
+
 
     [HttpDelete("DeleteCommunity/{id}")]
     public async Task<ActionResult> DeleteCommunity(int id){
