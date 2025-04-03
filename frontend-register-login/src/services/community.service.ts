@@ -53,4 +53,12 @@ export class CommunityService {
    getSubscriberCount(name:string){
     return this.http.get(this.url + '/Community/GetSubscribers/'+name);
    }
+
+   updateDescription(communityName:string,desc:string){
+    return this.http.put(`${this.url}/Community/UpdateCommunityDescription/${communityName}/${desc}`,{},{responseType:'text'});
+   }
+
+   updateInfo(communityName:string,info:string){
+    return this.http.put(`${this.url}/Community/UpdateCommInfo/${communityName}/${info}`,{},{responseType:'text'});
+   }
 }

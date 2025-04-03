@@ -102,15 +102,23 @@
                         <input type="text" id="banUser" placeholder="Enter Username">
                     </div>
                 </div>
+                <p class="comm"></p>
             </div>
         </div>
         <div class="modal-footer d-flex justify-content-end" *ngIf="!editModerators">
-          <button class="btn btn-info" *ngIf="modSecond==0">Edit Description</button>
-          <button class="btn btn-info" *ngIf="modSecond==1">Edit Community Info</button>
-          <button class="btn btn-danger" *ngIf="modSecond==2 && ban">Ban User</button>
-          <button class="btn btn-success" *ngIf="modSecond==2 && !ban">Unban User</button>
+            <div class="modal-color" *ngIf="modSecond==0">
+                <button type="button" class="btn btn-info"  (click)="editDescription();">Edit Description</button>
+            </div>
+            <div class="modal-color" *ngIf="modSecond==1">
+                <button class="btn btn-info" (click)="editInfo();">Edit Community Info</button>
+            </div>
+            <div class="modal-color" *ngIf="modSecond==2 && ban">
+                <button class="btn btn-danger" (click)="banUser();">Ban User</button>
+            </div>
+            <div class="modal-color" *ngIf="modSecond==2 && !ban">
+                <button class="btn btn-success" (click)="unbanUser();">Unban User</button>
+            </div>
         </div>
-        
       </div>
     </div>
   </div>

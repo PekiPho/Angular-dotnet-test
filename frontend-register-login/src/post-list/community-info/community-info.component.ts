@@ -147,6 +147,62 @@ export class CommunityInfoComponent implements OnInit{
     }
   }
 
+  editDescription(){
+    var description=(document.querySelector("#editDesc") as HTMLTextAreaElement).value;
+    var errorP=document.querySelector(".comm")as HTMLParagraphElement;
+
+    if(description!=''){
+    this.communityService.updateDescription(this.community!.name,description).subscribe({
+      next:(data)=>{
+        if(this.community!=null)
+          this.community.description=description ?? '';
+
+        this.editCommunity=false;
+      },
+      error:(err)=>{
+        errorP.textContent='Enter Valid Description';
+        console.log(err);
+      },
+      complete:()=>{}
+    });
+    }
+    else{
+      errorP.textContent='Enter Valid Description';
+    }
+  }
+
+  editInfo(){
+    var info=(document.querySelector("#editCommInfo") as HTMLTextAreaElement).value;
+    var errorP=document.querySelector(".comm")as HTMLParagraphElement;
+
+    if(info!=''){
+      this.communityService.updateInfo(this.community!.name,info).subscribe({
+        next:(data)=>{
+          if(this.community!=null)
+            this.community.communityInfo=info;
+
+          this.editCommunity=false;
+        },
+        error:(err)=>{
+          errorP.textContent= 'Enter Valid Info';
+          console.log(err);
+        },
+        complete:()=>{}
+      });
+    }
+    else{
+      errorP.textContent='Enter Valid Info';
+    }
+  }
+
+  banUser(){
+    var ban=(document.querySelector("#banUser")as HTMLInputElement).value;
+  }
+
+  unbanUser(){
+    var unban=(document.querySelector("#banUser")as HTMLInputElement).value;
+  }
+
 
   setModerator(value:boolean){
     this.editModerators=value;
