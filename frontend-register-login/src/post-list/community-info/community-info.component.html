@@ -45,6 +45,18 @@
                     Remove Moderator
                 </div>
             </div>
+
+            <div class="d-flex flex-row justify-content-between header-whole" *ngIf="editCommunity">
+                <div class="modal-color d-flex align-items-center justify-content-center" (click)="setEdit(0);">
+                    Edit Description
+                </div>
+                <div class="modal-color d-flex align-items-center justify-content-center " (click)="setEdit(1);">
+                    Edit Community info
+                </div>
+                <div class="modal-color d-flex align-items-center justify-content-center" (click)="setEdit(2);">
+                    Bans
+                </div>
+            </div>
         </div>
         <div class="modal-body d-flex flex-column gap-2 " >
             <div class="modal-color" *ngIf="editModerators">
@@ -67,9 +79,33 @@
                     <button type="button" class="btn btn-danger align-self-end" style="width: 30%;" (click)="removeModerator();">Remove</button>
                 </div>
             </div>
+
+            <div class="modal-color" *ngIf="editCommunity">
+                <div class="modal-color d-flex flex-column gap-2" *ngIf="modSecond==0">
+                    <label for="editDesc">Description:</label>
+                    <textarea id="editDesc" rows="5" placeholder="Enter Description.."></textarea>
+                </div>
+                <div class="modal-color d-flex flex-column gap-2" *ngIf="modSecond==1">
+                    <label for="editCommInfo">Community Info:</label>
+                    <textarea id="editCommInfo" rows="8"></textarea>
+                </div>
+                <div class="modal-color" *ngIf="modSecond==2">
+                    <div class="modal-color d-flex flex-row justify-content-around pb-5">
+                        <div class="modal-color" (click)="setBan(true);">Ban User</div>
+                        <div class="modal-color" (click)="setBan(false);">Unban User</div>
+                    </div>
+                    <div class="modal-color d-flex flex-row gap-3">
+                        <label for="banUser">Username:</label>
+                        <input type="text" id="banUser" placeholder="Enter Username">
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="modal-footer" *ngIf="!editModerators">
-          
+        <div class="modal-footer d-flex justify-content-end" *ngIf="!editModerators">
+          <button class="btn btn-info" *ngIf="modSecond==0">Edit Description</button>
+          <button class="btn btn-info" *ngIf="modSecond==1">Edit Community Info</button>
+          <button class="btn btn-danger" *ngIf="modSecond==2 && ban">Ban User</button>
+          <button class="btn btn-success" *ngIf="modSecond==2 && !ban">Unban User</button>
         </div>
         
       </div>

@@ -29,6 +29,8 @@ export class CommunityInfoComponent implements OnInit{
   public editCommunity:boolean=false;
   public editModerators:boolean=false;
   public isAdd:boolean=true;
+  public modSecond:number=0;
+  public ban:boolean=true;
 
   ngOnInit(): void {
     this.userService.userr$.subscribe({
@@ -114,6 +116,14 @@ export class CommunityInfoComponent implements OnInit{
 
   setAdd(value:boolean){
     this.isAdd=value;
+  }
+
+  setEdit(value:number){
+    this.modSecond=value;
+  }
+
+  setBan(value:boolean){
+    this.ban=value;
   }
 }
 
