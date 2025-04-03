@@ -49,11 +49,6 @@ export class UserServiceService {
   }
   
 
-  // to send username
-  public user:User={username:"",password:"",email:""};
-  sendUserToComponent(newUser:User){
-    this.user=newUser;
-  }
 
   //jwt test
   getEntry(){

@@ -28,5 +28,13 @@ export class SubscribeService {
     isUserModerating(username:string,communityName:string){
       return this.http.get(`${this.url}/Subscribe/IsUserModerating/${communityName}/${username}`);
     }
+
+    addModerator(communityName:string,username:string){
+      return this.http.post(`${this.url}/Subscribe/AddUserToMod/${username}/${communityName}`,{},{responseType:'json'});
+    }
+
+    removeModerator(communityName:string,username:string){
+      return this.http.delete(`${this.url}/Subscribe/RemoveModFromCommunity/${username}/${communityName}`,{responseType:'json'});
+    }
      
 }

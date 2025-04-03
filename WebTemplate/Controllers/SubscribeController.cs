@@ -128,7 +128,9 @@ public class SubscribeController:ControllerBase{
 
         await Context.SaveChangesAsync();
 
-        return Ok($"Added moderator: {user.Username} to the community {community.Name}");
+        var userDto= Mapper.Map<UserDto>(user);
+
+        return Ok(userDto);
     }
 
 
@@ -150,7 +152,9 @@ public class SubscribeController:ControllerBase{
 
         await Context.SaveChangesAsync();
 
-        return Ok("User successfully removed from moderating community");
+        var userDto=Mapper.Map<UserDto>(user);
+
+        return Ok(userDto);
     }
 
     [HttpGet("FindModeratorsFromCommunity/{communityName}")]

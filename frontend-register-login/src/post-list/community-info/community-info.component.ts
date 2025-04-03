@@ -96,11 +96,55 @@ export class CommunityInfoComponent implements OnInit{
   }
 
   addModerator(){
+    var addMod=(document.querySelector("#mod") as HTMLInputElement).value;
+    var errorP=document.querySelector(".addModText") as HTMLParagraphElement;
+    if(addMod!=''){
+      this.subscribeService.addModerator(this.community!.name,addMod).subscribe({
+        next:(data)=>{
+          errorP.textContent='';
+          this.editModerators=false;
 
+          var mod=data as UserWithoutPass;
+          this.moderators?.push(mod);
+        },
+        error:(err)=>{
+          errorP.textContent="Enter Valid Username";
+        },
+        complete:()=>{}
+      });
+    }
+    else{
+      errorP.textContent="Enter Valid Username";
+    }
   }
 
   removeModerator(){
-    
+    var removeMod=(document.querySelector("#removeMod") as HTMLInputElement).value;
+    var errorP=document.querySelector(".removeModText") as HTMLParagraphElement;
+
+    if(removeMod!=''){
+      errorP.textContent='';
+
+      this.subscribeService.removeModerator(this.community!.name,removeMod).subscribe({
+        next:(data)=>{
+          errorP.textContent='';
+          this.editModerators=false;
+
+          var mod=data as UserWithoutPass;
+
+          this.moderators=(this.moderators ?? []).filter(x=>x.id!=mod.id);
+          //this.moderators?.push();
+        },
+        error:(err)=>{
+          errorP.textContent='Enter Valid Username';
+          console.log(err);
+        },
+        complete:()=>{}
+      });
+    }
+    else{
+      errorP.textContent="Enter Valid Username";
+    }
   }
 
 
