@@ -7,6 +7,7 @@ import { PostService } from '../../services/post.service';
 import { NgFor, NgIf } from '@angular/common';
 import { CommunityService } from '../../services/community.service';
 import {InfiniteScrollDirective} from 'ngx-infinite-scroll';
+import { Media } from '../../interfaces/media';
 
 @Component({
   selector: 'posts',
@@ -100,6 +101,24 @@ export class PostsComponent implements OnInit,OnChanges{
           this.hasMorePosts=false;
         this.posts=[...this.posts,...data];
         this.page++;
+
+
+        this.posts.forEach(post=>{
+          this.postService.getMediaFromPost(post.id).subscribe({
+            next:(data)=>{
+              if(data== null){
+                post.mediaIds=null;
+              }
+              else{
+                post.mediaIds=data as Media[];
+              }
+            },
+            error:(err)=>{
+              console.log(err);
+            },
+            complete:()=>{}
+          });
+        });
         //console.log(this.posts);
         //console.log(this.loading());
       },

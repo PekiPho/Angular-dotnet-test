@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Post, PostToSend } from '../interfaces/post';
+import { Media } from '../interfaces/media';
 
 @Injectable({
   providedIn: 'root'
@@ -34,5 +35,9 @@ export class PostService {
 
   getPostsBySort(communityName:string,type:string,page:number,limit:number,time?:string){
     return this.http.get<Post[]>(`${this.url}/Post/GetPostsBySort/${communityName}/${type}/${page}/${limit}/${time}`);
+  }
+
+  getMediaFromPost(postId:string){
+    return this.http.get<Media[] | null>(`${this.url}/Media/GetMediaFromPost/${postId}`);
   }
 }

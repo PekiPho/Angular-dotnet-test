@@ -286,3 +286,4 @@ E:\angular\prooooj\WebTemplate\obj\Debug\net8.0\refint\WebTemplate.dll
 E:\angular\prooooj\WebTemplate\obj\Debug\net8.0\WebTemplate.pdb
 E:\angular\prooooj\WebTemplate\obj\Debug\net8.0\WebTemplate.genruntimeconfig.cache
 E:\angular\prooooj\WebTemplate\obj\Debug\net8.0\ref\WebTemplate.dll
+E:\angular\prooooj\WebTemplate\bin\Debug\net8.0\Newtonsoft.Json.dll

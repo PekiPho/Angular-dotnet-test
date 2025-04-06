@@ -8,7 +8,7 @@ export interface Post {
     communityName: string; 
     title: string;
     description?: string;
-    mediaIds: string[];
+    mediaIds: Media[] | null;
     comments?: number[];
     username: string;
     vote?: number;

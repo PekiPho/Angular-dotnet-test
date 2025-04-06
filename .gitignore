@@ -41,3 +41,5 @@ Thumbs.db
 # Other files that are IDE-specific or may be automatically generated
 .idea/
 .vscode/
+
+api.txt

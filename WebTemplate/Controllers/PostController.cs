@@ -1,5 +1,8 @@
+using System.Text.RegularExpressions;
 using AutoMapper;
 using WebTemplate.Dtos;
+using System.IO;
+using System.Text.Json;
 
 namespace WebTemplate.Controllers;
 
@@ -65,19 +68,40 @@ public class PostController:ControllerBase{
         post.Community=community;
         post.User=user;
 
-        if(post.Media !=null && post.Media.Any()){
-            foreach(var media in post.Media){
-                media.Post=post;    
+        if(IsUrl(post.Description)){
+            Console.WriteLine("isUrl!!");
+            var img=await GetOgImage(post?.Description);
+            //Console.WriteLine(img);
+            if(!string.IsNullOrEmpty(img)){
+                var media = new Media{
+                    Url=img,
+                    Post=post
+                };
+
+                await Context.Media.AddAsync(media);
+                post.Media= post.Media ?? new List<Media>();
+                post.Media.Add(media);
+
+
             }
-                
         }
+        else{
+            //Console.WriteLine("No url :(");
+        }
+
+        // if(post.Media !=null && post.Media.Any()){
+        //     foreach(var media in post.Media){
+        //         media.Post=post;    
+        //     }
+                
+        // }
 
         await Context.Posts.AddAsync(post);
         await Context.SaveChangesAsync();
 
         var postDto=Mapper.Map<PostDto>(post);
-        Console.WriteLine(post.User.Username);
-        Console.WriteLine(postDto.Username);
+        //Console.WriteLine(post.User.Username);
+        //Console.WriteLine(postDto.Username);
         return Ok(postDto);
         
     }
@@ -142,6 +166,7 @@ public class PostController:ControllerBase{
     public async Task<ActionResult> GetPostsBySort(string communityName,string sort,int page,int limit,string? time){
 
         var posts=Context.Posts.Include(c=>c.Community)
+                                    .Include(c=>c.Media)
                                     .Where(c=>c.Community!.Name==communityName);
 
         if(sort=="Top"){
@@ -199,5 +224,35 @@ public class PostController:ControllerBase{
         var postDto = Mapper.Map<List<PostDto>>(postss);
         return Ok(postDto);
 
+    }
+
+    private bool IsUrl(string? description){
+        if(string.IsNullOrEmpty(description))
+            return false;
+
+        return Uri.IsWellFormedUriString(description,UriKind.Absolute);
+    }
+
+    private async Task<string?> GetOgImage(string? url){
+        using var httpClient = new HttpClient();
+        var keyy= System.IO.File.ReadAllLines("api.txt");
+        var encoded=Uri.EscapeDataString(url!);
+        //Console.WriteLine("keyyyyy");
+        //Console.WriteLine(keyy.Length);
+        var key=keyy[0];
+        //Console.WriteLine(url);
+        var ogUrl=$"https://opengraph.io/api/1.1/site/{encoded}?app_id={key}";
+
+        var resp = await httpClient.GetStringAsync(ogUrl);
+        var data = System.Text.Json.JsonSerializer.Deserialize<JsonElement>(resp);
+
+        //Console.WriteLine(resp);
+
+        var image = data.GetProperty("openGraph").GetProperty("image").GetProperty("url").GetString();
+
+        //Console.WriteLine(image);
+
+        return image;
+        
     }
 }

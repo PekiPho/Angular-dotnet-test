@@ -44,10 +44,31 @@
 .post-link {
     font-size: 0.8rem;
     color: #007bff;
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.post-link a:hover{
+    text-decoration: underline;
+    color: #005fff;
 }
 
 .post-preview {
-    margin-top: 10px;
+    margin-left: 20px;
+    width: 25;
+}
+
+.post-image{
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.post-preview img{
+    max-width: 100%;
+    height: auto;
 }
 
 .post-actions {

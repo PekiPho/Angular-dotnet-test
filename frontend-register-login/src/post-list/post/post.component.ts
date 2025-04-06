@@ -18,7 +18,7 @@ export class PostComponent implements OnInit{
 
   @Input() public post= {} as Post;
 
-  public sanitizedUrl:SafeUrl | null = null;
+  //public sanitizedUrl:SafeUrl | null = null;
 
   public isLink:boolean=false;
 
@@ -59,10 +59,10 @@ export class PostComponent implements OnInit{
     }
     else{
       if(this.checkURL(this.post.description)){
-        console.log("Is url!!");
+        //console.log("Is url!!");
         this.isLink=true;
-
-        this.sanitizedUrl=this.sanitizer.bypassSecurityTrustResourceUrl(this.post.description);
+        console.log(this.post.mediaIds);
+        //this.sanitizedUrl=this.sanitizer.bypassSecurityTrustResourceUrl(this.post.description);
       }
       else{
 
@@ -71,7 +71,7 @@ export class PostComponent implements OnInit{
   }
 
   checkURL(name:string){
-    const regex=/^(https?:\/\/[^\s]+)$/;
+    const regex=/^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
 
     return regex.test(name);
   }

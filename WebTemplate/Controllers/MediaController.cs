@@ -1,6 +1,7 @@
 namespace WebTemplate.Controllers;
 
-
+[ApiController]
+[Route("[controller]")]
 public class MediaController:ControllerBase{
 
     public IspitContext Context{get;set;}
@@ -9,7 +10,18 @@ public class MediaController:ControllerBase{
         Context=context;
     }
 
-    [HttpGet("UploadMedia")]
+    [HttpGet("GetMediaFromPost/{postId}")]
+    public async Task<ActionResult> GetMediaFromPost(Guid postid){
+
+        var media = await Context.Media.Include(c=>c.Post).Where(c=>c.Post!.Id==postid).ToListAsync();
+
+        if(media==null)
+            return Ok(null);
+        
+        return Ok(media);
+    }
+
+    [HttpPost("UploadMedia")]
     public async Task<ActionResult> UploadMedia([FromForm] List<IFormFile> mediaFiles){
         if(mediaFiles==null || mediaFiles.Count==0){
             return BadRequest("No data sent");
