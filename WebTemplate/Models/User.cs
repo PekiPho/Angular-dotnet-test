@@ -17,7 +17,7 @@ public class User{
     [RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$",ErrorMessage ="Enter valid email")]
     public required string Email { get; set; }
 
-    [JsonIgnore]
+    [System.Text.Json.Serialization.JsonIgnore]
     public List<Community>? Subscribed { get; set; }
 
     public List<Community>? Moderator { get; set; }

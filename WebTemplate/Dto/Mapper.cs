@@ -18,5 +18,10 @@ public class MappingProfile:Profile{
             .ForMember(a=>a.Moderating,b=>b.MapFrom(c=>c.Moderator.Select(d=>d.Id).ToList()))
             .ForMember(a=>a.Email,b=>b.MapFrom(c=>c.Email))
             .ForMember(c=>c.DateOfAccountCreated,b=>b.MapFrom(a=>a.DateOfAccountCreated));
+
+        CreateMap<Media,MediaDto>()
+            .ForMember(a=>a.Id,b=>b.MapFrom(c=>c.Id))
+            .ForMember(a=>a.Url,b=>b.MapFrom(c=>c.Url))
+            .ForMember(a=>a.PostId,b=>b.MapFrom(c=>c.Post.Id));
     }
 }

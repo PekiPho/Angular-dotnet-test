@@ -1,3 +1,6 @@
+using AutoMapper;
+using WebTemplate.Dtos;
+
 namespace WebTemplate.Controllers;
 
 [ApiController]
@@ -6,8 +9,11 @@ public class MediaController:ControllerBase{
 
     public IspitContext Context{get;set;}
 
-    public MediaController(IspitContext context){
+    private readonly IMapper Mapper;
+
+    public MediaController(IspitContext context,IMapper mapper){
         Context=context;
+        Mapper=mapper;
     }
 
     [HttpGet("GetMediaFromPost/{postId}")]
@@ -17,8 +23,10 @@ public class MediaController:ControllerBase{
 
         if(media==null)
             return Ok(null);
+
+        var mediaDto= Mapper.Map<List<MediaDto>>(media);
         
-        return Ok(media);
+        return Ok(mediaDto);
     }
 
     [HttpPost("UploadMedia")]

@@ -40,3 +40,11 @@ public class UserDto{
 
     public DateTime DateOfAccountCreated { get; set; }
 }
+
+public class MediaDto{
+    public Guid Id { get; set; }
+
+    public string? Url { get; set; }
+
+    public Guid PostId { get; set; }
+}

@@ -1,9 +1,9 @@
 import { Post } from "./post";
 
 export interface Media {
-    id: number;
+    id: string;
     url: string;
-    post?: Post; 
+    postId: string; 
   }
 
   export interface MediaSmall{
