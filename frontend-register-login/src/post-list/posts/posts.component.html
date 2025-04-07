@@ -1,5 +1,5 @@
 <div class="w-100 rand " *ngIf="this.posts.length>0" infiniteScroll (scrolled)="onScroll()" [infiniteScrollDistance]="2" [infiniteScrollThrottle]="150">
-    <div class="" *ngFor="let post of this.posts">
+    <div class="aaa" *ngFor="let post of this.posts">
         <post [post]="post"></post>
     </div>
 </div>

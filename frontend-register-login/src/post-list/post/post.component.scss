@@ -148,4 +148,27 @@
   .downvoted {
     color: #007bff;
   }
-  
+
+  .vote-comments{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 40%;
+  }
+
+  .comment-btn{
+    background-color: #2d2d2d;
+    border-radius: 5px;
+    padding: 5px 1rem 5px 1rem;
+
+    border: none;
+  }
+
+  .comment-btn:hover{
+    color: aliceblue;
+
+    background-color: black;
+
+    transition: all 1s ease-in-out;
+
+  }

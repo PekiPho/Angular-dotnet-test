@@ -14,10 +14,15 @@
         </div>
   
         <div class="post-actions">
-          <div class="vote-buttons">
-            <button class="upvote-btn" (click)="voteOnPost(true);" [class.upvoted]="voted===true">▲</button>
-            <div class="vote-count">{{ post.vote }}</div>
-            <button class="downvote-btn" (click)="voteOnPost(false);" [class.downvoted]="voted===false">▼</button>
+          <div class="vote-comments">
+            <div class="vote-buttons">
+              <button class="upvote-btn" (click)="voteOnPost(true);" [class.upvoted]="voted===true">▲</button>
+              <div class="vote-count">{{ post.vote }}</div>
+              <button class="downvote-btn" (click)="voteOnPost(false);" [class.downvoted]="voted===false">▼</button>
+            </div>
+            <div class="comments">
+              <button class="comment-btn" (click)="openBigPost();">📝 {{commCount}}</button>
+            </div>
           </div>
           <button class="share-btn">🔗Share</button>
         </div>

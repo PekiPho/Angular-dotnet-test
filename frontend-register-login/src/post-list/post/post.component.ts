@@ -5,6 +5,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { PostService } from '../../services/post.service';
 import { UserServiceService } from '../../services/user-service.service';
 import { User } from '../../interfaces/user';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'post',
@@ -14,7 +15,11 @@ import { User } from '../../interfaces/user';
 })
 export class PostComponent implements OnInit{
 
-  constructor(private sanitizer:DomSanitizer,private userService:UserServiceService, private postService:PostService){}
+  constructor(private sanitizer:DomSanitizer,
+    private userService:UserServiceService,
+    private postService:PostService,
+    private router:Router
+  ){}
 
   @Input() public post= {} as Post;
 
@@ -27,6 +32,9 @@ export class PostComponent implements OnInit{
   public voted:boolean|null=null;
 
   public date:any;
+
+
+  public commCount:number=0; // to add comment count fetching
 
   ngOnInit(): void {
 
@@ -61,7 +69,7 @@ export class PostComponent implements OnInit{
       if(this.checkURL(this.post.description)){
         //console.log("Is url!!");
         this.isLink=true;
-        console.log(this.post.mediaIds);
+        //console.log(this.post.mediaIds);
         //this.sanitizedUrl=this.sanitizer.bypassSecurityTrustResourceUrl(this.post.description);
       }
       else{
@@ -100,5 +108,9 @@ export class PostComponent implements OnInit{
       },
       complete:()=>{}
     });
+  }
+
+  openBigPost(){
+    this.router.navigateByUrl(`/mainPage/community/${this.post.communityName}/post/${this.post.id}`);
   }
 }

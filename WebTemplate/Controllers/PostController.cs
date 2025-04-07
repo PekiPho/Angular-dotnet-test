@@ -34,6 +34,22 @@ public class PostController:ControllerBase{
         return Ok(postsDto);
     }
 
+    [HttpGet("GetPostByID/{postId}")]
+    public async Task<ActionResult> GetPostByID(Guid postId){
+        var post=await Context.Posts.Where(c=>c.Id== postId).Include(c=>c.Community)
+                                    .Include(c=>c.User)
+                                    .Include(c=>c.Media)
+                                    .Include(c=>c.Comments)
+                                    .FirstOrDefaultAsync();
+
+        if(post==null)
+            return BadRequest("Post does not exist");
+
+        var postDto= Mapper.Map<PostDto>(post);
+
+        return Ok(postDto);
+    }
+
     [HttpPost("AddPost/{userID}/{communityID}")]
     public async Task<ActionResult> AddPost(int userID,int communityID,[FromBody]Post post){
 

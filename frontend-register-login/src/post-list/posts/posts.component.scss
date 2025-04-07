@@ -1,5 +1,13 @@
-.rand {
-    height: 100%; 
-    padding: 10px;
-    background-color: black;
+// .rand {
+//     height: 100%; 
+//     padding: 10px;
+//     background-color: black;
+// }
+
+.rand{
+    width: 100%;
+  flex-grow: 1;
+  padding: 10px;
+  background-color: black;
+  box-sizing: border-box;
 }

@@ -1,6 +1,31 @@
 <div class="parent">
     <div class="content border-end border-light">
-        
+        <div class="post" *ngIf="post!=null">
+            <h2>{{post.title}}</h2>
+            <div class="" *ngIf="hasMedia && post.mediaIds && post.mediaIds.length > 0">
+                <img [src]="post.mediaIds[0].url" alt="Image" class="post-image">
+                <p class="link-bottom">{{post.mediaIds[0].url}}</p>
+            </div>
+            <div class="" *ngIf="!hasMedia">
+                {{post.description}}
+            </div>
+        </div>
+        <div class="upvotes" *ngIf="post!=null">
+            <div class="vote-comments">
+                <div class="vote-buttons">
+                    <button class="upvote-btn" (click)="voteOnPost(true);" [class.upvoted]="hasVoted===true">▲</button>
+                    <div class="vote-count">{{ post.vote }}</div>
+                    <button class="downvote-btn" (click)="voteOnPost(false);" [class.downvoted]="hasVoted===false">▼</button>
+                </div>
+                <div class="comm">
+                <button class="comment-btn">📝 {{commCount}}</button>
+                </div>
+            </div>
+            <button class="share-btn">🔗Share</button>
+        </div>
+        <div class="comments">
+
+        </div>
     </div>
     <div class="sidebar">
         <community-info></community-info>

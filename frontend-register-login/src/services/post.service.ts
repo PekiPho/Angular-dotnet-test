@@ -40,4 +40,8 @@ export class PostService {
   getMediaFromPost(postId:string){
     return this.http.get<Media[] | null>(`${this.url}/Media/GetMediaFromPost/${postId}`);
   }
+
+  getPost(postId:string){
+    return this.http.get<Post>(`${this.url}/Post/GetPostByID/${postId}`);
+  }
 }
