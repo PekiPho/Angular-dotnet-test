@@ -45,14 +45,14 @@ export class PostDetailComponent implements OnInit {
           
           this.postService.getMediaFromPost(this.postId).subscribe({
             next:(data)=>{
+              //console.log(data);
               if(data== null){
+                this.hasMedia=false;
                 this.post.mediaIds=null;
               }
               else{
                 this.post.mediaIds=data as Media[];
               }
-
-              console.log(this.post);
             },
             error:(err)=>{
               console.log(err);
@@ -65,6 +65,9 @@ export class PostDetailComponent implements OnInit {
         },
         complete:()=>{}
       });
+
+
+      //console.log(this.hasMedia);
     }
     else{
       this.cantLoad=true;

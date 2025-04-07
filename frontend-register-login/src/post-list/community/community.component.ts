@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { HistoryComponent } from '../history/history.component';
 import { PostsComponent } from '../posts/posts.component';
 import { CommunityInfoComponent } from "../community-info/community-info.component";
@@ -6,7 +6,7 @@ import { Community, CommunityToSend } from '../../interfaces/community';
 import { CommunityService } from '../../services/community.service';
 import { ActivatedRoute } from '@angular/router';
 import { NgIf } from '@angular/common';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { PostService } from '../../services/post.service';
 
 @Component({
@@ -23,14 +23,18 @@ export class CommunityComponent implements OnInit{
 
   public subs:number = -1;
 
+
   constructor(private communityService:CommunityService,private activatedRoute:ActivatedRoute,private postService:PostService ){}
 
   ngOnInit(): void {
-    this.activatedRoute.url.subscribe(url=>{
-      const urlPath = url.map(c=>c.path);
-      //console.log(urlPath[0]);
-      if(urlPath[0]=='community'){
-        this.communityService.getCommunityByName(urlPath[1]).subscribe({
+
+    this.activatedRoute.paramMap.subscribe(url=>{
+      const urlPath = url.get('name');
+      //console.log(url);
+      console.log(urlPath);
+      if(!urlPath) return;
+      //if(urlPath[0]=='community'){
+        this.communityService.getCommunityByName(urlPath).subscribe({
           next:(data)=>{
             this.community=data as Community;
             this.communityService.setFullCommunity(this.community);
@@ -46,7 +50,7 @@ export class CommunityComponent implements OnInit{
           },
           complete:()=>{}
       });
-      this.communityService.getSubscriberCount(urlPath[1]).subscribe({
+      this.communityService.getSubscriberCount(urlPath).subscribe({
         next:(data)=>{
           this.subs=data as number;
           this.communityService.setSubCount(this.subs);
@@ -57,10 +61,10 @@ export class CommunityComponent implements OnInit{
         },
         complete:()=>{}
       });
-      }
+      //}
     });
   }
-
+  
   public sort:boolean=false;
 
 
@@ -81,5 +85,13 @@ export class CommunityComponent implements OnInit{
 
   setTime(name:string){
     this.selectedTime=name;
+  }
+
+  onSortChange(newSort:string){
+    this.selectedSort=newSort;
+  }
+  onAgeChange(newAge:string){
+    this.sort=false;    
+    this.selectedTime=newAge;
   }
 }

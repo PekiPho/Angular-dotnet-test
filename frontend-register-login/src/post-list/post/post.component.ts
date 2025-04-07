@@ -88,7 +88,7 @@ export class PostComponent implements OnInit{
     //console.log(votee);
     this.postService.addVote(this.post,this.user!.username,votee).subscribe({
       next:(data)=>{
-        console.log(data);
+        //console.log(data);
         //this.voted=votee;
         var vote=JSON.parse(data) as Vote;
         this.post.vote= vote.votes;
@@ -96,7 +96,7 @@ export class PostComponent implements OnInit{
         //console.log(this.voted + " " +votee);
         if(this.voted===votee){
           this.voted=null;
-          console.log(this.voted);
+          //console.log(this.voted);
         }
         else{
           this.voted=votee;

@@ -6,7 +6,7 @@
                 <img [src]="post.mediaIds[0].url" alt="Image" class="post-image">
                 <p class="link-bottom">{{post.mediaIds[0].url}}</p>
             </div>
-            <div class="" *ngIf="!hasMedia">
+            <div class="desc-text" *ngIf="hasMedia===false">
                 {{post.description}}
             </div>
         </div>

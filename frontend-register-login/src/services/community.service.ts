@@ -17,8 +17,9 @@ export class CommunityService {
    public communitySource=new BehaviorSubject<CommunityToSend | null>(null);
     communityy$= this.communitySource.asObservable();
 
-    setCommunity(community:CommunityToSend){
-       this.communitySource.next(community);
+    setCommunity(community:CommunityToSend|null){
+      //console.log(community);
+       this.communitySource.next({...community});
     }
 
     public subsCount = new BehaviorSubject<number>(-1);
@@ -32,7 +33,7 @@ export class CommunityService {
     public fullCommunity=new BehaviorSubject<Community | null>(null);
     fullCommunity$=this.fullCommunity.asObservable();
 
-    setFullCommunity(name:Community){
+    setFullCommunity(name:Community|null){
       this.fullCommunity.next(name);
     }
 

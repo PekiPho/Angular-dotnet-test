@@ -21,7 +21,7 @@ public class MediaController:ControllerBase{
 
         var media = await Context.Media.Include(c=>c.Post).Where(c=>c.Post!.Id==postid).ToListAsync();
 
-        if(media==null)
+        if(!media.Any())
             return Ok(null);
 
         var mediaDto= Mapper.Map<List<MediaDto>>(media);
