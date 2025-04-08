@@ -3,6 +3,7 @@ using AutoMapper;
 using WebTemplate.Dtos;
 using System.IO;
 using System.Text.Json;
+using Microsoft.Extensions.ObjectPool;
 
 namespace WebTemplate.Controllers;
 
@@ -123,12 +124,10 @@ public class PostController:ControllerBase{
     }
 
 
-    [HttpPut("UpdateTitle/{communityID}/{postID}/{title}")]
-    public async  Task<ActionResult> UpdateTitle(int communityID,Guid postID,string title){
+    [HttpPut("UpdateTitle/{postID}/{title}")]
+    public async  Task<ActionResult> UpdateTitle(Guid postID,string title){
 
-        var post=await Context.Posts
-        .Include(c=>c.Community)
-        .Where(c=>c.Id==postID && c.Community!.Id==communityID).FirstOrDefaultAsync();
+        var post=await Context.Posts.Where(c=>c.Id==postID).FirstOrDefaultAsync();
 
         if(post==null)
             return BadRequest("Post does not exist");
@@ -142,12 +141,11 @@ public class PostController:ControllerBase{
         return Ok($"Title of the post with ID: {post.Id} updated");
     }
 
-    [HttpPut("UpdateDescription/{communityID}/{postID}/{description}")]
-    public async Task<ActionResult> UpdateDescription(int communityID,Guid postID,string description){
+    [HttpPut("UpdateDescription/{postID}/{description}")]
+    public async Task<ActionResult> UpdateDescription(Guid postID,string description){
 
         var post =await Context.Posts
-        .Include(c=>c.Community)
-        .Where(c=>c.Community!.Id==communityID && c.Id== postID).FirstOrDefaultAsync();
+        .Where(c=> c.Id== postID).FirstOrDefaultAsync();
 
         if(post==null){
             return BadRequest("Post does not exist");
@@ -176,6 +174,31 @@ public class PostController:ControllerBase{
         await Context.SaveChangesAsync();
 
         return Ok($"Post  with ID: {postID} removed");
+    }
+
+    [HttpDelete("DeletePostByName/{postId}")]
+    public async Task<ActionResult> DeletePostByName(Guid postId){
+
+        var post=await Context.Posts.Include(c=>c.Media)
+                            .Where(c=>c.Id==postId).FirstOrDefaultAsync();
+
+        if(post==null)
+            return BadRequest("Post does not exist");
+
+        if(post.Media !=null && post.Media.Any()){
+            foreach(var media in post.Media){
+                Context.Media.Remove(media);
+            }
+
+            await Context.SaveChangesAsync();
+        }
+
+        Context.Posts.Remove(post);
+
+        await Context.SaveChangesAsync();
+
+        return Ok("Deleted");
+        
     }
 
     [HttpGet("GetPostsBySort/{communityName}/{sort}/{page}/{limit}/{time}")]
@@ -270,5 +293,24 @@ public class PostController:ControllerBase{
 
         return image;
         
+    }
+
+
+    //need to add to laod 50 by 50 but its so late right now so ill do it tmrw
+    [HttpGet("GetPostsByUser/{username}")]
+    public async Task<ActionResult> GetPostsByUser(string username){
+        var posts=await Context.Posts.Include(c=>c.User)
+                                    .Include(c=>c.Media)
+                                    .Include(c=>c.Comments)
+                                    .Include(c=>c.Community)
+                                    .Where(c=>c.User.Username==username)
+                                    .ToListAsync();
+
+        if(!posts.Any())
+            return Ok(null);
+
+        var postsDto=Mapper.Map<PostDto>(posts);
+
+        return Ok(postsDto);
     }
 }

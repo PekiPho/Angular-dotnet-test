@@ -85,7 +85,22 @@ public class VoteController:ControllerBase{
     [HttpGet("GetAllVotesByUser/{username}")]
     public async Task<ActionResult> GetAllVotesByUser(string username){
 
-        var votes=await Context.Votes.Where(c=>c.User!.Username == username).ToDictionaryAsync(
+        var votes=await Context.Votes.Include(c=>c.User)
+                                        .Include(c=>c.Post)
+                                        .Where(c=>c.User!.Username == username).ToDictionaryAsync(
+            c=>c.Post!.Id,
+            c=>c.VoteValue
+        );
+
+        return Ok(votes);
+    }
+
+    [HttpGet("GetVotesByUser/{username}/{direction}")]
+    public async Task<ActionResult> GetVotesByUser(string username,bool direction){
+
+        var votes=await Context.Votes.Include(c=>c.User)
+                                        .Include(c=>c.Post)
+                                        .Where(c=>c.User!.Username==username && c.VoteValue==direction).ToDictionaryAsync(
             c=>c.Post!.Id,
             c=>c.VoteValue
         );

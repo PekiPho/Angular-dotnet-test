@@ -19,7 +19,7 @@ export class CommunityService {
 
     setCommunity(community:CommunityToSend|null){
       //console.log(community);
-       this.communitySource.next({...community});
+       this.communitySource.next(community);
     }
 
     public subsCount = new BehaviorSubject<number>(-1);
