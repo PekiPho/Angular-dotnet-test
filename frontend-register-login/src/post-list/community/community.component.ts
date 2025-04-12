@@ -1,12 +1,10 @@
 import { Component, OnChanges, OnDestroy, OnInit } from '@angular/core';
-import { HistoryComponent } from '../history/history.component';
 import { PostsComponent } from '../posts/posts.component';
 import { CommunityInfoComponent } from "../community-info/community-info.component";
 import { Community, CommunityToSend } from '../../interfaces/community';
 import { CommunityService } from '../../services/community.service';
 import { ActivatedRoute } from '@angular/router';
 import { NgIf } from '@angular/common';
-import { BehaviorSubject, Subscription } from 'rxjs';
 import { PostService } from '../../services/post.service';
 
 @Component({
@@ -31,7 +29,7 @@ export class CommunityComponent implements OnInit{
     this.activatedRoute.paramMap.subscribe(url=>{
       const urlPath = url.get('name');
       //console.log(url);
-      console.log(urlPath);
+      //console.log(urlPath);
       if(!urlPath) return;
       //if(urlPath[0]=='community'){
         this.communityService.getCommunityByName(urlPath).subscribe({
