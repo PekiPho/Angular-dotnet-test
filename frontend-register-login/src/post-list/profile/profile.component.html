@@ -1,13 +1,25 @@
 <div class="parent">
     <div class="content border-end border-light">
         <div class="menu border-light border-bottom">
-            <div class="btn btn-dark posts">Posts</div>
-            <div class="btn btn-dark comments">Comments</div>
-            <div class="btn btn-dark upvoted">Upvoted</div>
-            <div class="btn btn-dark downvoted">Downvoted</div>
+            <div class="btn btn-dark posts" (click)="changeNumber(0);">Posts</div>
+            <div class="btn btn-dark comments" (click)="changeNumber(1);">Comments</div>
+            <div class="btn btn-dark upvoted" (click)="changeNumber(2);">Upvoted</div>
+            <div class="btn btn-dark downvoted" (click)="changeNumber(3);">Downvoted</div>
+        </div>
+        <div class="" *ngIf="loadNumber==0">
+
+        </div>
+        <div class="" *ngIf="loadNumber==1">
+
+        </div>
+        <div class="" *ngIf="loadNumber==2">
+
+        </div>
+        <div class="" *ngIf="loadNumber==3">
+            
         </div>
     </div>
     <div class="sidebar">
-        
+
     </div>
 </div>

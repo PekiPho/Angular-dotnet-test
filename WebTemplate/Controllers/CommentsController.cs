@@ -88,4 +88,17 @@ public class CommentController:ControllerBase{
         return Ok("Deleted");
     }
 
+    [HttpGet("GetCommentsFromUser/{username}")]
+    public async Task<ActionResult> GetCommentsFromUser(string username){
+
+        var comments=await Context.Comments.Include(c=>c.User)
+                                        .Include(c=>c.Post)
+                                        .Where(c=>c.User.Username==username)
+                                        .ToListAsync();
+
+        //mapper and to make it so that i load 50 by 50 comments
+        //i also need to add a bool to the comments database to check if the comment is a reply
+        return Ok(comments);
+    }
+
 }

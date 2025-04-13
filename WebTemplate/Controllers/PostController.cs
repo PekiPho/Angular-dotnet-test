@@ -309,7 +309,30 @@ public class PostController:ControllerBase{
         if(!posts.Any())
             return Ok(null);
 
-        var postsDto=Mapper.Map<PostDto>(posts);
+        var postsDto=Mapper.Map<List<PostDto>>(posts);
+
+        return Ok(postsDto);
+    }
+
+    [HttpGet("GetXVotedPostsByUser/{username}/{vote}")]
+    public async Task<ActionResult> GetXVotedPostByUser(string username,bool vote){
+
+        var v=-1;
+        if(vote)
+            v=1;
+        else v=0;
+
+        var posts=await Context.Posts.Include(c=>c.Media)
+                                        .Include(c=>c.User)
+                                        .Include(c=>c.Community)
+                                        .Include(c=>c.Comments)
+                                        .Include(c=>c.Votes)
+                                        .Where(c=>c.Votes.Any(a=>a.User.Username==username && a.VoteValue==vote))
+                                        .ToListAsync();
+
+        // i need to load 50 by 50 as well here
+        
+        var postsDto=Mapper.Map<List<PostDto>>(posts);
 
         return Ok(postsDto);
     }

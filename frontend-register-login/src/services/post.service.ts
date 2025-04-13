@@ -44,4 +44,12 @@ export class PostService {
   getPost(postId:string){
     return this.http.get<Post>(`${this.url}/Post/GetPostByID/${postId}`);
   }
+
+  getPostsFromUser(username:string){
+    return this.http.get<Post[]>(`${this.url}/Post/GetPostByUser/${username}`);
+  }
+
+  getXVotedPostsFromUser(username:string,vote:boolean){
+    return this.http.get<Post[]>(`${this.url}/Post/GetXVotedPostsByUser/${username}/${vote}`);
+  }
 }
