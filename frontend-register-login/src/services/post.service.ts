@@ -46,7 +46,7 @@ export class PostService {
   }
 
   getPostsFromUser(username:string){
-    return this.http.get<Post[]>(`${this.url}/Post/GetPostByUser/${username}`);
+    return this.http.get<Post[]>(`${this.url}/Post/GetPostsByUser/${username}`);
   }
 
   getXVotedPostsFromUser(username:string,vote:boolean){

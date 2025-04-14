@@ -7,16 +7,22 @@
             <div class="btn btn-dark downvoted" (click)="changeNumber(3);">Downvoted</div>
         </div>
         <div class="" *ngIf="loadNumber==0">
-
+            <div class="" *ngFor="let post of this.posts">
+                <post [post]="post"></post>
+            </div>
         </div>
         <div class="" *ngIf="loadNumber==1">
 
         </div>
         <div class="" *ngIf="loadNumber==2">
-
+            <div class="" *ngFor="let post of this.upVoted">
+                <post [post]="post"></post>
+            </div>
         </div>
         <div class="" *ngIf="loadNumber==3">
-            
+            <div class="" *ngFor="let post of this.downVoted">
+                <post [post]="post"></post>
+            </div>
         </div>
     </div>
     <div class="sidebar">

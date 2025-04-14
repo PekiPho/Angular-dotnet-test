@@ -13,7 +13,8 @@
 .content{
     grid-area: 1 / 1 / 6 / 5;
 
-    overflow-y: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 .sidebar{
     grid-area: 1 / 5 / 6 / 6;
@@ -44,3 +45,33 @@
 .posts{
     margin-left: 3rem;
 }
+
+
+
+.content {
+    --sb-track-color: #f0f8ff;
+    --sb-thumb-color: #ff4500;
+    --sb-size: 6px;
+  }
+  
+  .content::-webkit-scrollbar {
+    width: var(--sb-size)
+  }
+  
+  .content::-webkit-scrollbar-track {
+    background: var(--sb-track-color);
+    border-radius: 10px;
+  }
+  
+  .content::-webkit-scrollbar-thumb {
+    background: var(--sb-thumb-color);
+    border-radius: 10px;
+    
+  }
+  
+  @supports not selector(::-webkit-scrollbar) {
+    .content {
+      scrollbar-color: var(--sb-thumb-color)
+                       var(--sb-track-color);
+    }
+  }

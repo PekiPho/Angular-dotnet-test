@@ -1,31 +1,48 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { HistoryComponent } from "../history/history.component";
-import { NgIf } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { Post } from '../../interfaces/post';
 import { Comment } from '../../interfaces/comment';
 import { PostService } from '../../services/post.service';
 import { NavigationEnd, Router } from '@angular/router';
+import { PostComponent } from "../post/post.component";
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'profile',
-  imports: [NgIf],
+  imports: [NgIf, NgFor, PostComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit,OnDestroy {
 
   constructor(private postService:PostService,private route:Router)
   {}
 
-  ngOnInit(): void {
-    
-    this.route.events.subscribe((event)=>{
-      if(event instanceof NavigationEnd){
-        var seg= this.route.url.split("/");
+  private routeSubs:Subscription= new Subscription();
 
-        this.user=seg[seg.length-1];
-      }
-    })
+  ngOnInit(): void {
+
+    var seg=this.route.url.split('/');
+
+    this.user=seg[seg.length-1];
+    
+    // this.routeSubs= this.route.events.subscribe((event)=>{
+    //   if(event instanceof NavigationEnd){
+    //     var seg= this.route.url.split("/");
+
+    //     seg.forEach(s=>{
+    //       console.log(s);
+    //     })
+    //     console.log(this.user);
+    //   }
+    // })
+
+  }
+
+  ngOnDestroy(): void {
+    if(this.routeSubs)
+      this.routeSubs.unsubscribe();
   }
 
   private user:string='';
@@ -34,6 +51,8 @@ export class ProfileComponent implements OnInit {
 
   changeNumber(value:number){
     this.loadNumber=value;
+
+    this.loadData();
   }
 
   public posts:Post[]=[];
@@ -42,6 +61,9 @@ export class ProfileComponent implements OnInit {
   public downVoted:Post[]=[];
 
   loadData(){
+
+    console.log(this.user);
+
     if(this.loadNumber===0){
       this.loadPosts();
     }
@@ -67,10 +89,11 @@ export class ProfileComponent implements OnInit {
 
     // need to make it to load 50 by 50
     // will do some other time
-    
+    console.log(this.user);
     this.postService.getPostsFromUser(this.user).subscribe({
       next:(data)=>{
         this.posts=data;
+        this.loadMedia();
       },
       error:(err)=>{
         console.log(err);
@@ -92,6 +115,7 @@ export class ProfileComponent implements OnInit {
     this.postService.getXVotedPostsFromUser(this.user,true).subscribe({
       next:(data)=>{
         this.upVoted=data;
+        this.loadMedia();
       },
       error:(err)=>{
         console.log(err);
@@ -108,11 +132,54 @@ export class ProfileComponent implements OnInit {
     this.postService.getXVotedPostsFromUser(this.user,false).subscribe({
       next:(data)=>{
         this.downVoted=data;
+        //console.log(data);
+        this.loadMedia();
       },
       error:(err)=>{
         console.log(err);
       }
     });
+  }
+
+  loadMedia(){
+    if(this.loadNumber===0){
+      this.posts.forEach(post=>{
+        this.postService.getMediaFromPost(post.id).subscribe({
+          next:(data)=>{
+            post.mediaIds=data;
+          },
+          error:(err)=>{
+            console.log(err);
+          }
+        });
+      })
+    }
+
+    if(this.loadNumber===2){
+      this.upVoted.forEach(post=>{
+        this.postService.getMediaFromPost(post.id).subscribe({
+          next:(data)=>{
+            post.mediaIds=data;
+          },
+          error:(err)=>{
+            console.log(err);
+          }
+        });
+      })
+    }
+
+    if(this.loadNumber===3){
+      this.downVoted.forEach(post=>{
+        this.postService.getMediaFromPost(post.id).subscribe({
+          next:(data)=>{
+            post.mediaIds=data;
+          },
+          error:(err)=>{
+            console.log(err);
+          }
+        });
+      })
+    }
   }
 
 }

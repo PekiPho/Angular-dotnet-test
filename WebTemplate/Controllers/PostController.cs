@@ -303,11 +303,9 @@ public class PostController:ControllerBase{
                                     .Include(c=>c.Media)
                                     .Include(c=>c.Comments)
                                     .Include(c=>c.Community)
+                                    .Include(c=>c.Votes)
                                     .Where(c=>c.User.Username==username)
                                     .ToListAsync();
-
-        if(!posts.Any())
-            return Ok(null);
 
         var postsDto=Mapper.Map<List<PostDto>>(posts);
 
