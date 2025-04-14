@@ -107,6 +107,9 @@ h2{
     border: none;
     cursor: pointer;
     transition: color 0.3s;
+    //color: aliceblue;
+}
+button{
     color: aliceblue;
 }
 
@@ -130,4 +133,22 @@ h2{
 
 .share-btn:hover{
     background-color: grey;
+}
+
+//vote logic
+
+.upvote-btn:hover {
+    color: orangered;
+  }
+  
+.downvote-btn:hover {
+    color: #007bff;
+}
+
+.upvoted{
+    color: orangered;
+}
+
+.downvoted{
+    color: #007bff;
 }
