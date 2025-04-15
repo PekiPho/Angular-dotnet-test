@@ -135,6 +135,60 @@ button{
     background-color: grey;
 }
 
+
+// comment input
+
+.add-comments{
+    width: 75%;
+    padding-top: 1rem;
+}
+
+.textarea-wrapper{
+    position: relative;
+    width: 100%;
+}
+
+.textarea-wrapper>textarea{
+    all: unset;
+    width: calc(100% - 12px);
+    
+    min-height: 32px;
+    max-height: 150px;
+    border-radius: 20px;
+
+    padding:8px 0px 8px 10px;
+    border: 1px solid aliceblue;
+    background-attachment: #2d2d2d;
+    color: aliceblue;
+    resize: none;
+    overflow-y: auto;
+}
+
+// .add-comments > textarea::-webkit-scrollbar {
+//     display: none;
+// }
+
+.textarea-wrapper>textarea:hover{
+    border: 1px solid orangered;
+}
+
+.textarea-wrapper>textarea:focus{
+    min-height: 120px;
+    padding-bottom: 40px;
+    border: 1px solid orangered;
+}
+
+.textarea-wrapper>button{
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+    border-radius: 5px;
+    background-color: orangered;
+    color: aliceblue;
+    cursor:pointer;
+
+}
+
 //vote logic
 
 .upvote-btn:hover {

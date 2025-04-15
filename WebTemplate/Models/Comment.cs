@@ -26,7 +26,24 @@ public class Comment
 
     public List<Comment>? Replies { get; set; } = new(); // Collection of replies
 
-    public int Vote { get; set; }
+    //public int Vote { get; set; }
 
     public DateTime DateOfComment { get; set; } = DateTime.Now;
+
+
+    public bool IsDeleted { get; set; }=false;
+
+    public List<CommentVote>? Votes { get; set; }=new();
+
+    [NotMapped]
+    public int Upvotes => Votes.Count(c=>c.VoteValue);
+
+    [NotMapped]
+    public int DownVotes => Votes.Count(c=>!c.VoteValue);
+
+    [NotMapped]
+    public int TotalVotes => Votes.Count;
+
+    [NotMapped]
+    public double Ratio => TotalVotes == 0 ? 0 : (double)Upvotes/DownVotes;
 }

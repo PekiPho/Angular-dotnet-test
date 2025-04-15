@@ -17,6 +17,8 @@ public class IspitContext : DbContext
 
     public DbSet<Vote> Votes { get; set; }
 
+    public DbSet<CommentVote> CommentVotes { get; set; }
+
     public IspitContext(DbContextOptions options) : base(options)
     {
         

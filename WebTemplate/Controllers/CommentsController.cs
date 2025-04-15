@@ -1,4 +1,6 @@
+using AutoMapper;
 using Microsoft.VisualBasic;
+using WebTemplate.Dtos;
 
 namespace WebTemplate.Controllers;
 
@@ -8,8 +10,11 @@ public class CommentController:ControllerBase{
 
     public IspitContext Context {get;set;}
 
-    public CommentController(IspitContext context){
+    private readonly IMapper Mapper;
+
+    public CommentController(IspitContext context,IMapper mapper){
         Context=context;
+        Mapper=mapper;
     }
 
 
@@ -28,7 +33,8 @@ public class CommentController:ControllerBase{
 
 
         //wont work because of cycles
-        //need to make a mapper
+        //DONE need to make a mapper
+        var commentsDto=Mapper.Map<List<CommentDto>>(comments);
         return Ok(comments);
     }
 
@@ -42,12 +48,27 @@ public class CommentController:ControllerBase{
 
         comment.Post=post;
         comment.User=user;
+        comment.DateOfComment=DateTime.Now;
+
+        var vote=new CommentVote{
+            VoteValue=true,
+            User=user,
+            Comment=comment
+        };
+
+        if(comment.Votes==null)
+            comment.Votes= new List<CommentVote>();
+
+        comment.Votes.Add(vote);
+
+        await Context.CommentVotes.AddAsync(vote);
 
         await Context.Comments.AddAsync(comment);
         await Context.SaveChangesAsync();
 
-        //need to map this as well probably
-        return Ok(comment);
+        //DONE need to map this as well probably
+        var commentDto= Mapper.Map<CommentDto>(comment);
+        return Ok(commentDto);
     }
 
     [HttpPut("UpdateComment/{commentId}/{content}")]
@@ -69,8 +90,9 @@ public class CommentController:ControllerBase{
         await Context.SaveChangesAsync();
 
 
-        //also needs a mapper
-        return Ok(comment);
+        //DONE also needs a mapper
+        var commentDto= Mapper.Map<CommentDto>(comment);
+        return Ok(commentDto);
     }
 
     [HttpDelete("DeleteComment/{commentId}")]
@@ -81,11 +103,15 @@ public class CommentController:ControllerBase{
         if(comment==null)
             return BadRequest("Comment does not exist");
 
-        Context.Comments.Remove(comment);
+        comment.IsDeleted=true;
+        comment.Content="[deleted]";
+        comment.User=null;
+
+        Context.Comments.Update(comment);
 
         await Context.SaveChangesAsync();
 
-        return Ok("Deleted");
+        return Ok(true);
     }
 
     [HttpGet("GetCommentsFromUser/{username}")]
@@ -97,8 +123,9 @@ public class CommentController:ControllerBase{
                                         .ToListAsync();
 
         //mapper and to make it so that i load 50 by 50 comments
-        //i also need to add a bool to the comments database to check if the comment is a reply
-        return Ok(comments);
+        //DONE i also need to add a bool to the comments database to check if the comment is a reply
+        var commentsDto=Mapper.Map<List<CommentDto>>(comments);
+        return Ok(commentsDto);
     }
 
 }

@@ -48,3 +48,25 @@ public class MediaDto{
 
     public Guid PostId { get; set; }
 }
+
+
+public class CommentDto{
+    public Guid Id { get; set; }
+
+    public string? Content { get; set; }
+
+    public DateTime DateOfComment { get; set; }
+
+    public bool IsDeleted { get; set; }
+
+    public string? Username { get; set; }
+
+    public Guid PostId { get; set; }
+
+    public Guid? ReplyToId { get; set; }
+
+    public List<CommentDto>? Replies { get; set; }
+
+    public int Vote { get; set; }
+
+}
