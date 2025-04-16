@@ -29,7 +29,9 @@
       </div>
   
       <div class="post-preview" *ngIf="isLink && post.mediaIds && post.mediaIds.length > 0">
-        <img [src]="post.mediaIds[0].url" alt="Image" class="post-image" />
+        <a [href]="post.description">
+          <img [src]="post.mediaIds[0].url" alt="Image" class="post-image" />
+        </a>
       </div>
     </div>
   </div>

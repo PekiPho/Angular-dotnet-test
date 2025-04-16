@@ -123,4 +123,9 @@ export class PostDetailComponent implements OnInit {
       }
     })
   }
+
+
+  addComment(){
+    
+  }
 }

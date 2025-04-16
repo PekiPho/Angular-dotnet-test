@@ -3,8 +3,12 @@
         <div class="post" *ngIf="post!=null">
             <h2>{{post.title}}</h2>
             <div class="" *ngIf="hasMedia && post.mediaIds && post.mediaIds.length > 0">
-                <img [src]="post.mediaIds[0].url" alt="Image" class="post-image">
-                <p class="link-bottom">{{post.mediaIds[0].url}}</p>
+                <a [href]="post.description">
+                    <img [src]="post.mediaIds[0].url" alt="Image" class="post-image">
+                </a>
+                <a [href]="post.description">
+                    <p class="link-bottom">{{post.description}}</p>
+                </a>
             </div>
             <div class="desc-text" *ngIf="hasMedia===false">
                 {{post.description}}
@@ -26,7 +30,7 @@
         <div class="add-comments">
             <div class="textarea-wrapper">
                 <textarea type="text" placeholder="Add Comment" rows="1"></textarea>
-                <button class="btn btn-small">Add</button>
+                <button class="btn btn-small" (click)="addComment();">Add</button>
             </div>
         </div>
         <div class="comments">

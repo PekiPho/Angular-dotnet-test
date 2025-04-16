@@ -37,6 +37,7 @@ export class ProfileComponent implements OnInit,OnDestroy {
     //     console.log(this.user);
     //   }
     // })
+    this.loadData();
 
   }
 
@@ -46,7 +47,7 @@ export class ProfileComponent implements OnInit,OnDestroy {
   }
 
   private user:string='';
-  public loadNumber:number=-1;
+  public loadNumber:number=0;
 
 
   changeNumber(value:number){

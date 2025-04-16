@@ -9,7 +9,7 @@ export interface Post {
     title: string;
     description?: string;
     mediaIds: Media[] | null;
-    comments?: number[];
+    comments?: string[];
     username: string;
     vote?: number;
     dateOfPost?: string; 

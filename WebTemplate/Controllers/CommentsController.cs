@@ -38,13 +38,32 @@ public class CommentController:ControllerBase{
         return Ok(comments);
     }
 
-    [HttpPost("CreateComment/{username}/{postId}")]
-    public async Task<ActionResult> CreateComment(string username,Guid postId,[FromBody]Comment comment){
+    [HttpPost("CreateComment/{username}/{postId}/{replyToId}")]
+    public async Task<ActionResult> CreateComment(string username,Guid postId,string replyToId,[FromBody]Comment comment){
         var post=await Context.Posts.FirstOrDefaultAsync(c=>c.Id==postId);
         var user=await Context.Users.FirstOrDefaultAsync(c=>c.Username==username);
 
         if(post==null || user==null)
             return BadRequest("User or post invalid");
+
+
+        if(replyToId!= "null"){
+            Guid replyGuid;
+            Guid.TryParse(replyToId,out replyGuid);
+            var parent=await Context.Comments.Where(c=>c.Id==replyGuid).FirstOrDefaultAsync();
+
+            if(parent==null){
+                return BadRequest("Parent comment does not exist");
+            }
+
+            if(parent.Replies==null){
+                parent.Replies=new List<Comment>();
+            }
+
+            parent.Replies.Add(comment);
+            comment.ReplyTo=parent;
+        }
+        
 
         comment.Post=post;
         comment.User=user;
