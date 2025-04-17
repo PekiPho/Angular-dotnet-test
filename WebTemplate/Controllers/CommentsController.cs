@@ -28,14 +28,14 @@ public class CommentController:ControllerBase{
                                         .Include(c=>c.User)
                                         .Where(c=>c.Post!.Id==postId).ToListAsync();
 
-        if(!comments.Any())
-            return Ok(null);
+        // if(!comments.Any())
+        //     return Ok(null);
 
 
         //wont work because of cycles
         //DONE need to make a mapper
         var commentsDto=Mapper.Map<List<CommentDto>>(comments);
-        return Ok(comments);
+        return Ok(commentsDto);
     }
 
     [HttpPost("CreateComment/{username}/{postId}/{replyToId}")]
@@ -133,6 +133,43 @@ public class CommentController:ControllerBase{
         return Ok(true);
     }
 
+    [HttpDelete("ActualDelete/{commentId}")]
+    public async Task<ActionResult> ActualDelete(Guid commentId){
+
+        var comment = await Context.Comments.Include(c=>c.Replies).Where(c=>c.Id==commentId).FirstOrDefaultAsync();
+
+        if(comment==null)
+            return BadRequest("Comment does not exist");
+
+        await DeleteChild(comment);
+
+        Context.Comments.Remove(comment);
+
+        await Context.SaveChangesAsync();
+
+        return Ok("Deleted comment with its children");
+    }
+
+    private async Task DeleteChild(Comment parent){
+        var children=await Context.Comments
+                                    .Include(c=>c.Replies)
+                                    .Include(c=>c.ReplyTo).Where(c=>c.ReplyTo.Id==parent.Id).ToListAsync();
+
+        var votes=await Context.CommentVotes.Include(c=>c.Comment).Where(c=>c.Comment.Id==parent.Id).ToListAsync();
+
+        Context.CommentVotes.RemoveRange(votes);
+
+        foreach(var child in children){
+
+            await DeleteChild(child);
+
+            Context.Comments.Remove(child);
+
+            await Context.SaveChangesAsync();
+        }
+        
+    }
+
     [HttpGet("GetCommentsFromUser/{username}")]
     public async Task<ActionResult> GetCommentsFromUser(string username){
 
@@ -145,6 +182,13 @@ public class CommentController:ControllerBase{
         //DONE i also need to add a bool to the comments database to check if the comment is a reply
         var commentsDto=Mapper.Map<List<CommentDto>>(comments);
         return Ok(commentsDto);
+    }
+
+    [HttpGet("GetCommentCount/{postId}")]
+    public async Task<ActionResult> GetCommentCount(Guid postId){
+        var comments=await Context.Comments.Where(c=>c.Post.Id==postId).CountAsync();
+
+        return Ok(comments);
     }
 
 }

@@ -7,10 +7,13 @@ import { NgIf } from '@angular/common';
 import { Media } from '../../interfaces/media';
 import { UserServiceService } from '../../services/user-service.service';
 import { User } from '../../interfaces/user';
+import { CommentService } from '../../services/comment.service';
+import { Comment } from '../../interfaces/comment';
+import { CommentRecursionComponent } from "./comment-recursion/comment-recursion.component";
 
 @Component({
   selector: 'post-detail',
-  imports: [CommunityInfoComponent,NgIf],
+  imports: [CommunityInfoComponent, NgIf, CommentRecursionComponent],
   templateUrl: './post-detail.component.html',
   styleUrl: './post-detail.component.scss'
 })
@@ -19,6 +22,7 @@ export class PostDetailComponent implements OnInit {
   constructor(private postService:PostService,
     private activatedRoute:ActivatedRoute,
     private userService:UserServiceService,
+    private commentService:CommentService,
   ){}
 
   private user={} as User;
@@ -29,6 +33,8 @@ export class PostDetailComponent implements OnInit {
   public hasVoted:boolean | null=null;
   public commCount:number=0;
   public post={}as Post;
+
+  public comments:Comment[]=[];
 
   ngOnInit(): void {
     
@@ -66,13 +72,25 @@ export class PostDetailComponent implements OnInit {
                 else this.hasVoted=false;
               }
 
-              console.log(this.hasVoted);
+              //console.log(this.hasVoted);
             },
             error:(err)=>{
               console.log(err);
             }
-          })
-          
+          });
+
+
+          this.commentService.getCommentsFromPost(this.postId).subscribe({
+            next:(data)=>{
+              this.comments=[...data];
+              this.commCount++;
+
+              console.log(this.comments);
+            },
+            error:(err)=>{
+              console.log(err);
+            }
+          });          
           
           this.postService.getMediaFromPost(this.postId).subscribe({
             next:(data)=>{
@@ -124,8 +142,28 @@ export class PostDetailComponent implements OnInit {
     })
   }
 
-
   addComment(){
-    
+    var content=(document.querySelector(".comment-send") as HTMLTextAreaElement).value;
+
+    //console.log(comment);
+    var comm={}as Comment;
+
+    comm.content=content;
+    comm.username=this.user.username;
+    comm.postId=this.postId;
+    comm.replyToId="null";
+
+    this.commentService.addComment(this.user.username,this.postId,"null",comm).subscribe({
+      next:(data)=>{
+        comm=data;
+        this.comments=[comm ,...this.comments];
+        (document.querySelector(".comment-send") as HTMLTextAreaElement).value='';
+
+        //console.log(content);
+      },
+      error:(err)=>{
+        console.log(err);
+      }
+    })
   }
 }

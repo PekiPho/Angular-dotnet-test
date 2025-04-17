@@ -6,6 +6,7 @@ import { PostService } from '../../services/post.service';
 import { UserServiceService } from '../../services/user-service.service';
 import { User } from '../../interfaces/user';
 import { Router } from '@angular/router';
+import { CommentService } from '../../services/comment.service';
 
 @Component({
   selector: 'post',
@@ -18,7 +19,8 @@ export class PostComponent implements OnInit{
   constructor(private sanitizer:DomSanitizer,
     private userService:UserServiceService,
     private postService:PostService,
-    private router:Router
+    private router:Router,
+    private commentService:CommentService,
   ){}
 
   @Input() public post= {} as Post;
@@ -59,6 +61,16 @@ export class PostComponent implements OnInit{
         console.log(err);
       },
       complete:()=>{}
+    });
+
+    //comm count fetch
+    this.commentService.getCommentCount(this.post.id).subscribe({
+      next:(data)=>{
+        this.commCount=data;
+      },
+      error:(err)=>{
+        console.log(err);
+      }
     });
 
    //console.log(this.post);

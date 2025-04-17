@@ -2,16 +2,13 @@ import { Post } from "./post";
 import { User } from "./user";
 
 export interface Comment {
-    id: number;
-    postId: number;
-    postCommunityId: number;
-    post: Post;
-    content: string;
-    userId: number;
-    user: User;
-    replyToId?: number; 
-    replyTo?: Comment; 
+    id?: number;
+    postId?: string;
+    content?: string;
+    username?: string;
+    replyToId?: string; 
     replies?: Comment[]; 
-    vote: number;
-    dateOfComment: string; 
+    vote?: number;
+    dateOfComment?: string; 
+    isDeleted?:boolean;
   }

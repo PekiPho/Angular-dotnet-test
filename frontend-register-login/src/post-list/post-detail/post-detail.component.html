@@ -29,12 +29,12 @@
         </div>
         <div class="add-comments">
             <div class="textarea-wrapper">
-                <textarea type="text" placeholder="Add Comment" rows="1"></textarea>
-                <button class="btn btn-small" (click)="addComment();">Add</button>
+                <textarea class="comment-send" type="text" placeholder="Add Comment" rows="1"></textarea>
+                <button type="button" class="btn btn-small" (mousedown)="addComment();">Add</button>
             </div>
         </div>
         <div class="comments">
-
+            <!-- <comment-recursion *ngFor="let comment of this.comments"></comment-recursion> -->
         </div>
     </div>
     <div class="sidebar">
