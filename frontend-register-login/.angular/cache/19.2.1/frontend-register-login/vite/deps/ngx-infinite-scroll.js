@@ -12,10 +12,8 @@ import {
   ɵɵdefineInjector,
   ɵɵdefineNgModule,
   ɵɵdirectiveInject
-} from "./chunk-QX2COTFA.js";
+} from "./chunk-U62FLTWO.js";
 import {
-  __spreadProps,
-  __spreadValues,
   filter,
   fromEvent,
   map,
@@ -23,7 +21,11 @@ import {
   of,
   tap,
   throttleTime
-} from "./chunk-S35MAB2V.js";
+} from "./chunk-P6U2JBMQ.js";
+import {
+  __spreadProps,
+  __spreadValues
+} from "./chunk-WDMUDEB6.js";
 
 // node_modules/ngx-infinite-scroll/fesm2022/ngx-infinite-scroll.mjs
 function resolveContainerElement(selector, scrollWindow, defaultElement, fromRoot) {

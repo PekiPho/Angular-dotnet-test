@@ -1,1 +1,33 @@
-<p>comment-recursion works!</p>
+<div class="comment" [style.margin-left.px]="level*20">
+    <div class="header">
+        <p class="user" *ngIf="!comment.isDeleted">{{comment.username}}</p>
+        <p class="user" *ngIf="comment.isDeleted">[deleted]</p>
+        <p class="date">{{date}}</p>
+    </div>
+
+
+    <div class="comm-body" *ngIf="!comment.isDeleted">
+        {{comment.content}}
+    </div>
+    <div class="comm-body" *ngIf="comment.isDeleted">
+        [deleted]
+    </div>
+
+    <div class="post-actions">
+        <div class="vote-comments">
+          <div class="vote-buttons">
+            <button class="upvote-btn" (click)="voteOnComment(true);" [class.upvoted]="voted===true">▲</button>
+            <div class="vote-count"></div>
+            <button class="downvote-btn"(click)="voteOnComment(false);" [class.downvoted]="voted===false">▼</button>
+          </div>
+        </div>
+        <button class="reply-btn">Reply</button>
+    </div>
+
+    <div class="" *ngIf="comment.replies && comment.replies.length>0">
+        <div class="" *ngFor="let reply of comment.replies">
+            <comment-recursion [comment]="reply" [level]="level+1"></comment-recursion>
+        </div>
+    </div>
+
+</div>

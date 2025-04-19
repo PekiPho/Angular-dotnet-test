@@ -34,7 +34,7 @@
             </div>
         </div>
         <div class="comments">
-            <!-- <comment-recursion *ngFor="let comment of this.comments"></comment-recursion> -->
+            <comment-recursion *ngFor="let comment of this.root" [comment]="comment" [level]="0"></comment-recursion>
         </div>
     </div>
     <div class="sidebar">

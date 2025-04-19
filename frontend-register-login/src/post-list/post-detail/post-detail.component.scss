@@ -141,6 +141,8 @@ button{
 .add-comments{
     width: 75%;
     padding-top: 1rem;
+
+    margin-bottom: 1.5rem;
 }
 
 .textarea-wrapper{
@@ -162,6 +164,11 @@ button{
     color: aliceblue;
     resize: none;
     overflow-y: auto;
+}
+
+.comments{
+    width:75%;
+    height:auto;
 }
 
 // .add-comments > textarea::-webkit-scrollbar {

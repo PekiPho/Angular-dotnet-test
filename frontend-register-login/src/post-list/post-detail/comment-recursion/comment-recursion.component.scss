@@ -1,0 +1,98 @@
+.comment{
+    width:100%;
+    background-color: #2d2d2d;
+    border-radius: 10px;
+
+    margin-bottom: 1rem;
+}
+
+.post-actions{
+    width: 100%;
+    height: 30px;
+}
+
+
+.comm-body{
+    padding-left: 1rem;
+    padding-bottom: 0.5rem;
+}
+
+.header{
+    padding-top: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.user{
+    padding-left: 1rem;
+}
+.date{
+    padding-right: 1rem;
+}
+
+
+
+
+.post-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+  }
+  
+  .vote-buttons {
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    padding-bottom: 5px;
+  }
+  
+  .vote-buttons button {
+    font-size: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  
+  .upvote-btn:hover {
+    color: orangered;
+  }
+  
+  .downvote-btn:hover {
+    color: #007bff;
+  }
+  
+  .vote-count {
+    font-size: 16px;
+    margin: 0 10px;
+  }
+
+  button {
+    color: aliceblue;
+  }
+  
+  .upvoted {
+    color: orangered;
+  }
+  
+  .downvoted {
+    color: #007bff;
+  }
+
+  .vote-comments{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 40%;
+  }
+  .reply-btn{
+    all:unset;
+    color:aliceblue;
+    background-color: darken($color: orangered, $amount: 10);
+    padding:6px;
+    border-radius: 10px;
+
+    margin-right: 10px;
+    margin-bottom: 5px;
+  }

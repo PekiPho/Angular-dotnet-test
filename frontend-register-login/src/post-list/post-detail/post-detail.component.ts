@@ -3,7 +3,7 @@ import { CommunityInfoComponent } from "../community-info/community-info.compone
 import { PostService } from '../../services/post.service';
 import { ActivatedRoute } from '@angular/router';
 import { Post, Vote } from '../../interfaces/post';
-import { NgIf } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { Media } from '../../interfaces/media';
 import { UserServiceService } from '../../services/user-service.service';
 import { User } from '../../interfaces/user';
@@ -13,7 +13,7 @@ import { CommentRecursionComponent } from "./comment-recursion/comment-recursion
 
 @Component({
   selector: 'post-detail',
-  imports: [CommunityInfoComponent, NgIf, CommentRecursionComponent],
+  imports: [CommunityInfoComponent, NgIf, CommentRecursionComponent,NgFor],
   templateUrl: './post-detail.component.html',
   styleUrl: './post-detail.component.scss'
 })
@@ -83,14 +83,33 @@ export class PostDetailComponent implements OnInit {
           this.commentService.getCommentsFromPost(this.postId).subscribe({
             next:(data)=>{
               this.comments=[...data];
-              this.commCount++;
 
-              console.log(this.comments);
+              this.commentDict={};
+
+              this.comments.forEach(comment=>{
+                var id=comment.id as string;
+                this.commentDict[id]=comment;
+              });
+              //console.log(this.comments);
+
+              
+              this.root=[];
+              this.buildTree();
             },
             error:(err)=>{
               console.log(err);
             }
-          });          
+          }); 
+          
+          this.commentService.getCommentCount(this.postId).subscribe({
+            next:(data)=>{
+              console.log(data);
+              this.commCount=data;
+            },
+            error:(err)=>{
+              console.log(err);
+            }
+          })
           
           this.postService.getMediaFromPost(this.postId).subscribe({
             next:(data)=>{
@@ -159,6 +178,9 @@ export class PostDetailComponent implements OnInit {
         this.comments=[comm ,...this.comments];
         (document.querySelector(".comment-send") as HTMLTextAreaElement).value='';
 
+        this.commentDict={};
+        this.root=[];
+        this.buildTree();
         //console.log(content);
       },
       error:(err)=>{
@@ -166,4 +188,29 @@ export class PostDetailComponent implements OnInit {
       }
     })
   }
+
+  public commentDict:{[id:string]:Comment}={};
+  public root:Comment[]=[];
+
+  buildTree(){
+    
+
+  //console.log(this.comments);
+   Object.values(this.commentDict).forEach(comment => {
+      if(comment.replyToId){
+        const parent=this.commentDict[comment.replyToId];
+
+        if(parent){
+          parent.replies=parent.replies || [];
+          parent.replies.push(comment);
+        }
+      }
+      else{
+        this.root.push(comment);
+      }
+    });
+
+    console.log(this.root);
+  }
+
 }
