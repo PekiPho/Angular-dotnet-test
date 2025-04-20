@@ -193,6 +193,11 @@ export class PostDetailComponent implements OnInit {
   public root:Comment[]=[];
 
   buildTree(){
+    this.root=[];
+
+  Object.values(this.commentDict).forEach(comment => {
+    comment.replies = [];
+  });
     
 
   //console.log(this.comments);
@@ -210,7 +215,7 @@ export class PostDetailComponent implements OnInit {
       }
     });
 
-    console.log(this.root);
+    //console.log(this.root);
   }
 
 }

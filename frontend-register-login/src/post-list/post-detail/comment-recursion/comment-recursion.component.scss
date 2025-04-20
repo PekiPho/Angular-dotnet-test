@@ -96,3 +96,45 @@
     margin-right: 10px;
     margin-bottom: 5px;
   }
+
+  //reply css
+  .reply-box {
+    margin-top: 8px;
+  }
+  
+  .reply-textarea {
+    all:unset;
+
+    border-radius: 15px;
+    background-color: lighten($color: #2d2d2d, $amount: 10);
+    width: calc(100% - 15px);
+    resize: vertical;
+    padding: 8px;
+    font-size: 14px;
+  }
+  
+  .reply-actions {
+    margin-left: 1rem;
+    margin-top: 4px;
+
+    display: flex;
+    flex-direction: row;
+    gap:1rem;
+  }
+  
+  .submit-reply-btn,
+  .cancel-reply-btn {
+    margin-right: 8px;
+    padding: 4px 10px;
+
+    all: unset;
+    color: aliceblue;
+    border-radius: 10px;
+    background-color: orangered;
+    height: 30px;
+    width: 75px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }

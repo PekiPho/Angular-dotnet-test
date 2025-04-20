@@ -1,4 +1,4 @@
-<div class="comment" [style.margin-left.px]="level*20">
+<div class="comment" [style.margin-left.px]="level*20" [style.width]="getWidth(level)">
     <div class="header">
         <p class="user" *ngIf="!comment.isDeleted">{{comment.username}}</p>
         <p class="user" *ngIf="comment.isDeleted">[deleted]</p>
@@ -21,8 +21,22 @@
             <button class="downvote-btn"(click)="voteOnComment(false);" [class.downvoted]="voted===false">▼</button>
           </div>
         </div>
-        <button class="reply-btn">Reply</button>
+        
+        <button class="reply-btn" (click)="toggleReply()">Reply</button>
     </div>
+
+    <div class="reply-box" *ngIf="this.showReply">
+        <textarea
+          class="reply-textarea"
+          [(ngModel)]="replyContent"
+          placeholder="Write a reply..."
+          rows="3"
+        ></textarea>
+        <div class="reply-actions">
+          <button class="submit-reply-btn" (click)="submitReply()">Submit</button>
+          <button class="cancel-reply-btn" (click)="toggleReply()">Cancel</button>
+        </div>
+      </div>
 
     <div class="" *ngIf="comment.replies && comment.replies.length>0">
         <div class="" *ngFor="let reply of comment.replies">
