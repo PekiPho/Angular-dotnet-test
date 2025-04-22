@@ -103,7 +103,7 @@ export class PostDetailComponent implements OnInit {
           
           this.commentService.getCommentCount(this.postId).subscribe({
             next:(data)=>{
-              console.log(data);
+              //console.log(data);
               this.commCount=data;
             },
             error:(err)=>{

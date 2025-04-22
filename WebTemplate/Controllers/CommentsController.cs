@@ -26,6 +26,7 @@ public class CommentController:ControllerBase{
                                         .Include(c=>c.Replies)
                                         .Include(c=>c.ReplyTo)
                                         .Include(c=>c.User)
+                                        .Include(c=>c.Votes)
                                         .Where(c=>c.Post!.Id==postId).ToListAsync();
 
         // if(!comments.Any())

@@ -10,7 +10,7 @@ public class MappingProfile:Profile{
             .ForMember(a=>a.CommunityName,b=>b.MapFrom(c=>c.Community.Name))
             .ForMember(a=>a.Username,b=>b.MapFrom(c=>c.User.Username))
             .ForMember(a=>a.MediaIds,b=>b.MapFrom(c=>c.Media.Select(d=>d.Id).ToList()))
-            .ForMember(a=>a.Vote,b=>b.MapFrom(c=>c.Upvotes-c.Downvotes));
+            .ForMember(a=>a.Vote,b=>b.MapFrom(c=>c.Vote));
 
         CreateMap<User,UserDto>()
             .ForMember(c=>c.CommentIds, a=>a.MapFrom(b=>b.Comments.Select(d=>d.Id).ToList()))

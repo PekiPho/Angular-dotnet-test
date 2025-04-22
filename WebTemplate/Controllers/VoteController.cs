@@ -107,5 +107,60 @@ public class VoteController:ControllerBase{
 
         return Ok(votes);
     }
+
+    [HttpGet("GetVoteValue/{commentId}/{username}")]
+    public async Task<ActionResult> GetVoteValue(Guid commentId,string username){
+        var val=await Context.CommentVotes.Include(c=>c.User)
+                                        .Include(c=>c.Comment)
+                                        .Where(c=>c.Comment.Id==commentId && c.User.Username==username)
+                                        .FirstOrDefaultAsync();
+
+        if(val==null)
+            return Ok(null);
+            
+        return Ok(val.VoteValue);
+    }
+
+    [HttpPost("Comment/AddCommentVote/{commentId}/{username}/{vote}")]
+    public async Task <ActionResult> AddCommentVote(Guid commentId,string username,bool vote){
+
+        bool? final=null;
+
+        var comment=await Context.Comments.Where(c=>c.Id==commentId).FirstOrDefaultAsync();
+        var user=await Context.Users.Where(c=>c.Username==username).FirstOrDefaultAsync();
+
+        if(comment==null || user==null)
+            return BadRequest("User or Comment do not exist");
+        
+        var currentVote=await Context.CommentVotes.Include(c=>c.User)
+                                        .Include(c=>c.Comment)
+                                        .Where(c=>c.Comment.Id==comment.Id && c.User.Id==user.Id)
+                                        .FirstOrDefaultAsync();
+
+        if(currentVote!=null){
+            if(currentVote.VoteValue!=vote){
+                currentVote.VoteValue=vote;
+                final=vote;
+                Context.CommentVotes.Update(currentVote);
+            }
+            else{
+                Context.CommentVotes.Remove(currentVote);
+                //await Context.SaveChangesAsync();
+            }
+        }
+        else{
+            await Context.CommentVotes.AddAsync(new CommentVote{
+                User=user,
+                Comment=comment,
+                VoteValue=vote
+            });
+
+            final=vote;
+        }
+
+        await Context.SaveChangesAsync();
+
+        return Ok(final);
+    }
     
 }

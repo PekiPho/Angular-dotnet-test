@@ -12,7 +12,7 @@ import { BehaviorSubject, distinctUntilChanged, filter, forkJoin, map, of, Subsc
 
 @Component({
   selector: 'posts',
-  imports: [PostComponent,NgIf,NgFor,InfiniteScrollDirective],
+  imports: [PostComponent, NgIf, NgFor],
   templateUrl: './posts.component.html',
   styleUrl: './posts.component.scss'
 })
@@ -52,6 +52,11 @@ export class PostsComponent implements OnInit,OnChanges,OnDestroy{
     this.routerSubscription= this.route.events.subscribe((event)=>{
       if(event instanceof NavigationEnd){
         this.loadComm();
+
+        this.sortBy = "Hot";
+        this.age = "Today";
+        this.sortByChange.emit(this.sortBy);
+        this.ageChange.emit(this.age);
 
         this.page=1;
         this.loadPosts();
@@ -100,6 +105,9 @@ export class PostsComponent implements OnInit,OnChanges,OnDestroy{
         else  
           this.posts=[...this.posts,...data];
 
+        // this.posts.forEach(post=>{
+        //   console.log(post.vote);
+        // });
         this.loadMedia();
       }
 

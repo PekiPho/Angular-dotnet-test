@@ -25,4 +25,12 @@ export class CommentService {
   getCommentCount(postId:string){
     return this.http.get<number>(`${this.url}/Comment/GetCommentCount/${postId}`);
   }
+
+  getVoteValue(commentId:string,username:string){
+    return this.http.get<boolean | null>(`${this.url}/Vote/GetVoteValue/${commentId}/${username}`);
+  }
+
+  addCommentVote(commentId:string,username:string,vote:boolean){
+    return this.http.post(`${this.url}/Vote/Comment/AddCommentVote/${commentId}/${username}/${vote}`,{});
+  }
 }

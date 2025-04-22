@@ -17,7 +17,7 @@
         <div class="vote-comments">
           <div class="vote-buttons">
             <button class="upvote-btn" (click)="voteOnComment(true);" [class.upvoted]="voted===true">▲</button>
-            <div class="vote-count"></div>
+            <div class="vote-count">{{comment.vote}}</div>
             <button class="downvote-btn"(click)="voteOnComment(false);" [class.downvoted]="voted===false">▼</button>
           </div>
         </div>

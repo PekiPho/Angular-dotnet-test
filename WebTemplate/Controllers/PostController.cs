@@ -206,6 +206,8 @@ public class PostController:ControllerBase{
 
         var posts=Context.Posts.Include(c=>c.Community)
                                     .Include(c=>c.Media)
+                                    .Include(c=>c.User)
+                                    .Include(c=>c.Votes)
                                     .Where(c=>c.Community!.Name==communityName);
 
         if(sort=="Top"){

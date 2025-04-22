@@ -46,6 +46,13 @@ export class CommentRecursionComponent implements OnInit,OnChanges{
       error:(err)=>{
         console.log(err);
       }
+    });
+
+
+    this.commentService.getVoteValue(this.comment.id!,this.user.username).subscribe({
+      next:(data)=>{
+        this.voted=data;
+      }
     })
   }
 
@@ -56,7 +63,32 @@ export class CommentRecursionComponent implements OnInit,OnChanges{
   }
 
   voteOnComment(value:boolean){
-    this.voted=value;
+    //this.voted=value;
+
+    this.commentService.addCommentVote(this.comment.id!,this.user.username,value).subscribe({
+      next:(data)=>{
+        if(data===null){
+          if(this.voted)
+            this.comment.vote!--;
+          else this.comment.vote!++;
+
+          this.voted=null;
+        }  
+        else{
+          if(this.voted===null){
+           if(data)
+            this.comment.vote!++;
+          else this.comment.vote!--;
+        }
+        else{
+          if(data)
+            this.comment.vote!+=2;
+          else this.comment.vote!-=2;
+        }
+
+        this.voted=data as boolean;
+        }
+    }});
   }
 
   toggleReply(){
