@@ -33,6 +33,8 @@ export class PostComponent implements OnInit{
 
   public voted:boolean|null=null;
 
+  public copied:boolean=false;
+
   public date:any;
 
 
@@ -124,5 +126,24 @@ export class PostComponent implements OnInit{
 
   openBigPost(){
     this.router.navigateByUrl(`/mainPage/community/${this.post.communityName}/post/${this.post.id}`);
+  }
+
+  shareLink(){
+    var base=window.location.origin;
+    var url = this.router.url.split('/mainPage')[0]+"mainPage";
+
+    var postUrl=`${base}/${url}/community/${this.post.communityName}/post/${this.post.id}`;
+
+    navigator.clipboard.writeText(postUrl).then(
+      ()=>{
+        this.copied=true;
+        setTimeout(()=>{
+          this.copied=false;
+        },3000);
+      },
+      (err)=>{
+        console.log(err);
+      }
+    );
   }
 }

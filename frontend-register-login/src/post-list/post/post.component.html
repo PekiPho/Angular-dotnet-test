@@ -24,7 +24,8 @@
               <button class="comment-btn" (click)="openBigPost();">📝 {{commCount}}</button>
             </div>
           </div>
-          <button class="share-btn">🔗Share</button>
+          <button class="share-btn" (click)="shareLink();">🔗Share</button>
+          <div *ngIf="copied">Copied to clipboard</div>
         </div>
       </div>
   

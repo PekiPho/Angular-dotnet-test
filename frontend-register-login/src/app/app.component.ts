@@ -17,10 +17,14 @@ export class AppComponent implements OnInit {
 
   constructor(private userService:UserServiceService,private route:Router){}
 
+  //private firstLoad:boolean=true;
+
   ngOnInit(): void {
     this.userService.getEntry().subscribe({
       next:(data)=>{
-        this.route.navigate(['./mainPage']);
+        if(this.route.url.includes('login') || this.route.url.includes('getStarted'))
+          this.route.navigate(['./mainPage']);
+                   
       },
       error:(err)=>{
         

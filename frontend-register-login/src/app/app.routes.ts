@@ -42,7 +42,7 @@ export const routes: Routes = [
         children:[
             {path:'',component:PostListComponent},
             { path: 'community/:name', component: CommunityComponent },
-            { path: 'community/:name/post/:postID', component: PostDetailComponent },
+            { path: 'community/:name/post/:postID', component: PostDetailComponent ,pathMatch:'full'},
             { path: 'profile/:userID', component: ProfileComponent},
         ]
     }

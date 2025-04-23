@@ -67,6 +67,7 @@ export class CommentRecursionComponent implements OnInit,OnChanges{
 
     this.commentService.addCommentVote(this.comment.id!,this.user.username,value).subscribe({
       next:(data)=>{
+        //var votee=JSON.parse(data) as boolean | null;
         if(data===null){
           if(this.voted)
             this.comment.vote!--;
