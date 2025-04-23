@@ -146,4 +146,8 @@ export class PostComponent implements OnInit{
       }
     );
   }
+
+  navigate(){
+    this.router.navigateByUrl(`/mainPage/community/${this.post.communityName}/post/${this.post.id}`);
+  }
 }

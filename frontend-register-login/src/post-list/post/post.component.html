@@ -1,15 +1,23 @@
 <div class="post">
+  <div class="info">
+    <div class="comm-user">
+      <h5>{{post.communityName}}</h5>
+      <h6>{{post.username}}</h6>
+    </div>
+    
+    <div class="small">{{date}}</div>
+  </div>
     <div class="post-header-row">
       <div class="post-left">
+        
         <div class="top d-flex justify-content-between">
-          <h3 class="title">{{ post.title }}</h3>
-          <div class="small">{{date}}</div>
+          <h3 class="title" (click)="navigate();">{{ post.title }}</h3>
         </div>
   
         <p *ngIf="isLink" class="post-link">
           <a [href]="post.description">{{ post.description }}</a>
         </p>
-        <div *ngIf="!isLink" class="post-description">
+        <div *ngIf="!isLink" class="post-description" (click)="navigate();">
           {{ post.description }}
         </div>
   
@@ -25,7 +33,7 @@
             </div>
           </div>
           <button class="share-btn" (click)="shareLink();">🔗Share</button>
-          <div *ngIf="copied">Copied to clipboard</div>
+          <div *ngIf="copied" class="copy-message">Copied!</div>
         </div>
       </div>
   
@@ -37,3 +45,4 @@
     </div>
   </div>
   
+ 
