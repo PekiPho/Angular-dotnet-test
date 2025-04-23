@@ -25,7 +25,8 @@
                 <button class="comment-btn">📝 {{commCount}}</button>
                 </div>
             </div>
-            <button class="share-btn">🔗Share</button>
+            <button class="share-btn" (click)="shareLink();">🔗Share</button>
+            <div class="copy-message" *ngIf="copied">Copied!</div>
         </div>
         <div class="add-comments">
             <div class="textarea-wrapper">

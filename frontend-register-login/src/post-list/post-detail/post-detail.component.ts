@@ -1,7 +1,7 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { CommunityInfoComponent } from "../community-info/community-info.component";
 import { PostService } from '../../services/post.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Post, Vote } from '../../interfaces/post';
 import { NgFor, NgIf } from '@angular/common';
 import { Media } from '../../interfaces/media';
@@ -23,6 +23,7 @@ export class PostDetailComponent implements OnInit {
     private activatedRoute:ActivatedRoute,
     private userService:UserServiceService,
     private commentService:CommentService,
+    private route:Router,
   ){}
 
   private user={} as User;
@@ -31,6 +32,7 @@ export class PostDetailComponent implements OnInit {
   public cantLoad:boolean=false;
   public hasMedia:boolean=false;
   public hasVoted:boolean | null=null;
+  public copied:boolean=false;
   public commCount:number=0;
   public post={}as Post;
 
@@ -216,6 +218,26 @@ export class PostDetailComponent implements OnInit {
     });
 
     //console.log(this.root);
+  }
+
+
+  shareLink(){
+    var base=window.location.origin;
+    var url = this.route.url.split('/mainPage')[0]+"mainPage";
+
+    var postUrl=`${base}/${url}/community/${this.post.communityName}/post/${this.post.id}`;
+
+    navigator.clipboard.writeText(postUrl).then(
+      ()=>{
+        this.copied=true;
+        setTimeout(()=>{
+          this.copied=false;
+        },3000);
+      },
+      (err)=>{
+        console.log(err);
+      }
+    );
   }
 
 }

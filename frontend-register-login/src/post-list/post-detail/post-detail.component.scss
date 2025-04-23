@@ -242,3 +242,27 @@ button{
                        var(--sb-track-color);
     }
   }
+
+
+  //share button
+  .upvotes{
+    position: relative;
+  }
+
+  .copy-message{
+    position: absolute;
+    z-index: 10;
+    height: 30px;
+    background-color: #2d2d2d;
+    border-radius: 10px;
+    padding: 10px;
+    width: fit-content;
+
+    bottom: 20%;
+    right: 20%;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: aliceblue;
+  }
