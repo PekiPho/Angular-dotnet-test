@@ -150,4 +150,12 @@ export class PostComponent implements OnInit{
   navigate(){
     this.router.navigateByUrl(`/mainPage/community/${this.post.communityName}/post/${this.post.id}`);
   }
+
+  navigateUser(){
+    this.router.navigateByUrl(`/mainPage/profile/${this.post.username}`);
+  }
+
+  navigateCommunity(){
+    this.router.navigateByUrl(`/mainPage/community/${this.post.communityName}`);
+  }
 }

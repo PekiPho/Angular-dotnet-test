@@ -1,8 +1,8 @@
 <div class="post">
   <div class="info">
     <div class="comm-user">
-      <h5>{{post.communityName}}</h5>
-      <h6>{{post.username}}</h6>
+      <h5 (click)="navigateCommunity();">{{post.communityName}}</h5>
+      <h6 (click)="navigateUser();">{{post.username}}</h6>
     </div>
     
     <div class="small">{{date}}</div>
