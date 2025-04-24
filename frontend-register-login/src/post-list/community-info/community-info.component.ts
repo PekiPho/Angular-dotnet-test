@@ -1,12 +1,12 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { CommunityService } from '../../services/community.service';
 import { Community, CommunityToSend } from '../../interfaces/community';
 import { SubscribeService } from '../../services/subscribe.service';
 import { UserServiceService } from '../../services/user-service.service';
 import { User, UserWithoutPass } from '../../interfaces/user';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { NgFor, NgIf } from '@angular/common';
-import { RouterLink, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'community-info',
@@ -14,7 +14,7 @@ import { RouterLink, RouterModule } from '@angular/router';
   templateUrl: './community-info.component.html',
   styleUrl: './community-info.component.scss'
 })
-export class CommunityInfoComponent implements OnInit{
+export class CommunityInfoComponent implements OnInit,OnDestroy{
 
   public subs:number=-1;
   public community:Community | null=null;
@@ -23,7 +23,11 @@ export class CommunityInfoComponent implements OnInit{
   public username:string='';
   public moderators:UserWithoutPass[] | null =null;
 
-  constructor(private communityService:CommunityService,private subscribeService:SubscribeService,private userService:UserServiceService){}
+  constructor(private communityService:CommunityService,
+    private subscribeService:SubscribeService,
+    private userService:UserServiceService,
+    private route:ActivatedRoute
+  ){}
 
   
   public editCommunity:boolean=false;
@@ -32,41 +36,73 @@ export class CommunityInfoComponent implements OnInit{
   public modSecond:number=0;
   public ban:boolean=true;
 
+  private communitySub:Subscription=new Subscription();
+
   ngOnInit(): void {
     this.userService.userr$.subscribe({
       next: (userData) => {
         this.user = userData;
         //console.log(this.user);
 
-        this.communityService.fullCommunity$.subscribe({
-          next: (communityData) => {
-            this.community = communityData;
-            //console.log(this.community);
+        this.route.url.subscribe((seg)=>{
+          this.communitySub=this.communityService.getCommunityByName(seg[1]!.path).subscribe({
+            next:(data)=>{
+              this.community=data as Community;
+              this.communityService.setFullCommunity(this.community);
+  
+              this.loadModeratorsAndSubscriptionStatus();
+  
+              this.communityService.getSubscriberCount(this.community!.name).subscribe({
+                next:(data)=>{
+                  this.subs=data as number;
+                },
+                error:(err)=>{
+                  console.log(err);
+                }
+              });
+            },
+            error:(err)=>{
+              console.log(err);
+            }
+          });
+        });
+        
+        
+
+        // this.communityService.fullCommunity$.subscribe({
+        //   next: (communityData) => {
+        //     this.community = communityData;
+        //     //console.log(this.community);
 
       
-            this.loadModeratorsAndSubscriptionStatus();
-          },
-          error: (err) => {
-            console.log(err);
-          },
-          complete: () => {}
-        });
-        this.communityService.subCount$.subscribe({
-          next: (subCountData) => {
-            this.subs = subCountData;
-            //console.log(this.subs);
-          },
-          error: (err) => {
-            console.log(err);
-          },
-          complete: () => {}
-        });
+        //     this.loadModeratorsAndSubscriptionStatus();
+        //   },
+        //   error: (err) => {
+        //     console.log(err);
+        //   },
+        //   complete: () => {}
+        // });
+        // this.communityService.subCount$.subscribe({
+        //   next: (subCountData) => {
+        //     this.subs = subCountData;
+        //     //console.log(this.subs);
+        //   },
+        //   error: (err) => {
+        //     console.log(err);
+        //   },
+        //   complete: () => {}
+        // });
       },
       error: (err) => {
         console.log(err);
       },
       complete: () => {}
     });
+  }
+
+  ngOnDestroy(): void {
+    if(this.communitySub)
+      this.communitySub.unsubscribe();
   }
 
   private loadModeratorsAndSubscriptionStatus(): void {
