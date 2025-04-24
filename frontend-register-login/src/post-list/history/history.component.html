@@ -1,1 +1,22 @@
-<p>history works!</p>
+<div class="all">
+    <div class="cont">
+        <div class=" no-recent" *ngIf="recentPosts.length==0">
+            No Recent Posts
+        </div>
+        <div class="all-posts" *ngIf="recentPosts.length>0">
+            <div class="top">
+                <p class="recent">Recent Posts</p>
+                <button class="clear-btn" (click)="clearRecent();">Clear</button>
+            </div>
+            <hr>
+            <div class="posts" *ngFor="let post of recentPosts">
+                <p class="name">{{post.communityName}}</p>
+                <p class="desc">{{post.title}}</p>
+                <hr>
+            </div>
+            
+        </div>
+        
+    </div>
+</div>
+

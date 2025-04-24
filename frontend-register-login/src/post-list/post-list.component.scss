@@ -43,6 +43,12 @@
     height: 100%;
 }
 
+.sidebar{
+  height: 100%;
+  overflow: hidden;
+  //flex-grow: 0;
+  
+}
 
 .content {
     --sb-track-color: #f0f8ff;

@@ -1,0 +1,100 @@
+
+.all{
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cont{
+    margin-top: 2rem;
+    width:90%;
+    height: auto;
+    //min-height: 20%;
+    background-color: #2d2d2d;
+    border-radius: 10px;
+    border: 1px solid white;
+    // display: flex;
+    // flex-direction: column;
+
+    overflow-y: hidden;
+}
+
+
+.top{
+    height:40px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 0 0.5rem;
+}
+
+.posts{
+    max-height: 100px;
+    width:100%;
+    //overflow-y: auto;
+}
+.name,.desc{
+    padding-left: 0.4rem;
+}
+.name{
+    padding-top: 0.25rem;
+}
+.all-posts{
+    width: 100%;
+    height: auto;
+}
+
+.recent{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    margin-bottom: 0;
+}
+
+hr{
+    border: none;
+    width: 100%;
+    height: 2px;
+    background-color: white;
+    margin: 0;
+}
+
+.no-recent{
+    display: flex;
+    align-items: center;
+    padding:1rem;
+}
+
+.desc{
+    display: -webkit-box;
+    word-wrap:break-word;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.clear-btn{
+    all: unset;
+    background-color: white;
+    border-radius: 10px;
+    padding:5px;
+    color: black;
+    max-width: 50px;
+    width: 5vw;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+// p{
+//     flex-wrap: wrap;
+//     overflow-x: none;
+// }

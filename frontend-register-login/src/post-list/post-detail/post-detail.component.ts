@@ -61,6 +61,9 @@ export class PostDetailComponent implements OnInit {
       this.postService.getPost(this.postId).subscribe({
         next:(data)=>{
           this.post=data;
+          
+          this.postService.addToRecent(this.post);
+
           if(this.post.mediaIds!=null){
             this.hasMedia=true;
           }

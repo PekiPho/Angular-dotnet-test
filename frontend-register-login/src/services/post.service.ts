@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Post, PostToSend } from '../interfaces/post';
 import { Media } from '../interfaces/media';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -51,5 +52,27 @@ export class PostService {
 
   getXVotedPostsFromUser(username:string,vote:boolean){
     return this.http.get<Post[]>(`${this.url}/Post/GetXVotedPostsByUser/${username}/${vote}`);
+  }
+
+  private recentPosts=new BehaviorSubject<Post[]>([]);
+  recentPosts$=this.recentPosts.asObservable();
+
+  addToRecent(post:Post){
+
+    console.log(post);
+    
+    var curr=this.recentPosts.value.filter(c=>c.id !==post.id);
+    curr.unshift(post);
+
+    if(curr.length>25){
+      curr.pop();
+    }
+
+
+    this.recentPosts.next(curr);
+  }
+
+  clearRecent(){
+    this.recentPosts.next([]);
   }
 }
