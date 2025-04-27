@@ -59,7 +59,7 @@ export class PostService {
 
   addToRecent(post:Post){
 
-    console.log(post);
+    //console.log(post);
     
     var curr=this.recentPosts.value.filter(c=>c.id !==post.id);
     curr.unshift(post);

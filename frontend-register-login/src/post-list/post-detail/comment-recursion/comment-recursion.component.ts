@@ -1,4 +1,4 @@
-import { Component, Input, input, NgModule, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, input, NgModule, OnChanges, OnInit, SimpleChanges,ElementRef,ViewChild, Output, EventEmitter, AfterViewInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { Comment } from '../../../interfaces/comment';
 import { NgFor, NgIf, NumberSymbol } from '@angular/common';
 import {format} from 'date-fns';
@@ -8,6 +8,7 @@ import { User } from '../../../interfaces/user';
 import { PostService } from '../../../services/post.service';
 import { Route, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { last, max } from 'rxjs';
 
 @Component({
   selector: 'comment-recursion',
@@ -15,12 +16,14 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './comment-recursion.component.html',
   styleUrl: './comment-recursion.component.scss'
 })
-export class CommentRecursionComponent implements OnInit,OnChanges{
+export class CommentRecursionComponent implements OnInit,OnChanges,AfterViewInit,OnDestroy{
 
   constructor(private commentService:CommentService,
       private userService:UserServiceService,
       private postService:PostService,
       private route:Router,
+      private el:ElementRef,
+      private cdRef:ChangeDetectorRef,
   ){}
 
   @Input() comment:Comment={};
@@ -34,6 +37,10 @@ export class CommentRecursionComponent implements OnInit,OnChanges{
 
   public showReply:boolean=false;
   public replyContent:string='';
+
+  public lineHeight:number=0;
+
+  private resizeObserver!: ResizeObserver;
 
   ngOnInit(): void {
     //console.log(this.comment.dateOfComment);
@@ -54,12 +61,37 @@ export class CommentRecursionComponent implements OnInit,OnChanges{
         this.voted=data;
       }
     })
+
+    //this.getComment();
+    //this.calcLineHeight();
+    //this.calculateBottom();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['comment']){
       this.date = format(new Date(this.comment.dateOfComment!),'dd/MM/yy HH:mm');
+      //this.calculateBottom();
     }
+  }
+
+  ngAfterViewInit(): void {
+    
+
+    this.resizeObserver=new ResizeObserver(()=> {
+      this.calculateLineHeight();
+      this.cdRef.detectChanges();
+    }
+  );
+
+    this.resizeObserver.observe(this.el.nativeElement);
+
+    this.calculateLineHeight();
+    this.cdRef.detectChanges();
+  }
+
+  ngOnDestroy(): void {
+    if(this.resizeObserver)
+      this.resizeObserver.disconnect();
   }
 
   voteOnComment(value:boolean){
@@ -127,4 +159,35 @@ export class CommentRecursionComponent implements OnInit,OnChanges{
   getWidth(level:number){
     return `calc(100% - ${level*20}px)`;
   }
+
+  calculateLineHeight(){
+    
+    var childEl=this.el.nativeElement.querySelectorAll(':scope > div > div > div > comment-recursion');
+    var child=this.el.nativeElement;
+    //console.log(child);
+    // console.log(child.querySelectorAll(":scope > div > div > div > comment-recursion"));
+    // console.log("\n");
+
+    if(childEl.length===0){
+      this.lineHeight=this.el.nativeElement.getBoundingClientRect().height;
+      //console.log(this.lineHeight);
+      return;
+    }
+
+    // //console.log('henlo');
+    
+    var lastEl=childEl[childEl.length-1];
+
+    // console.log(lastEl);
+    // console.log(this.el.nativeElement);
+    // console.log(lastEl.getBoundingClientRect().top + " " + this.el.nativeElement.getBoundingClientRect().top + "\n");
+
+    this.lineHeight=lastEl.getBoundingClientRect().top-this.el.nativeElement.getBoundingClientRect().top;
+    //console.log(this.lineHeight);
+  }
+
+
 }
+
+
+

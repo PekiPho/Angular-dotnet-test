@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { PostService } from '../../services/post.service';
 import { Post } from '../../interfaces/post';
 import { NgFor, NgIf } from '@angular/common';
 
 @Component({
   selector: 'history',
-  imports: [NgIf,NgFor],
+  imports: [NgIf,NgFor,RouterModule],
   templateUrl: './history.component.html',
   styleUrl: './history.component.scss'
 })

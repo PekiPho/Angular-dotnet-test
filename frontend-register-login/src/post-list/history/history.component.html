@@ -10,9 +10,11 @@
             </div>
             <hr>
             <div class="posts" *ngFor="let post of recentPosts">
-                <p class="name">{{post.communityName}}</p>
-                <p class="desc">{{post.title}}</p>
-                <hr>
+                <div class="" [routerLink]="['/mainPage','community',post.communityName,'post',post.id]" >
+                    <p class="name">{{post.communityName}}</p>
+                    <p class="desc">{{post.title}}</p>
+                    <hr>
+                </div>
             </div>
             
         </div>
