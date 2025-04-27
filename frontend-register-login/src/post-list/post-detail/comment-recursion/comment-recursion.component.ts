@@ -35,10 +35,12 @@ export class CommentRecursionComponent implements OnInit,OnChanges,AfterViewInit
   public voted:boolean | null = null;
   public visible:boolean=false;
 
+
   public showReply:boolean=false;
   public replyContent:string='';
 
   public lineHeight:number=0;
+  public collapsed:boolean=false;
 
   private resizeObserver!: ResizeObserver;
 
@@ -157,33 +159,46 @@ export class CommentRecursionComponent implements OnInit,OnChanges,AfterViewInit
   }
 
   getWidth(level:number){
-    return `calc(100% - ${level*20}px)`;
+    if(level===0)
+      return '100%';
+    else return `calc(100% - 20px)`;
   }
 
   calculateLineHeight(){
     
     var childEl=this.el.nativeElement.querySelectorAll(':scope > div > div > div > comment-recursion');
     var child=this.el.nativeElement;
-    //console.log(child);
-    // console.log(child.querySelectorAll(":scope > div > div > div > comment-recursion"));
-    // console.log("\n");
 
     if(childEl.length===0){
-      this.lineHeight=this.el.nativeElement.getBoundingClientRect().height;
-      //console.log(this.lineHeight);
+      this.lineHeight=this.el.nativeElement.getBoundingClientRect().height-14;
       return;
     }
-
-    // //console.log('henlo');
     
     var lastEl=childEl[childEl.length-1];
+    this.lineHeight=lastEl.getBoundingClientRect().top-this.el.nativeElement.getBoundingClientRect().top-14;
+  }
 
-    // console.log(lastEl);
-    // console.log(this.el.nativeElement);
-    // console.log(lastEl.getBoundingClientRect().top + " " + this.el.nativeElement.getBoundingClientRect().top + "\n");
+  calcMargin(){
+    if(this.level===0){
+      return 0;
+    }
+    else return 20;
+  }
 
-    this.lineHeight=lastEl.getBoundingClientRect().top-this.el.nativeElement.getBoundingClientRect().top;
-    //console.log(this.lineHeight);
+  @Output() collapseChanged=new EventEmitter<void>();
+
+  changeCollapse(){
+    this.collapsed=!this.collapsed;
+    //this.calculateLineHeight();
+    this.collapseChanged.emit();
+  }
+
+  onChildResized(){
+    this.calculateLineHeight();
+
+    console.log(this.lineHeight);
+
+    this.collapseChanged.emit();
   }
 
 

@@ -1,5 +1,11 @@
-<div class="comment" [style.margin-left.px]="level*20" [style.width]="getWidth(level)">
+<div class="comment" [style.margin-left.px]="calcMargin()" [style.width]="getWidth(level)" *ngIf="!collapsed">
     <div class="line" [style.height.px]="lineHeight"></div>
+    
+    <div *ngIf="level>0" style="position: absolute; height: 8px; top:-16px; left:-20px; width:20px;">
+      <svg width="20px" height="16" viewBox="0 0 20 16">
+        <path d="M0,0 C5,8 15,8 20,16" style="stroke: white;" fill="transparent" stroke-width="1" />
+      </svg>
+    </div>
 
     <div class="header">
         <p class="user" *ngIf="!comment.isDeleted">{{comment.username}}</p>
@@ -8,10 +14,10 @@
     </div>
 
 
-    <div class="comm-body" *ngIf="!comment.isDeleted">
+    <div class="comm-body" (click)="changeCollapse();" *ngIf="!comment.isDeleted">
         {{comment.content}}
     </div>
-    <div class="comm-body" *ngIf="comment.isDeleted">
+    <div class="comm-body" (click)="changeCollapse();" *ngIf="comment.isDeleted">
         [deleted]
     </div>
 
@@ -39,12 +45,22 @@
           <button class="cancel-reply-btn" (click)="toggleReply()">Cancel</button>
         </div>
       </div>
-      <hr>
+      <!-- <hr> -->
 
       <div class="" *ngIf="comment.replies && comment.replies.length>0">
         <div class="" *ngFor="let reply of comment.replies">
-            <comment-recursion [comment]="reply" [level]="level+1"></comment-recursion>
+            <comment-recursion [comment]="reply" [level]="level+1" (collapseChanged)="onChildResized()"></comment-recursion>
         </div>
       </div>
+</div>
+
+
+<div class="collapse" *ngIf="collapsed" (click)="changeCollapse();">
+  <p class="user-collapse">⊕</p>
+  <p class="user-collapse" *ngIf="!comment.isDeleted">{{comment.username}}</p>
+  <p class="user-collapse" *ngIf="comment.isDeleted">[deleted]</p>
+  <p class="date-collapse">{{date}}</p>
+  
+  <div class="vote-count">{{comment.vote}}</div>
 </div>
 
