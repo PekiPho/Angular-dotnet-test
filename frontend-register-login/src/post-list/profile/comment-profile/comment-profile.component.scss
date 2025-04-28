@@ -1,0 +1,103 @@
+.whole {
+    width: 75%;
+    max-height: 250px;
+    //overflow: auto;
+    background-color: #2d2d2d;
+    //border: 1px solid orangered;
+    border:1px solid;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 16px;
+    position: relative;
+    color: white;
+    margin: 0 auto;
+    margin-top: 1.5rem;
+
+    //overflow-y: hidden;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  
+  .header p {
+    margin: 0;
+    font-weight: bold;
+    font-size: 14px;
+  }
+  
+  .content {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .content p{
+    margin: 0;
+    max-height: 200px;
+    //height: 100px;
+    overflow: hidden;
+    word-break: break-word;
+    text-overflow: ellipsis;
+
+    //white-space: nowrap;
+  }
+
+
+
+//vote stuff
+  .post-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+  }
+  
+  .vote-buttons {
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    padding-bottom: 5px;
+  }
+  
+  .vote-buttons button {
+    font-size: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  
+  .upvote-btn:hover {
+    color: orangered;
+  }
+  
+  .downvote-btn:hover {
+    color: #007bff;
+  }
+  
+  .vote-count {
+    font-size: 14px;
+    margin: 0 10px;
+  }
+
+  button {
+    color: aliceblue;
+  }
+  
+  .upvoted {
+    color: orangered;
+  }
+  
+  .downvoted {
+    color: #007bff;
+  }
+
+  .vote-comments{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 40%;
+  }

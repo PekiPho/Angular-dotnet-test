@@ -196,7 +196,7 @@ export class CommentRecursionComponent implements OnInit,OnChanges,AfterViewInit
   onChildResized(){
     this.calculateLineHeight();
 
-    console.log(this.lineHeight);
+    //console.log(this.lineHeight);
 
     this.collapseChanged.emit();
   }

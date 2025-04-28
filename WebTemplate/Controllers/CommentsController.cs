@@ -192,4 +192,20 @@ public class CommentController:ControllerBase{
         return Ok(comments);
     }
 
+    [HttpGet("GetCommentsOnProfile/{username}")]
+    public async Task<ActionResult> GetCommentsOnProfile(string username){
+
+        var comments=await Context.Comments
+                                    .Include(c=>c.User)
+                                    .Include(c=>c.Votes)
+                                    .Include(c=>c.Post)
+                                    .Include(c=>c.Replies)
+                                    .Include(c=>c.ReplyTo)
+                                    .Where(c=>c.User.Username==username).ToListAsync();
+
+        var commentsDto=Mapper.Map<List<CommentDto>>(comments);
+
+        return Ok(commentsDto);
+    }
+
 }

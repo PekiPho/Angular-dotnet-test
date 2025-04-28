@@ -7,17 +7,21 @@ import { PostService } from '../../services/post.service';
 import { NavigationEnd, Router } from '@angular/router';
 import { PostComponent } from "../post/post.component";
 import { Subscription } from 'rxjs';
+import { CommentService } from '../../services/comment.service';
+import { CommentProfileComponent } from './comment-profile/comment-profile.component';
 
 @Component({
   selector: 'profile',
-  imports: [NgIf, NgFor, PostComponent],
+  imports: [NgIf, NgFor, PostComponent,CommentProfileComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
 export class ProfileComponent implements OnInit,OnDestroy {
 
-  constructor(private postService:PostService,private route:Router)
-  {}
+  constructor(private postService:PostService,
+    private route:Router,
+    private commentService:CommentService
+  ){}
 
   private routeSubs:Subscription= new Subscription();
 
@@ -70,7 +74,7 @@ export class ProfileComponent implements OnInit,OnDestroy {
     }
     
     if(this.loadNumber===1){
-
+      this.loadComments();
     }
 
     if(this.loadNumber===2){
@@ -104,7 +108,20 @@ export class ProfileComponent implements OnInit,OnDestroy {
   }
 
   loadComments(){
+    this.posts=[];
+    this.upVoted=[];
+    this.downVoted=[];
 
+
+    this.commentService.getCommentsFromUser(this.user).subscribe({
+      next:(data)=>{
+        //console.log(data);
+        this.comments=data;
+      },
+      error:(err)=>{
+        console.log(err);
+      }
+    });
   }
 
   loadUpVoted(){

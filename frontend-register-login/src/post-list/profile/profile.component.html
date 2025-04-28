@@ -12,7 +12,9 @@
             </div>
         </div>
         <div class="" *ngIf="loadNumber==1">
-
+            <div class="" *ngFor="let comment of this.comments">
+                <comment-profile [comment]="comment"></comment-profile>
+            </div>
         </div>
         <div class="" *ngIf="loadNumber==2">
             <div class="" *ngFor="let post of this.upVoted">

@@ -1,0 +1,35 @@
+<div class="whole" [ngStyle]="{
+    'border-top-color': !this.comment.replyToId ? '#ededed' : 'orangered',
+    'border-left-color': !this.comment.replyToId ? '#ededed' : 'orangered',
+    'border-right-color': 'orangered',
+    'border-bottom-color': 'orangered'
+}" (click)="routeToPost();">
+    <div class="header">
+        <p>{{this.comment.username}}</p>
+        <p>{{this.date}}</p>
+    </div>
+    <div class="content">
+        <p>{{this.comment.content}}</p>
+    </div>
+
+    <div class="post-actions">
+        <div class="vote-comments">
+          <div class="vote-buttons">
+            <button class="upvote-btn" (click)="voteOnComment(true);" [class.upvoted]="voted===true">▲</button>
+            <div class="vote-count">{{comment.vote}}</div>
+            <button class="downvote-btn"(click)="voteOnComment(false);" [class.downvoted]="voted===false">▼</button>
+          </div>
+        </div>
+    
+    </div>
+
+    <div *ngIf="comment.replyToId===null" style="position: absolute; height: 8px; top:0; left:-10px; width:10px;">
+        <svg width="10px" height="16px" viewBox="0 0 10 16">
+            <path d="M0,0 C5,8 15,8 10,16" stroke="white" fill="transparent" stroke-width="1" />
+        </svg>
+    </div>
+    
+</div>
+
+
+

@@ -33,4 +33,8 @@ export class CommentService {
   addCommentVote(commentId:string,username:string,vote:boolean){
     return this.http.post(`${this.url}/Vote/Comment/AddCommentVote/${commentId}/${username}/${vote}`,{});
   }
+
+  getCommentsFromUser(username:string){
+    return this.http.get<Comment[]>(`${this.url}/Comment/GetCommentsOnProfile/${username}`);
+  }
 }
