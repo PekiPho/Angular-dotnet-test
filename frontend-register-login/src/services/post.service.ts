@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Post, PostToSend } from '../interfaces/post';
 import { Media } from '../interfaces/media';
 import { BehaviorSubject } from 'rxjs';
+import { Community } from '../interfaces/community';
 
 @Injectable({
   providedIn: 'root'
@@ -52,6 +53,14 @@ export class PostService {
 
   getXVotedPostsFromUser(username:string,vote:boolean){
     return this.http.get<Post[]>(`${this.url}/Post/GetXVotedPostsByUser/${username}/${vote}`);
+  }
+
+  searchOnType(query:string){
+    return this.http.get<Community[]>(`${this.url}/Search/OnTypeCommunities/${query}`);
+  }
+
+  fullSearch(query:string){
+    return this.http.get<{communities : Community[],posts: Post[]}>(`${this.url}/Search/GetCommunitiesAndPosts/${query}`);
   }
 
   private recentPosts=new BehaviorSubject<Post[]>([]);

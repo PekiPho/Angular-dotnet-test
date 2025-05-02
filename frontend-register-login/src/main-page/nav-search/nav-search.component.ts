@@ -3,8 +3,9 @@ import { RouterLink, RouterModule } from '@angular/router';
 import { UserServiceService } from '../../services/user-service.service';
 import { User } from '../../interfaces/user';
 import { NgIf } from '@angular/common';
-import { PostToSend } from '../../interfaces/post';
+import { Post, PostToSend } from '../../interfaces/post';
 import { PostService } from '../../services/post.service';
+import { Community } from '../../interfaces/community';
 
 @Component({
   selector: 'nav-search',
@@ -114,6 +115,59 @@ export class NavSearchComponent {
         complete:()=>{}
       });
 
+    }
+
+    public communities:Community[]=[];
+    public posts:Post[]=[];
+
+    onType(event:Event){
+      //var input=document.querySelector("#search") as HTMLInputElement;
+      var input=event.target as HTMLInputElement;
+
+
+      if(input.value.length>3){
+        this.communities=[];
+        this.posts=[];
+
+        this.postService.searchOnType(input.value).subscribe({
+          next:(data)=>{
+            //console.log(data);
+            this.communities=data;
+          },
+          error:(err)=>{
+            console.log(err);
+          }
+        });
+      }
+    }
+
+    onSearch(input:HTMLInputElement){
+
+      this.communities=[];
+      this.posts=[];
+
+      this.postService.fullSearch(input.value).subscribe({
+        next:(data)=>{
+          this.communities=data.communities;
+          this.posts=data.posts;
+
+          //console.log(this.communities);
+          //console.log(this.posts);
+          input.value='';
+        },
+        error:(err)=>{
+          console.log(err);
+        }
+      });
+
+      //setTimeout(() => this.clearInput(input), 100);
+    }
+
+    clearInput(input:HTMLInputElement){
+      setTimeout(() => {
+        input.value='';
+      }, 500);
+      
     }
 
 }

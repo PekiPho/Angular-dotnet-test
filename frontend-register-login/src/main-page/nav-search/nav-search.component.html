@@ -5,9 +5,9 @@
             <p style="margin: 0;">App</p>
         </div>
         <div class="input-group" style="max-width: 30%;">
-            <input type="text" class="form-control bg-dark input-search" placeholder="Search" aria-describedby="basic-addon2">
+            <input #searchInput type="text" id="search" class="form-control bg-dark input-search" placeholder="Search" aria-describedby="basic-addon2" (input)="onType($event);" (blur)="clearInput(searchInput);">
             <div class="input-group-append">
-              <button class="btn btn-outline-success" type="button">Search</button>
+              <button class="btn btn-outline-success" type="button" (click)="onSearch(searchInput);">Search</button>
             </div>
         </div>
         <div class="right d-flex">

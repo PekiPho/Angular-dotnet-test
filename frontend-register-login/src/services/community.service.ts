@@ -62,4 +62,5 @@ export class CommunityService {
    updateInfo(communityName:string,info:string){
     return this.http.put(`${this.url}/Community/UpdateCommInfo/${communityName}/${info}`,{},{responseType:'text'});
    }
+
 }
