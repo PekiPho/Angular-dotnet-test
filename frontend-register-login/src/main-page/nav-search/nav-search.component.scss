@@ -100,3 +100,7 @@ p{
     border-radius: 5%;
     transition: 0.7s;
 }
+
+.input-group div:last-child {
+    border-bottom: none;
+  }

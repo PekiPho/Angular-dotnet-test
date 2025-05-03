@@ -4,10 +4,15 @@
             <img src="p_transparent.png" alt="Logo" style="width: 50px;height:50px;" [routerLink]="['/mainPage']">
             <p style="margin: 0;">App</p>
         </div>
-        <div class="input-group" style="max-width: 30%;">
-            <input #searchInput type="text" id="search" class="form-control bg-dark input-search" placeholder="Search" aria-describedby="basic-addon2" (input)="onType($event);" (blur)="clearInput(searchInput);">
+        <div class="input-group position-relative" style="max-width: 30%;">
+            <input #searchInput type="text" id="search" class="form-control bg-dark input-search" placeholder="Search" aria-describedby="basic-addon2" autocomplete="off" (input)="onType($event);" (blur)="clearInput(searchInput);">
             <div class="input-group-append">
               <button class="btn btn-outline-success" type="button" (click)="onSearch(searchInput);">Search</button>
+            </div>
+            <div class="position-absolute bg-dark border rounded w-100 mt-1 z-3 coms" style="top:100%; left:0;" *ngIf="this.showSug && this.communities.length>0">
+              <div class="ps-3 p-2 text-light" *ngFor="let community of communities" style="border-bottom: 1px solid aliceblue;" [routerLink]="['./community/'+community.name]">
+                {{community.name}}
+              </div>
             </div>
         </div>
         <div class="right d-flex">

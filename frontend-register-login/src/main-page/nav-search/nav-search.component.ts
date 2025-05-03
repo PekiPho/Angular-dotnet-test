@@ -2,14 +2,14 @@ import { Component, Input } from '@angular/core';
 import { RouterLink, RouterModule } from '@angular/router';
 import { UserServiceService } from '../../services/user-service.service';
 import { User } from '../../interfaces/user';
-import { NgIf } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { Post, PostToSend } from '../../interfaces/post';
 import { PostService } from '../../services/post.service';
 import { Community } from '../../interfaces/community';
 
 @Component({
   selector: 'nav-search',
-  imports: [RouterLink,RouterModule,NgIf],
+  imports: [RouterLink,RouterModule,NgIf,NgFor],
   templateUrl: './nav-search.component.html',
   styleUrl: './nav-search.component.scss'
 })
@@ -118,7 +118,8 @@ export class NavSearchComponent {
     }
 
     public communities:Community[]=[];
-    public posts:Post[]=[];
+    //public posts:Post[]=[];
+    public showSug:boolean=false;
 
     onType(event:Event){
       //var input=document.querySelector("#search") as HTMLInputElement;
@@ -127,38 +128,44 @@ export class NavSearchComponent {
 
       if(input.value.length>3){
         this.communities=[];
-        this.posts=[];
+        //this.posts=[];
 
         this.postService.searchOnType(input.value).subscribe({
           next:(data)=>{
             //console.log(data);
             this.communities=data;
+            this.showSug=true;
           },
           error:(err)=>{
             console.log(err);
           }
         });
       }
+      else{
+        this.showSug=false;
+      }
     }
 
     onSearch(input:HTMLInputElement){
 
       this.communities=[];
-      this.posts=[];
 
-      this.postService.fullSearch(input.value).subscribe({
-        next:(data)=>{
-          this.communities=data.communities;
-          this.posts=data.posts;
+      
+      // this.posts=[];
 
-          //console.log(this.communities);
-          //console.log(this.posts);
-          input.value='';
-        },
-        error:(err)=>{
-          console.log(err);
-        }
-      });
+      // this.postService.fullSearch(input.value).subscribe({
+      //   next:(data)=>{
+      //     this.communities=data.communities;
+      //     this.posts=data.posts;
+
+      //     //console.log(this.communities);
+      //     //console.log(this.posts);
+      //     input.value='';
+      //   },
+      //   error:(err)=>{
+      //     console.log(err);
+      //   }
+      // });
 
       //setTimeout(() => this.clearInput(input), 100);
     }
@@ -166,6 +173,7 @@ export class NavSearchComponent {
     clearInput(input:HTMLInputElement){
       setTimeout(() => {
         input.value='';
+        this.showSug=false;
       }, 500);
       
     }
