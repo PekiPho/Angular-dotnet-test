@@ -10,6 +10,7 @@ import { PostComponent } from '../post-list/post/post.component';
 import { ProfileComponent } from '../post-list/profile/profile.component';
 import { PostListComponent } from '../post-list/post-list.component';
 import { PostDetailComponent } from '../post-list/post-detail/post-detail.component';
+import { SearchComponent } from '../post-list/search/search.component';
 
 export const routes: Routes = [
     {
@@ -44,6 +45,7 @@ export const routes: Routes = [
             { path: 'community/:name', component: CommunityComponent },
             { path: 'community/:name/post/:postID', component: PostDetailComponent ,pathMatch:'full'},
             { path: 'profile/:userID', component: ProfileComponent},
+            { path: 'search/:query',component:SearchComponent},
         ]
     }
     //{ path: '**', redirectTo: 'mainPage' }

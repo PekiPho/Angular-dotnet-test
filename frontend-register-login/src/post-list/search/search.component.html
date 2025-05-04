@@ -1,0 +1,18 @@
+<div class="parent">
+    <div class="content border-end border-light">
+        <div class="communities" *ngIf="communities && communities.length>0">
+            <div class="community" *ngFor="let community of communities">
+                <p>{{community.name}}</p>
+                <p>{{subs[community.name]}}</p>
+            </div>
+        </div>
+        <div class="posts" *ngIf="posts && posts.length>0">
+            <div class="post" *ngFor="let post of posts">
+                <post [post]="post"></post>
+            </div>
+        </div>
+    </div>
+    <div class="sidebar">
+        <history></history>
+    </div>
+</div>

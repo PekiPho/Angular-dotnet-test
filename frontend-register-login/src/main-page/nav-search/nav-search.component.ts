@@ -124,6 +124,7 @@ export class NavSearchComponent {
     onType(event:Event){
       //var input=document.querySelector("#search") as HTMLInputElement;
       var input=event.target as HTMLInputElement;
+      this.query=input.value;
 
 
       if(input.value.length>3){
@@ -146,10 +147,11 @@ export class NavSearchComponent {
       }
     }
 
+    public query:string='';
+
     onSearch(input:HTMLInputElement){
 
       this.communities=[];
-
       
       // this.posts=[];
 

@@ -23,7 +23,7 @@ export class HistoryComponent implements OnInit {
     this.postService.recentPosts$.subscribe({
       next:(data)=>{
         this.recentPosts=data;
-        console.log(data);
+        //console.log(data);
       },
       error:(err)=>{
         console.log(err);
