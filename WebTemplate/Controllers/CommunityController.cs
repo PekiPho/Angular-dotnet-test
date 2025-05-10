@@ -11,40 +11,6 @@ public class CommunityController:ControllerBase{
         Context=context;
     }
 
-    [HttpGet("GetCommunity/{id}")]
-    public async Task<ActionResult> GetCommunity(int id){
-
-        var community = await Context.Communities.FindAsync(id);
-
-        if(community==null)
-            return BadRequest($"Community with id of: {id} does not exist");
-
-        return Ok(community);
-    }
-
-    [HttpGet("GetCommunityByName/{name}")]
-    public async Task<ActionResult> GetCommunityByName(string name){
-        var community = await Context.Communities.Where(c=> c.Name == name).FirstOrDefaultAsync();
-
-        if(community==null)
-            return BadRequest("Community with given name does not exist");
-        
-        return Ok(community);
-    }
-
-    [HttpGet("GetSubscribers/{name}")]
-    public async Task<ActionResult> GetSubscribers(string name){
-        var community=await Context.Communities.Where(c=>c.Name==name).Include(c=>c.Subscribers).FirstOrDefaultAsync();
-
-        if(community==null && community?.Subscribers == null)
-            return BadRequest("Community does not exist or has no subscribers");
-        
-        var subs=community!.Subscribers!.Count;
-
-        return Ok(subs);
-
-    }
-
     [HttpPost("CreateCommunity")]
     public async Task<ActionResult> CreateCommunity([FromBody] Community community){
 
@@ -56,6 +22,8 @@ public class CommunityController:ControllerBase{
 
         return Ok(community);
     }
+
+    
 
     [HttpPut("UpdateDescription/{id}/{description}")]
     public async Task<ActionResult> UpdateDescription(int id,string description){
@@ -141,6 +109,41 @@ public class CommunityController:ControllerBase{
         await Context.SaveChangesAsync();
 
         return Ok($"Community with the name of: {name} is successfully deleted");
+    }
+
+
+    [HttpGet("GetCommunity/{id}")]
+    public async Task<ActionResult> GetCommunity(int id){
+
+        var community = await Context.Communities.FindAsync(id);
+
+        if(community==null)
+            return BadRequest($"Community with id of: {id} does not exist");
+
+        return Ok(community);
+    }
+
+    [HttpGet("GetCommunityByName/{name}")]
+    public async Task<ActionResult> GetCommunityByName(string name){
+        var community = await Context.Communities.Where(c=> c.Name == name).FirstOrDefaultAsync();
+
+        if(community==null)
+            return BadRequest("Community with given name does not exist");
+        
+        return Ok(community);
+    }
+
+    [HttpGet("GetSubscribers/{name}")]
+    public async Task<ActionResult> GetSubscribers(string name){
+        var community=await Context.Communities.Where(c=>c.Name==name).Include(c=>c.Subscribers).FirstOrDefaultAsync();
+
+        if(community==null && community?.Subscribers == null)
+            return BadRequest("Community does not exist or has no subscribers");
+        
+        var subs=community!.Subscribers!.Count;
+
+        return Ok(subs);
+
     }
 
 }

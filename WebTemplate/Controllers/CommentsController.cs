@@ -17,28 +17,6 @@ public class CommentController:ControllerBase{
         Mapper=mapper;
     }
 
-
-    //need to make it so that 50 comments load and 50 agane
-    [HttpGet("GetCommentsFromPost/{postId}")]
-    public async Task<ActionResult> GetCommentsFromPost(Guid postId){
-
-        var comments=await Context.Comments.Include(c=>c.Post)
-                                        .Include(c=>c.Replies)
-                                        .Include(c=>c.ReplyTo)
-                                        .Include(c=>c.User)
-                                        .Include(c=>c.Votes)
-                                        .Where(c=>c.Post!.Id==postId).ToListAsync();
-
-        // if(!comments.Any())
-        //     return Ok(null);
-
-
-        //wont work because of cycles
-        //DONE need to make a mapper
-        var commentsDto=Mapper.Map<List<CommentDto>>(comments);
-        return Ok(commentsDto);
-    }
-
     [HttpPost("CreateComment/{username}/{postId}/{replyToId}")]
     public async Task<ActionResult> CreateComment(string username,Guid postId,string replyToId,[FromBody]Comment comment){
         var post=await Context.Posts.FirstOrDefaultAsync(c=>c.Id==postId);
@@ -90,6 +68,7 @@ public class CommentController:ControllerBase{
         var commentDto= Mapper.Map<CommentDto>(comment);
         return Ok(commentDto);
     }
+    
 
     [HttpPut("UpdateComment/{commentId}/{content}")]
     public async Task<ActionResult> UpdateComment(Guid commentId,string content){
@@ -190,6 +169,27 @@ public class CommentController:ControllerBase{
         var comments=await Context.Comments.Where(c=>c.Post.Id==postId).CountAsync();
 
         return Ok(comments);
+    }
+
+    //need to make it so that 50 comments load and 50 agane
+    [HttpGet("GetCommentsFromPost/{postId}")]
+    public async Task<ActionResult> GetCommentsFromPost(Guid postId){
+
+        var comments=await Context.Comments.Include(c=>c.Post)
+                                        .Include(c=>c.Replies)
+                                        .Include(c=>c.ReplyTo)
+                                        .Include(c=>c.User)
+                                        .Include(c=>c.Votes)
+                                        .Where(c=>c.Post!.Id==postId).ToListAsync();
+
+        // if(!comments.Any())
+        //     return Ok(null);
+
+
+        //wont work because of cycles
+        //DONE need to make a mapper
+        var commentsDto=Mapper.Map<List<CommentDto>>(comments);
+        return Ok(commentsDto);
     }
 
     [HttpGet("GetCommentsOnProfile/{username}")]

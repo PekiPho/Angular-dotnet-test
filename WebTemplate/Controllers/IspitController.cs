@@ -20,6 +20,46 @@ public class IspitController : ControllerBase
         Context = context;
     }
 
+    [HttpPost("AddUser")]
+    public async Task<ActionResult> AddUser([FromBody] User user){
+
+        await Context.Users.AddAsync(user);
+        await Context.SaveChangesAsync();
+
+        var claims=new[]{
+            new Claim(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Sub,user.Email),
+            new Claim(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Jti,user.Id.ToString())
+        };
+
+        var token=new JwtSecurityToken(
+            issuer:"http://localhost:4200",
+            audience:"http://localhost:4200",
+            claims:claims,
+            expires:DateTime.Now.AddDays(7),
+            signingCredentials:new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Super-Duper-Tajan-Kljuc-Ide-Gas-Brate-Najjace-Peki-App-LOoooool")),SecurityAlgorithms.HmacSha256)
+        );
+
+        return Ok(new{
+            token = new JwtSecurityTokenHandler().WriteToken(token),
+            expiration=token.ValidTo
+        });
+    }
+
+    
+
+    [HttpDelete("DeleteUser/{id}")]
+    public async Task<ActionResult> DeleteUser(int id){
+
+        var user = await Context.Users.Where(x=>x.Id == id).FirstOrDefaultAsync();
+
+        if(user==null)
+            return BadRequest("User does not exist");
+
+
+        Context.Users.Remove(user);
+        return Ok("User deleted");
+    }
+
 
     [HttpGet("GetUsers")]
     public async Task<ActionResult> GetUsers(){
@@ -76,45 +116,7 @@ public class IspitController : ControllerBase
        
     }
 
-    [HttpPost("AddUser")]
-    public async Task<ActionResult> AddUser([FromBody] User user){
-
-        await Context.Users.AddAsync(user);
-        await Context.SaveChangesAsync();
-
-        var claims=new[]{
-            new Claim(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Sub,user.Email),
-            new Claim(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Jti,user.Id.ToString())
-        };
-
-        var token=new JwtSecurityToken(
-            issuer:"http://localhost:4200",
-            audience:"http://localhost:4200",
-            claims:claims,
-            expires:DateTime.Now.AddDays(7),
-            signingCredentials:new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Super-Duper-Tajan-Kljuc-Ide-Gas-Brate-Najjace-Peki-App-LOoooool")),SecurityAlgorithms.HmacSha256)
-        );
-
-        return Ok(new{
-            token = new JwtSecurityTokenHandler().WriteToken(token),
-            expiration=token.ValidTo
-        });
-    }
-
     
-
-    [HttpDelete("DeleteUser/{id}")]
-    public async Task<ActionResult> DeleteUser(int id){
-
-        var user = await Context.Users.Where(x=>x.Id == id).FirstOrDefaultAsync();
-
-        if(user==null)
-            return BadRequest("User does not exist");
-
-
-        Context.Users.Remove(user);
-        return Ok("User deleted");
-    }
     
     [Authorize]
     [HttpGet("GetEntry")]

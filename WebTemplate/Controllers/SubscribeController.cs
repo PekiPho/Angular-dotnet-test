@@ -18,19 +18,7 @@ public class SubscribeController:ControllerBase{
         Mapper=mapper;
     }
 
-    [HttpGet("GetCommunitiesFromUser/{userID}")]
-    public async Task<ActionResult> GetCommunitiesFromUser(int userID){
-        
-        var user=await Context.Users.AsNoTracking().Include(c=>c.Subscribed).Where(c=>c.Id==userID).FirstOrDefaultAsync();
-        if(user==null)
-            return BadRequest("No user");
-
-        if( user.Subscribed ==null || !user.Subscribed.Any() )
-            return BadRequest("User not subscribed to any community");
-
-
-        return Ok(user.Subscribed);
-    }
+    
 
 
     [HttpPost("SubscribeUserToCommunity/{userID}/{communityID}")]
@@ -70,6 +58,27 @@ public class SubscribeController:ControllerBase{
         }
 
         return BadRequest("User or community does not exist");
+    }
+
+    [HttpPost("AddUserToMod/{username}/{communityName}")]
+    public async Task<ActionResult> AddUserToMod(string username,string communityName){
+
+        var user=await Context.Users.Include(c=>c.Moderator).Where(c=>c.Username==username).FirstOrDefaultAsync();
+
+        var community=await Context.Communities.Where(c=>c.Name==communityName).FirstOrDefaultAsync();
+
+        if(user==null || community==null)
+            return BadRequest("User or Community don't exist");
+
+        user.Moderator ??=new List<Community>();
+
+        user.Moderator.Add(community);
+
+        await Context.SaveChangesAsync();
+
+        var userDto= Mapper.Map<UserDto>(user);
+
+        return Ok(userDto);
     }
 
     [HttpDelete("UnsubscribeUserFromCommunity/{userID}/{communityID}")]
@@ -112,26 +121,7 @@ public class SubscribeController:ControllerBase{
         return Ok($"Removed User: {userID} from moderating community: {communityID}");
     }
 
-    [HttpPost("AddUserToMod/{username}/{communityName}")]
-    public async Task<ActionResult> AddUserToMod(string username,string communityName){
-
-        var user=await Context.Users.Include(c=>c.Moderator).Where(c=>c.Username==username).FirstOrDefaultAsync();
-
-        var community=await Context.Communities.Where(c=>c.Name==communityName).FirstOrDefaultAsync();
-
-        if(user==null || community==null)
-            return BadRequest("User or Community don't exist");
-
-        user.Moderator ??=new List<Community>();
-
-        user.Moderator.Add(community);
-
-        await Context.SaveChangesAsync();
-
-        var userDto= Mapper.Map<UserDto>(user);
-
-        return Ok(userDto);
-    }
+    
 
 
     [HttpDelete("RemoveModFromCommunity/{username}/{communityName}")]
@@ -185,5 +175,19 @@ public class SubscribeController:ControllerBase{
         bool check = community.Moderators?.Any(c=>c.Username==username) ?? false;
 
         return Ok(check);
+    }
+
+    [HttpGet("GetCommunitiesFromUser/{userID}")]
+    public async Task<ActionResult> GetCommunitiesFromUser(int userID){
+        
+        var user=await Context.Users.AsNoTracking().Include(c=>c.Subscribed).Where(c=>c.Id==userID).FirstOrDefaultAsync();
+        if(user==null)
+            return BadRequest("No user");
+
+        if( user.Subscribed ==null || !user.Subscribed.Any() )
+            return BadRequest("User not subscribed to any community");
+
+
+        return Ok(user.Subscribed);
     }
 }

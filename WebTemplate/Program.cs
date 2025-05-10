@@ -2,6 +2,7 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text.Json.Serialization;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +23,8 @@ builder.Services.AddCors(options =>
                            "https://localhost:5500",
                            "http://127.0.0.1:5500",
                            "https://127.0.0.1:5500",
-                           "http://localhost:4200");
+                           "http://localhost:4200")
+            .AllowCredentials();
     });
 });
 
@@ -65,6 +67,14 @@ if (app.Environment.IsDevelopment())
 app.UseCors("CORS");
 
 app.UseHttpsRedirection();
+
+
+app.UseStaticFiles();
+// app.UseStaticFiles(new StaticFileOptions
+// {
+//     FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Media")),
+//     RequestPath = ""
+// });
 
 app.UseAuthentication();
 app.UseAuthorization();

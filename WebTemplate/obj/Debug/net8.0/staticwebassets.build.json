@@ -1,12 +1,125 @@
 {
   "Version": 1,
-  "Hash": "Jrkz3wZT2j5I18T8wnByMkrG/h9T1cgUKd3vvqAPN3U=",
+  "Hash": "otk8+rZuanAffSqse1LIZ40QRLZve4p1MLf0H3FvRhg=",
   "Source": "WebTemplate",
   "BasePath": "_content/WebTemplate",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": [],
-  "Endpoints": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "WebTemplate\\wwwroot",
+      "Source": "WebTemplate",
+      "ContentRoot": "E:\\angular\\prooooj\\WebTemplate\\wwwroot\\",
+      "BasePath": "_content/WebTemplate",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "E:\\angular\\prooooj\\WebTemplate\\wwwroot\\Media\\2cb0489a-1982-4879-4541-08dd900fce85.png",
+      "SourceId": "WebTemplate",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\angular\\prooooj\\WebTemplate\\wwwroot\\",
+      "BasePath": "_content/WebTemplate",
+      "RelativePath": "Media/2cb0489a-1982-4879-4541-08dd900fce85#[.{fingerprint}]?.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "wdxkdobn2a",
+      "Integrity": "/BwtDd5PLR+sW/rU/LDDjzJDDcibWTnI0a5KKof4rw0=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Media\\2cb0489a-1982-4879-4541-08dd900fce85.png"
+    }
+  ],
+  "Endpoints": [
+    {
+      "Route": "Media/2cb0489a-1982-4879-4541-08dd900fce85.png",
+      "AssetFile": "E:\\angular\\prooooj\\WebTemplate\\wwwroot\\Media\\2cb0489a-1982-4879-4541-08dd900fce85.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "189910"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"/BwtDd5PLR+sW/rU/LDDjzJDDcibWTnI0a5KKof4rw0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 10 May 2025 22:18:35 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-/BwtDd5PLR+sW/rU/LDDjzJDDcibWTnI0a5KKof4rw0="
+        }
+      ]
+    },
+    {
+      "Route": "Media/2cb0489a-1982-4879-4541-08dd900fce85.wdxkdobn2a.png",
+      "AssetFile": "E:\\angular\\prooooj\\WebTemplate\\wwwroot\\Media\\2cb0489a-1982-4879-4541-08dd900fce85.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "189910"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"/BwtDd5PLR+sW/rU/LDDjzJDDcibWTnI0a5KKof4rw0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 10 May 2025 22:18:35 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "wdxkdobn2a"
+        },
+        {
+          "Name": "label",
+          "Value": "Media/2cb0489a-1982-4879-4541-08dd900fce85.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-/BwtDd5PLR+sW/rU/LDDjzJDDcibWTnI0a5KKof4rw0="
+        }
+      ]
+    }
+  ]
 }

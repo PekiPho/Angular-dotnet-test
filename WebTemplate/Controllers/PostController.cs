@@ -21,35 +21,67 @@ public class PostController:ControllerBase{
         Mapper=mapper;
     }
 
-    [HttpGet("GetPostsFromCommunity/{communityName}")]
-    public async Task<ActionResult> GetPostsFromCommunity(string communityName){
-        var posts=await Context.Posts.Include(c=>c.Community)
-                        .Include(c=>c.User)
-                        .Include(c=>c.Comments)
-                        .Include(c=>c.Media)
-                        .Where(c=>c.Community!.Name==communityName  && c.DateOfPost>DateTime.Now.AddDays(-7))
-                        .OrderBy(c=>c.Vote).ToListAsync();
+    [HttpPost("AddPostWithMedia/{username}/{communityName}")]
+    public async Task<ActionResult> AddPostWithMedia(string username,string communityName,[FromForm]string postJson,[FromForm] IFormFile file){
+        var user=await Context.Users.Where(c=>c.Username==username).FirstOrDefaultAsync();
+        var community=await Context.Communities.Where(c=>c.Name==communityName).FirstOrDefaultAsync();
+        if(user==null || community ==null)
+            return BadRequest("User or community not found");
         
-        var postsDto=Mapper.Map<List<PostDto>>(posts);
-
-        return Ok(postsDto);
-    }
-
-    [HttpGet("GetPostByID/{postId}")]
-    public async Task<ActionResult> GetPostByID(Guid postId){
-        var post=await Context.Posts.Where(c=>c.Id== postId).Include(c=>c.Community)
-                                    .Include(c=>c.User)
-                                    .Include(c=>c.Media)
-                                    .Include(c=>c.Comments)
-                                    .FirstOrDefaultAsync();
-
+        var post=JsonConvert.DeserializeObject<Post>(postJson);
         if(post==null)
-            return BadRequest("Post does not exist");
+            return BadRequest("Invalid post data");
 
-        var postDto= Mapper.Map<PostDto>(post);
+        post.User=user;
+        post.Community=community;
 
+        //Console.WriteLine(file);
+
+        if(file!=null){
+
+            var extensionsAllowed=new List<string> { ".jpg",".jpeg",".png",".mp4",".mov",".avi"};
+            var fileExt=Path.GetExtension(file.FileName).ToLowerInvariant();
+
+            if(!extensionsAllowed.Contains(fileExt))
+                return BadRequest("Extension is not yet supported");
+            
+            var media=new Media{
+                Post=post,
+                Url="",
+            };
+
+            post.Media=post.Media ?? new List<Media>();
+            post.Media.Add(media);
+
+            await Context.Media.AddAsync(media);
+            await Context.Posts.AddAsync(post);
+            await Context.SaveChangesAsync();
+
+
+            string path= Path.Combine(Directory.GetCurrentDirectory(),"wwwroot","Media");
+
+            if(!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            var fileName=media.Id+fileExt;
+            var filePath=Path.Combine(path,fileName);
+
+            using (var stream = new FileStream(filePath,FileMode.Create)){
+                await file.CopyToAsync(stream);
+            }
+
+            media.Url=Path.Combine("Media",fileName);
+
+            Context.Media.Update(media);
+
+            await Context.SaveChangesAsync();
+        }
+
+        var postDto=Mapper.Map<PostDto>(post);
         return Ok(postDto);
     }
+
+    
 
     [HttpPost("AddPost/{userID}/{communityID}")]
     public async Task<ActionResult> AddPost(int userID,int communityID,[FromBody]Post post){
@@ -335,5 +367,35 @@ public class PostController:ControllerBase{
         var postsDto=Mapper.Map<List<PostDto>>(posts);
 
         return Ok(postsDto);
+    }
+
+    [HttpGet("GetPostsFromCommunity/{communityName}")]
+    public async Task<ActionResult> GetPostsFromCommunity(string communityName){
+        var posts=await Context.Posts.Include(c=>c.Community)
+                        .Include(c=>c.User)
+                        .Include(c=>c.Comments)
+                        .Include(c=>c.Media)
+                        .Where(c=>c.Community!.Name==communityName  && c.DateOfPost>DateTime.Now.AddDays(-7))
+                        .OrderBy(c=>c.Vote).ToListAsync();
+        
+        var postsDto=Mapper.Map<List<PostDto>>(posts);
+
+        return Ok(postsDto);
+    }
+
+    [HttpGet("GetPostByID/{postId}")]
+    public async Task<ActionResult> GetPostByID(Guid postId){
+        var post=await Context.Posts.Where(c=>c.Id== postId).Include(c=>c.Community)
+                                    .Include(c=>c.User)
+                                    .Include(c=>c.Media)
+                                    .Include(c=>c.Comments)
+                                    .FirstOrDefaultAsync();
+
+        if(post==null)
+            return BadRequest("Post does not exist");
+
+        var postDto= Mapper.Map<PostDto>(post);
+
+        return Ok(postDto);
     }
 }

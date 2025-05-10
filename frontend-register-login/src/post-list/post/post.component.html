@@ -1,4 +1,4 @@
-<div class="post">
+<div class="post" [ngClass]="{'has-media': !isLink && post.mediaIds?.length}">
   <div class="info">
     <div class="comm-user">
       <h5 (click)="navigateCommunity();">{{post.communityName}}</h5>
@@ -20,6 +20,16 @@
         <div *ngIf="!isLink" class="post-description" (click)="navigate();">
           {{ post.description }}
         </div>
+
+        <!-- Trying to make media post work here -->
+          <div class="post-media-full" *ngIf="!isLink && post.mediaIds?.length">
+            <ng-container *ngFor="let media of post.mediaIds">
+              <img *ngIf="isImage(media.url);" [src]="'https://localhost:7080/'+media.url" alt="Image" class="post-full-image">
+              <video *ngIf="isVideo(media.url);" [src]="'https://localhost:7080/'+media.url" alt="Video" controls class="post-full-video"></video>
+            </ng-container>
+            
+          </div>
+        <!-- Until here -->
   
         <div class="post-actions">
           <div class="vote-comments">

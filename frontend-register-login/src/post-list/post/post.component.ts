@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { Post, PostToSend, Vote } from '../../interfaces/post';
-import { formatDate, NgIf } from '@angular/common';
+import { formatDate, NgClass, NgFor, NgIf } from '@angular/common';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { PostService } from '../../services/post.service';
 import { UserServiceService } from '../../services/user-service.service';
@@ -10,7 +10,7 @@ import { CommentService } from '../../services/comment.service';
 
 @Component({
   selector: 'post',
-  imports: [NgIf],
+  imports: [NgIf,NgFor,NgClass],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss'
 })
@@ -41,6 +41,7 @@ export class PostComponent implements OnInit{
   public commCount:number=0; // to add comment count fetching
 
   ngOnInit(): void {
+    console.log(this.post);
 
     this.userService.userr$.subscribe((user: User | null)=>{
       if(user){
@@ -145,6 +146,14 @@ export class PostComponent implements OnInit{
         console.log(err);
       }
     );
+  }
+
+  isVideo(url:string){
+    return /\.(mp4|mov|avi)$/i.test(url);
+  }
+
+  isImage(url:string){
+    return /\.(jpg|jpeg|png)$/i.test(url);
   }
 
   navigate(){

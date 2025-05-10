@@ -4,6 +4,7 @@ import { Post, PostToSend } from '../interfaces/post';
 import { Media } from '../interfaces/media';
 import { BehaviorSubject } from 'rxjs';
 import { Community } from '../interfaces/community';
+import { JsonPipe } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,18 @@ export class PostService {
 
   addPost( username:string,community:string,post:PostToSend){
     return this.http.post(this.url+"/Post/AddPostByName/"+username+"/"+community,post,{responseType:'json'});
+  }
+
+  addPostWithMedia(username:string,community:string,postJson:any,file:File){
+    const formData = new FormData();
+
+
+    formData.append('postJson',JSON.stringify(postJson));
+    if(file){
+      formData.append('file',file,file.name);
+    }
+
+    return this.http.post(`${this.url}/Post/AddPostWithMedia/${username}/${community}`,formData);
   }
 
   getPosts(communityName:string){

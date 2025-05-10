@@ -220,3 +220,26 @@
     align-items: center;
     color: aliceblue;
   }
+
+
+
+  .post-media-full {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  .post-full-image,
+  .post-full-video {
+    width: 100%;
+    max-height: 250px;
+    object-fit: fill;
+    border-radius: 8px;
+  }
+
+
+  .post.has-media {
+    height: 380px;
+    //height: fit-content;
+  }

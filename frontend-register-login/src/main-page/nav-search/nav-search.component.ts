@@ -20,15 +20,35 @@ export class NavSearchComponent {
     @Input() user?:string;
 
     public createPost:boolean=false;
+    public isError:boolean=false;
+    public error:string='';
 
     showPostModal(){
       this.createPost=true;
-
+      this.textClick();
       //console.log(this.createPost);
     }
 
     disablePostModal(){
       this.createPost=false;
+
+
+      (document.querySelector('#title') as HTMLInputElement).value='';
+      (document.querySelector("#community")as HTMLInputElement).value='';
+      (document.querySelector("#description") as HTMLInputElement).value='';
+      (document.querySelector("#imgVideo") as HTMLInputElement).value='';
+      
+
+      this.error='';
+      this.isError=false;
+
+      //this.textClick();
+    }
+
+    closeModal(){
+      this.createPost=false;
+      this.error='';
+      this.isError=false;
     }
 
     public text:boolean=true;
@@ -70,31 +90,54 @@ export class NavSearchComponent {
         post.description=desc;
       }
       if(this.imgVid){
-        var imageVideo=(document.querySelector("#imgVideo") as HTMLInputElement).files;
+        var imageVideo=(document.querySelector("#imgVideo") as HTMLInputElement);
+        var file=imageVideo?.files?.[0];
+        console.log("here");
+        if(file){
+          const isVideo = file.type.startsWith("video/");
+          const isImage=file.type.startsWith("image/");
+          console.log("hereee");
 
-        if(imageVideo!=null){
-          for(var i=0;i<imageVideo.length;i++){
+          if(isImage && file.size > 1<<20){
+            console.log("yoo");
+            this.error="File is too large";
+            this.isError=true;
+            return;
+          }
+          if(isVideo && file.size > 1<<30){
+            this.error='Video exceeds 1GB limit';
+            this.isError=true;
+            return;
+          }
 
-            const file=imageVideo[i];
-            if(file.type.startsWith('video/')){
-
-              const video=document.createElement('video');
-              video.preload='metadata';
-
-              video.onloadedmetadata=function(){
-                var duration=video.duration;
-                if(duration>15*60)
-                {
-                  console.log("File too long");
-                  return;
-                }
+          if(isVideo){
+            const videoEl=document.createElement('video');
+            videoEl.preload='metadata';
+            videoEl.onloadedmetadata=()=>{
+              const duration = videoEl.duration /60;
+              if(duration> 15){
+                this.isError=true;
+                this.error="Video is too long";
+                return;
               }
+
+              if(!this.submitPost(community,post,file)){
+                this.error="Select a file";
+                this.isError=true;
+              }
+            };
+
+            videoEl.src=URL.createObjectURL(file);
+          }
+          else{
+            if(!this.submitPost(community,post,file)){
+              this.error="Select a file";
+              this.isError=true;
             }
           }
         }
 
-        
-        
+        return;
       }
       if(this.link){
         var desc=(document.querySelector("#link")as HTMLInputElement).value;
@@ -115,6 +158,26 @@ export class NavSearchComponent {
         complete:()=>{}
       });
 
+    }
+
+    submitPost(community:string,post:PostToSend,file?:File):boolean{
+      if(!file){
+        return false;
+      }
+
+      console.log(this.user!,community,post,file);
+
+      this.postService.addPostWithMedia(this.user!,community,post,file).subscribe({
+        next:(data)=>{
+          this.disablePostModal();
+          return true;
+        },
+        error:(err)=>{
+          console.log(err);
+          return false;
+        }
+      });
+      return false;
     }
 
     public communities:Community[]=[];

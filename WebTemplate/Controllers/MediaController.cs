@@ -16,19 +16,6 @@ public class MediaController:ControllerBase{
         Mapper=mapper;
     }
 
-    [HttpGet("GetMediaFromPost/{postId}")]
-    public async Task<ActionResult> GetMediaFromPost(Guid postid){
-
-        var media = await Context.Media.Include(c=>c.Post).Where(c=>c.Post!.Id==postid).ToListAsync();
-
-        if(!media.Any())
-            return Ok(null);
-
-        var mediaDto= Mapper.Map<List<MediaDto>>(media);
-        
-        return Ok(mediaDto);
-    }
-
     [HttpPost("UploadMedia")]
     public async Task<ActionResult> UploadMedia([FromForm] List<IFormFile> mediaFiles){
         if(mediaFiles==null || mediaFiles.Count==0){
@@ -89,4 +76,19 @@ public class MediaController:ControllerBase{
         await Context.SaveChangesAsync();
         return Ok(mediaList);
     }
+
+    [HttpGet("GetMediaFromPost/{postId}")]
+    public async Task<ActionResult> GetMediaFromPost(Guid postid){
+
+        var media = await Context.Media.Include(c=>c.Post).Where(c=>c.Post!.Id==postid).ToListAsync();
+
+        if(!media.Any())
+            return Ok(null);
+
+        var mediaDto= Mapper.Map<List<MediaDto>>(media);
+        
+        return Ok(mediaDto);
+    }
+
+    
 }
