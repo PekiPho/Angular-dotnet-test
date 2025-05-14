@@ -188,3 +188,23 @@
     margin-left: 1rem;
     font-size: large;
   }
+
+  .reply-edit{
+    display: flex;
+    flex-direction: row;
+    gap:15px;
+  }
+
+  .dropdown-menu{
+    background-color: #1b1b1b;
+}
+
+.dropdown-item{
+    background-color: #1b1b1b;
+    font-weight:500;
+    //color:aliceblue;
+}
+.dropdown-item:hover{
+    background-color: #444;
+    cursor: pointer;
+}

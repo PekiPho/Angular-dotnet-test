@@ -1,4 +1,4 @@
-import { Component, Input, input, NgModule, OnChanges, OnInit, SimpleChanges,ElementRef,ViewChild, Output, EventEmitter, AfterViewInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, Input, input, NgModule, OnChanges, OnInit, SimpleChanges,ElementRef,ViewChild, Output, EventEmitter, AfterViewInit, ChangeDetectorRef, OnDestroy, HostListener } from '@angular/core';
 import { Comment } from '../../../interfaces/comment';
 import { NgFor, NgIf, NumberSymbol } from '@angular/common';
 import {format} from 'date-fns';
@@ -29,11 +29,12 @@ export class CommentRecursionComponent implements OnInit,OnChanges,AfterViewInit
   @Input() comment:Comment={};
   @Input() level:number=-1;
 
-  private user={} as User;
+  public user={} as User;
 
   public date:any;
   public voted:boolean | null = null;
   public visible:boolean=false;
+  public showMenu:boolean=false;
 
 
   public showReply:boolean=false;
@@ -201,6 +202,28 @@ export class CommentRecursionComponent implements OnInit,OnChanges,AfterViewInit
     this.collapseChanged.emit();
   }
 
+  @HostListener('document:click',['$event'])
+  handleClick(event:MouseEvent){
+    var target = event.target as HTMLElement;
+
+    if(!target.closest('.dropdown')){
+      this.showMenu=false;
+    }
+  }
+
+  deleteComment(){
+    this.showMenu=false;
+
+
+    this.commentService.deleteComment(this.comment.id!).subscribe({
+      next:(data)=>{
+        location.reload();
+      },
+      error:(err)=>{
+        console.log(err);
+      }
+    });
+  }
 
 }
 

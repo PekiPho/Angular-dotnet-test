@@ -37,4 +37,8 @@ export class CommentService {
   getCommentsFromUser(username:string){
     return this.http.get<Comment[]>(`${this.url}/Comment/GetCommentsOnProfile/${username}`);
   }
+
+  deleteComment(commentId:string){
+    return this.http.delete(`${this.url}/Comment/DeleteComment/${commentId}`);
+  }
 }

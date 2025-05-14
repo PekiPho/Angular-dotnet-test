@@ -14,11 +14,8 @@
     </div>
 
 
-    <div class="comm-body" (click)="changeCollapse();" *ngIf="!comment.isDeleted">
+    <div class="comm-body" (click)="changeCollapse();">
         {{comment.content}}
-    </div>
-    <div class="comm-body" (click)="changeCollapse();" *ngIf="comment.isDeleted">
-        [deleted]
     </div>
 
     <div class="post-actions">
@@ -29,8 +26,16 @@
             <button class="downvote-btn"(click)="voteOnComment(false);" [class.downvoted]="voted===false">▼</button>
           </div>
         </div>
-        
-        <button class="reply-btn" (click)="toggleReply()">Reply</button>
+
+        <div class="reply-edit">
+          <div class="dropdown" *ngIf="this.user.username == this.comment.username">
+            <button class="btn btn-sm btn-dark" (click)="showMenu=!showMenu">⋮</button>
+            <ul class="dropdown-menu show" style="display: block; position: absolute; right: 0; z-index: 1000;" *ngIf="showMenu">
+              <li class="dropdown-item text-danger" (click)="deleteComment();">Delete</li>
+            </ul>
+          </div>
+          <button class="reply-btn" (click)="toggleReply()">Reply</button>
+        </div>
     </div>
 
     <div class="reply-box" *ngIf="this.showReply">
