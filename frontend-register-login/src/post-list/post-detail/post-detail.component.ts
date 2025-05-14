@@ -277,4 +277,12 @@ export class PostDetailComponent implements OnInit {
     this.justOpened=false;
   }
 
+  isVideo(url:string){
+    return /\.(mp4|mov|avi)$/i.test(url);
+  }
+
+  isImage(url:string){
+    return /\.(jpg|jpeg|png)$/i.test(url);
+  }
+
 }

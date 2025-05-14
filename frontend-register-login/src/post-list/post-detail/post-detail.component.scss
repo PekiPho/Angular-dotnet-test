@@ -49,10 +49,12 @@ h2{
 
 .post{
     margin-top: 2rem;
-    width: 75%;
-    max-height: 50%;
+    width: calc(75% - 2px);
+    //max-height: 50%;
 
     background-color: #2d2d2d;
+    padding-top: 0.5rem;
+    border:1px solid orangered;
 
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
@@ -64,8 +66,13 @@ h2{
 
 .post-image{
     object-fit: cover;
-    max-height: 300px;
-    width: 100%;
+    //margin: auto 0;
+    //height: 400px;
+    max-height: 400px;
+    max-width: 100%;
+    width: 90%;
+    //align-self: center;
+    margin-bottom: 25px;
 }
 
 .link-bottom{
@@ -73,6 +80,7 @@ h2{
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-left: 25px;
 
     overflow: hidden;
     text-overflow: ellipsis;
@@ -318,4 +326,17 @@ button{
 .dropdown-item:hover{
     background-color: #444;
     cursor: pointer;
+}
+
+.rand{
+    display: flex;
+    justify-content: center;
+}
+
+.post-full-image{
+    max-width: 100%;
+    width: 90%;
+    object-fit: fill;
+    border-radius: 8px;
+    padding-bottom: 25px;
 }

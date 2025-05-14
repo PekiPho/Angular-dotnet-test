@@ -17,14 +17,24 @@
 
             <h2>{{post.title}}</h2>
             <div class="" *ngIf="hasMedia && post.mediaIds && post.mediaIds.length > 0">
-                <a [href]="post.description">
-                    <img [src]="post.mediaIds[0].url" alt="Image" class="post-image">
-                </a>
-                <a [href]="post.description">
-                    <p class="link-bottom">{{post.description}}</p>
-                </a>
+                <div class="" *ngIf="post.description">
+                    <a [href]="post.description" class="rand">
+                        <img [src]="post.mediaIds[0].url" alt="Image" class="post-image">
+                    </a>
+                
+                    <a [href]="post.description">
+                        <p class="link-bottom">{{post.description}}</p>
+                    </a>
+                </div>
+                <div class="rand" *ngIf="!post.description">
+                    <ng-container *ngFor="let media of post.mediaIds">
+                        <img *ngIf="isImage(media.url);" [src]="'https://localhost:7080/'+media.url" alt="Image" class="post-full-image">
+                        <video *ngIf="isVideo(media.url);" [src]="'https://localhost:7080/'+media.url" alt="Video" controls class="post-full-video"></video>
+                    </ng-container>
+                </div>
+                
             </div>
-            <div class="desc-text" *ngIf="hasMedia===false">
+            <div class="desc-text" *ngIf="!hasMedia">
                 {{post.description}}
             </div>
         </div>
