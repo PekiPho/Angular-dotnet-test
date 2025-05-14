@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, HostListener, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { CommunityInfoComponent } from "../community-info/community-info.component";
 import { PostService } from '../../services/post.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -26,13 +26,16 @@ export class PostDetailComponent implements OnInit {
     private route:Router,
   ){}
 
-  private user={} as User;
+  public user={} as User;
   private postId:string='';
 
   public cantLoad:boolean=false;
   public hasMedia:boolean=false;
   public hasVoted:boolean | null=null;
   public copied:boolean=false;
+  public showMenu:boolean=false;
+  public confirmDelete:boolean=false;
+  public justOpened:boolean=false;
   public commCount:number=0;
   public post={}as Post;
 
@@ -187,6 +190,7 @@ export class PostDetailComponent implements OnInit {
         this.root=[];
         this.buildTree();
         //console.log(content);
+        location.reload();
       },
       error:(err)=>{
         console.log(err);
@@ -241,6 +245,36 @@ export class PostDetailComponent implements OnInit {
         console.log(err);
       }
     );
+  }
+
+  deletePost(){
+    this.confirmDelete=false;
+
+    this.postService.deletePost(this.post.id).subscribe({
+      next:(data)=>{
+
+        this.postService.removeFromRecent(this.post.id);
+        this.route.navigateByUrl('/mainPage');
+      },
+      error:(err)=>{
+        console.log(err);
+      }
+    });
+  }
+
+  @HostListener('document:click',['$event'])
+  handleClick(event:MouseEvent){
+    var target = event.target as HTMLElement;
+
+    if(!target.closest('.dropdown')){
+      this.showMenu=false;
+    }
+
+    if(this.confirmDelete && !this.justOpened && !target.closest('.modal-box')){
+      this.confirmDelete=false;
+    }
+
+    this.justOpened=false;
   }
 
 }

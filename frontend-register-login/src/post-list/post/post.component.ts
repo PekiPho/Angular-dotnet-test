@@ -41,7 +41,7 @@ export class PostComponent implements OnInit{
   public commCount:number=0; // to add comment count fetching
 
   ngOnInit(): void {
-    console.log(this.post);
+    //console.log(this.post);
 
     this.userService.userr$.subscribe((user: User | null)=>{
       if(user){

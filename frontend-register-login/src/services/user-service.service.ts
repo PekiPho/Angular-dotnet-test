@@ -42,7 +42,7 @@ export class UserServiceService {
       tap((data:any)=>{
         if(data.token){
           localStorage.setItem('token',data.token);
-          console.log(data.token);
+          //console.log(data.token);
         }
       })
     );

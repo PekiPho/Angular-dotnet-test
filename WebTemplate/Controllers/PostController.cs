@@ -212,6 +212,10 @@ public class PostController:ControllerBase{
     public async Task<ActionResult> DeletePostByName(Guid postId){
 
         var post=await Context.Posts.Include(c=>c.Media)
+                                    .Include(c=>c.Votes)
+                                    .Include(c=>c.Comments)
+                                        .ThenInclude(c=>c.Votes)
+                                    //.Include(c=>c.)
                             .Where(c=>c.Id==postId).FirstOrDefaultAsync();
 
         if(post==null)
@@ -219,11 +223,38 @@ public class PostController:ControllerBase{
 
         if(post.Media !=null && post.Media.Any()){
             foreach(var media in post.Media){
+               // var filePath=Path.Combine("wwwroot/Media",media.Id.ToString());
+                var searchFile=Directory.GetFiles("wwwroot/Media", $"{media.Id}.*").FirstOrDefault();
+
+                if(System.IO.File.Exists(searchFile)){
+                    System.IO.File.Delete(searchFile);
+                }
+
                 Context.Media.Remove(media);
             }
 
             await Context.SaveChangesAsync();
         }
+
+        if(post.Votes!=null && post.Votes.Any()){
+            Context.Votes.RemoveRange(post.Votes);
+            await Context.SaveChangesAsync();
+        }
+
+        if(post.Comments!=null && post.Comments.Any()){
+            var allVotes=post.Comments.Where(c=>c.Votes !=null && c.Votes.Any())
+                                    .SelectMany(c=>c.Votes)
+                                    .ToList();
+            if(allVotes.Any()){
+                Context.CommentVotes.RemoveRange(allVotes);
+                await Context.SaveChangesAsync();
+            }
+
+            Context.Comments.RemoveRange(post.Comments);
+            await Context.SaveChangesAsync();
+        }
+
+
 
         Context.Posts.Remove(post);
 

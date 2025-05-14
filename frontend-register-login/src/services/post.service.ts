@@ -76,6 +76,10 @@ export class PostService {
     return this.http.get<{communities : Community[],posts: Post[]}>(`${this.url}/Search/GetCommunitiesAndPosts/${query}`);
   }
 
+  deletePost(postId:string){
+    return this.http.delete(`${this.url}/Post/DeletePostByName/${postId}`,{responseType:'text'});
+  }
+
   private recentPosts=new BehaviorSubject<Post[]>([]);
   recentPosts$=this.recentPosts.asObservable();
 
@@ -96,5 +100,10 @@ export class PostService {
 
   clearRecent(){
     this.recentPosts.next([]);
+  }
+
+  removeFromRecent(postId:string){
+    var updated= this.recentPosts.value.filter(c=>c.id!== postId);
+    this.recentPosts.next(updated);
   }
 }

@@ -150,7 +150,7 @@ export class NavSearchComponent {
       this.postService.addPost(this.user!,community,post).subscribe({
         next:(data)=>{
           console.log(data);
-          window.location.reload();
+          location.reload();
         },
         error:(err)=>{
           console.log(err);
@@ -170,6 +170,7 @@ export class NavSearchComponent {
       this.postService.addPostWithMedia(this.user!,community,post,file).subscribe({
         next:(data)=>{
           this.disablePostModal();
+          location.reload();
           return true;
         },
         error:(err)=>{

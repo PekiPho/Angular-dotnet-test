@@ -1,6 +1,20 @@
 <div class="parent">
     <div class="content border-end border-light">
-        <div class="post" *ngIf="post!=null">
+        <div class="post" style="position: relative;" *ngIf="post!=null">
+            <!-- This is to add modal to remove post -->
+            <div class="" style="position: absolute; top:5px; right: 5px;" *ngIf="this.post.username == this.user.username">
+
+                <div class="dropdown text-end" style="position: relative;">
+                    <button class="btn btn-sm btn-dark" (click)="showMenu = !showMenu">⋮</button>
+                    <ul class="dropdown-menu show" *ngIf="showMenu" style="display: block; position: absolute; right: 0; z-index: 1000;">
+                        <li><a class="dropdown-item text-danger" (click)="confirmDelete = true; showMenu = false; justOpened=true;">Delete</a></li>
+                        <!-- Later: <li><a class="dropdown-item" (click)="editPost()">Edit</a></li> -->
+                    </ul>
+                </div>
+
+            </div>
+            <!-- Until here -->
+
             <h2>{{post.title}}</h2>
             <div class="" *ngIf="hasMedia && post.mediaIds && post.mediaIds.length > 0">
                 <a [href]="post.description">
@@ -43,4 +57,14 @@
     </div>
 </div>
 
+
+<div class="modal-backdrop" *ngIf="confirmDelete">
+  <div class="modal-box">
+    <p>Are you sure you want to delete this post?</p>
+    <div class="modal-buttons">
+        <button class="btn btn-danger btn-sm" (click)="deletePost();">Delete</button>
+        <button class="btn btn-secondary btn-sm" (click)="confirmDelete = false">Cancel</button>
+    </div>
+  </div>
+</div>
 
