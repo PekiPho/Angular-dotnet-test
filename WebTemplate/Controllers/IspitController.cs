@@ -1,8 +1,10 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
@@ -43,6 +45,32 @@ public class IspitController : ControllerBase
             token = new JwtSecurityTokenHandler().WriteToken(token),
             expiration=token.ValidTo
         });
+    }
+
+    [HttpPut("UpdatePassword/{username}/{newPassword}")]
+    public async Task<ActionResult> UpdatePassword(string username, string newPassword)
+    {
+        string pattern = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$";
+
+        bool isMatch = Regex.IsMatch(newPassword, pattern);
+
+        if (!isMatch)
+            return BadRequest("Weak password");
+
+        var user = await Context.Users.FirstOrDefaultAsync(c => c.Username == username);
+
+        if (user == null)
+            return BadRequest("User does not exist");
+
+        var hasher = new PasswordHasher<User>();
+
+        user.Password = hasher.HashPassword(user, newPassword);
+
+        Context.Users.Update(user);
+
+        await Context.SaveChangesAsync();
+
+        return Ok("Password updated successfully!");
     }
 
     
@@ -90,9 +118,23 @@ public class IspitController : ControllerBase
     [HttpGet("GetUserByMailAndPassword/{mail}/{password}")]
     public async Task<ActionResult> GetUserByMailAndPassword(string mail,string password){
 
-        var user= await Context.Users.Where(x=>x.Email == mail && x.Password== password).FirstOrDefaultAsync();
+        var users= await Context.Users.Where(x=>x.Email == mail).ToListAsync();
 
-        if(user==null){
+        User? user = null; ;
+        var hasher = new PasswordHasher<User>();
+
+        foreach (var u in users)
+        {
+            if (hasher.VerifyHashedPassword(u, u.Password, password) == PasswordVerificationResult.Success)
+            {
+                user = u;
+                break;
+            }
+               
+        }
+
+        if (user == null)
+        {
             return BadRequest("Wrong email or password");
         }
 
