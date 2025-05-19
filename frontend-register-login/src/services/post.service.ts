@@ -68,6 +68,10 @@ export class PostService {
     return this.http.get<Post[]>(`${this.url}/Post/GetXVotedPostsByUser/${username}/${vote}`);
   }
 
+  getHotPosts(username:string){
+    return this.http.get<Post[]>(`${this.url}/Post/GetHotPosts/${username}`);
+  }
+
   searchOnType(query:string){
     return this.http.get<Community[]>(`${this.url}/Search/OnTypeCommunities/${query}`);
   }

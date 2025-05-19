@@ -303,7 +303,7 @@ public class PostController:ControllerBase{
         else{
         
 
-            //adjust the day based on popularity (only for optimization)
+            //adjust the day based on popularity (only for optimization, should be like 1 here)
              var posts = await Context.Posts.Include(c => c.Community)
                                             .Include(c => c.Media)
                                             .Include(c => c.User)
