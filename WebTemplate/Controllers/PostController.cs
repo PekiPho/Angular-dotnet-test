@@ -264,6 +264,70 @@ public class PostController:ControllerBase{
         
     }
 
+    [HttpGet("GetHotPosts/{username}")]
+    public async Task<ActionResult> GetHotPosts(string username)
+    {
+
+
+        var user = await Context.Users.Include(c => c.Subscribed).FirstOrDefaultAsync(c => c.Username == username);
+
+        if (user == null)
+            return BadRequest("No user");
+
+        if (user.Subscribed != null && user.Subscribed.Any())
+        {
+
+            var comm = user.Subscribed.Select(c => c.Name).ToList();
+
+            //change the value on total days based on however popular the thing is (should be like 3-4)
+            var posts = await Context.Posts.Include(c => c.Community)
+                                            .Include(c => c.Media)
+                                            .Include(c => c.User)
+                                            .Include(c => c.Votes)
+                                            .Where(c => EF.Functions.DateDiffDay(c.DateOfPost,DateTime.UtcNow) < 120 && comm.Contains(c.Community!.Name))
+                                            .ToListAsync();
+
+            var sortEm = posts.Select(c => new
+            {
+                Post = c,
+                HotScore = (c.Vote == 0 ? 1 : c.Vote) / Math.Pow((DateTime.UtcNow - c.DateOfPost).TotalHours +1, 1.25)
+            })
+            .OrderByDescending(a => a.HotScore)
+            .Select(a => a.Post)
+            .ToList();
+
+            var postsDto = Mapper.Map<List<PostDto>>(sortEm);
+
+            return Ok(postsDto);
+        }
+        else{
+        
+
+            //adjust the day based on popularity (only for optimization)
+             var posts = await Context.Posts.Include(c => c.Community)
+                                            .Include(c => c.Media)
+                                            .Include(c => c.User)
+                                            .Include(c => c.Votes)
+                                            .Where(c => EF.Functions.DateDiffDay(c.DateOfPost,DateTime.UtcNow) < 120)
+                                            .ToListAsync();
+
+            var sortEm = posts.Select(c => new
+            {
+                Post = c,
+                HotScore = (c.Vote == 0 ? 1 : c.Vote) / Math.Pow((DateTime.UtcNow - c.DateOfPost).TotalHours +1, 1.25)
+            })
+            .OrderByDescending(a => a.HotScore)
+            .Select(a => a.Post)
+            .ToList();
+
+            var postsDto = Mapper.Map<List<PostDto>>(sortEm);
+
+            return Ok(postsDto);
+        }
+
+        
+    }
+
     [HttpGet("GetPostsBySort/{communityName}/{sort}/{page}/{limit}/{time}")]
     public async Task<ActionResult> GetPostsBySort(string communityName,string sort,int page,int limit,string? time){
 
@@ -309,7 +373,7 @@ public class PostController:ControllerBase{
                 var res=await posts.ToListAsync();
                 var hot = res.Select(c => new {
                     Post = c,
-                    HotScore = Math.Log(Math.Max(1, Math.Abs(c.Vote))) - (DateTime.UtcNow - c.DateOfPost).TotalSeconds / 45000
+                    HotScore = c.Vote / Math.Pow((DateTime.UtcNow - c.DateOfPost).TotalHours,1.25)
                 })
                 .OrderByDescending(a => a.HotScore)
                 .Select(a => a.Post)
