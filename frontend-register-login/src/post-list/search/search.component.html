@@ -1,5 +1,5 @@
 <div class="parent">
-    <div class="content border-end border-light">
+    <div class="content border-end border-light" (scroll)="onScroll($event);">
         <div class="communities" *ngIf="communities && communities.length>0">
             <div class="community" *ngFor="let community of communities">
                 <p>{{community.name}}</p>

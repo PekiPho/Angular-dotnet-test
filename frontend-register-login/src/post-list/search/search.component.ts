@@ -27,11 +27,16 @@ export class SearchComponent implements OnInit,OnDestroy{
   public subs:{[key:string]:number}={};
   private query:string='';
   private routerSub:Subscription=new Subscription();
+  public isLoading:boolean=false;
+  public hasMore:boolean=true;
+  public currentPage:number=1;
 
   ngOnInit(): void {
     var seg=this.route.url.split('/');
     this.query=seg[seg.length-1];
     this.search();
+
+    //window.addEventListener('scroll', this.onScroll.bind(this));
     
     this.routerSub=this.route.events.subscribe((event)=>{
       //console.log("hiii");
@@ -46,6 +51,8 @@ export class SearchComponent implements OnInit,OnDestroy{
   }
 
   ngOnDestroy(): void {
+    //window.removeEventListener('scroll', this.onScroll.bind(this));
+
     if(this.routerSub){
       this.routerSub.unsubscribe();
     }
@@ -53,26 +60,57 @@ export class SearchComponent implements OnInit,OnDestroy{
 
   
 
-  search(){
-    this.postService.fullSearch(this.query).subscribe({
-      next:(data)=>{
-        this.communities=data.communities;
-        this.posts=data.posts;
+  search(page:number=1){
+    console.log(this.isLoading, this.hasMore);
+    if(this.isLoading || !this.hasMore) return;
 
-        this.communities.forEach((community)=>{
-          this.communityService.getSubscriberCount(community.name).subscribe({
-            next:(data)=>{
-              this.subs[community.name]=data as number;
-            },
-            error:(err)=>{
-              console.log(err);
-            }
+    this.isLoading=true;
+
+    this.postService.fullSearch(this.query,page).subscribe({
+      next:(data)=>{
+        if(page===1){
+          this.communities=data.communities;
+          this.posts=data.posts;
+        }
+        else{
+          this.posts=[...this.posts,...data.posts];
+        }
+
+        this.hasMore= data.posts.length===50;
+        
+        if(page == 1){
+          this.communities.forEach((community)=>{
+            this.communityService.getSubscriberCount(community.name).subscribe({
+              next:(data)=>{
+                this.subs[community.name]=data as number;
+              },
+              error:(err)=>{
+                console.log(err);
+              }
+            })
           })
-        })
+        }
+
+        this.isLoading=false;
+        this.currentPage=page;
       },
       error:(err)=>{
         console.log(err);
+        this.isLoading=false;
       }
     });
+  }
+
+  onScroll(event:Event){
+    var threshold=150;
+    var element= event.target as HTMLElement;
+
+    var Top=element.scrollTop;
+    var height=element.clientHeight;
+    var scrollHeight=element.scrollHeight;
+
+    if(scrollHeight + height >= scrollHeight-threshold && !this.isLoading && this.hasMore){
+      this.search(this.currentPage+1);
+    }
   }
 }

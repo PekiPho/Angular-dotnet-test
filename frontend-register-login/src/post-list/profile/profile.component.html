@@ -1,5 +1,5 @@
 <div class="parent">
-    <div class="content border-end border-light">
+    <div class="content border-end border-light" (scroll)="onScroll($event);">
         <div class="menu border-light border-bottom">
             <div class="btn btn-dark posts" (click)="changeNumber(0);">Posts</div>
             <div class="btn btn-dark comments" (click)="changeNumber(1);">Comments</div>

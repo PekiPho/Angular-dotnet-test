@@ -52,10 +52,15 @@ export class ProfileComponent implements OnInit,OnDestroy {
 
   private user:string='';
   public loadNumber:number=0;
+  public page:number=1;
+  public isLoading:boolean=false;
+  public hasMore:boolean=true;
 
 
   changeNumber(value:number){
     this.loadNumber=value;
+    this.page=1;
+    this.hasMore=true;
 
     this.loadData();
   }
@@ -67,7 +72,7 @@ export class ProfileComponent implements OnInit,OnDestroy {
 
   loadData(){
 
-    console.log(this.user);
+    //console.log(this.user);
 
     if(this.loadNumber===0){
       this.loadPosts();
@@ -88,20 +93,36 @@ export class ProfileComponent implements OnInit,OnDestroy {
 
   loadPosts(){
 
-    this.comments=[];
-    this.upVoted=[];
-    this.downVoted=[];
+    if(this.isLoading || !this.hasMore) return;
+
+    this.isLoading=true;
+
+    if(this.page===1){
+      this.comments=[];
+      this.upVoted=[];
+      this.downVoted=[];
+      this.posts=[];
+    }
+
+    
 
     // need to make it to load 50 by 50
     // will do some other time
-    console.log(this.user);
-    this.postService.getPostsFromUser(this.user).subscribe({
+    //console.log(this.user);
+    this.postService.getPostsFromUser(this.user,this.page).subscribe({
       next:(data)=>{
+        if(data.length<50){
+          this.hasMore=false;
+        }
+
         this.posts=data;
         this.loadMedia();
+        this.page++;
+        this.isLoading=false;
       },
       error:(err)=>{
         console.log(err);
+        this.isLoading=false;
       }
     });
 
@@ -124,37 +145,68 @@ export class ProfileComponent implements OnInit,OnDestroy {
     });
   }
 
+
   loadUpVoted(){
 
-    this.posts=[];
-    this.comments=[];
-    this.downVoted=[];
+    if(this.isLoading || !this.hasMore) return;
 
-    this.postService.getXVotedPostsFromUser(this.user,true).subscribe({
+    this.isLoading=true;
+
+    if(this.page===1){
+      this.posts=[];
+      this.comments=[];
+      this.downVoted=[];
+      this.upVoted=[];
+    }
+
+    this.postService.getXVotedPostsFromUser(this.user,true,this.page).subscribe({
       next:(data)=>{
-        this.upVoted=data;
+        if(data.length<50){
+          this.hasMore=false;
+        }
+
+        this.upVoted=[...this.upVoted,...data];
         this.loadMedia();
+        this.page++;
+        this.isLoading=false;
       },
       error:(err)=>{
         console.log(err);
+        this.isLoading=false;
       }
     });
   }
 
   loadDownVoted(){
 
-    this.posts=[];
-    this.comments=[];
-    this.upVoted=[];
+    if(this.isLoading || !this.hasMore) return;
 
-    this.postService.getXVotedPostsFromUser(this.user,false).subscribe({
+    this.isLoading=true;
+
+    if(this.page===1){
+      this.posts=[];
+      this.comments=[];
+      this.upVoted=[];
+      this.downVoted=[];
+    }
+    
+
+    this.postService.getXVotedPostsFromUser(this.user,false,this.page).subscribe({
       next:(data)=>{
+        if(data.length<50){
+          this.hasMore=false;
+        }
+
         this.downVoted=data;
+        this.page++;
         //console.log(data);
         this.loadMedia();
+
+        this.isLoading=false;
       },
       error:(err)=>{
         console.log(err);
+        this.isLoading=false;
       }
     });
   }
@@ -197,6 +249,20 @@ export class ProfileComponent implements OnInit,OnDestroy {
           }
         });
       })
+    }
+  }
+
+  onScroll(event:Event){
+    const element = event.target as HTMLElement;
+    const threshold = 150;
+
+    const scrollTop = element.scrollTop;
+    const clientHeight = element.clientHeight;
+    const scrollHeight = element.scrollHeight;
+
+    if (scrollTop + clientHeight >= scrollHeight - threshold && !this.isLoading && this.hasMore) {
+      //this.page++;
+      this.loadData();
     }
   }
 

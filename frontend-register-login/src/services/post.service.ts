@@ -60,24 +60,34 @@ export class PostService {
     return this.http.get<Post>(`${this.url}/Post/GetPostByID/${postId}`);
   }
 
-  getPostsFromUser(username:string){
-    return this.http.get<Post[]>(`${this.url}/Post/GetPostsByUser/${username}`);
+  getPostsFromUser(username:string,page?:number){
+    if(!page)
+      return this.http.get<Post[]>(`${this.url}/Post/GetPostsByUser/${username}`);
+    else return this.http.get<Post[]>(`${this.url}/Post/GetPostsByUser/${username}/${page}`);
   }
 
-  getXVotedPostsFromUser(username:string,vote:boolean){
-    return this.http.get<Post[]>(`${this.url}/Post/GetXVotedPostsByUser/${username}/${vote}`);
+  getXVotedPostsFromUser(username:string,vote:boolean,page?:number){
+    if(!page)
+      return this.http.get<Post[]>(`${this.url}/Post/GetXVotedPostsByUser/${username}/${vote}`);
+    else return this.http.get<Post[]>(`${this.url}/Post/GetXVotedPostsByUser/${username}/${vote}/${page}`);
   }
 
-  getHotPosts(username:string){
-    return this.http.get<Post[]>(`${this.url}/Post/GetHotPosts/${username}`);
+  getHotPosts(username:string,page?:number){
+    if(!page)
+      return this.http.get<Post[]>(`${this.url}/Post/GetHotPosts/${username}`);
+    else return this.http.get<Post[]>(`${this.url}/Post/GetHotPosts/${username}/${page}`);
   }
 
   searchOnType(query:string){
     return this.http.get<Community[]>(`${this.url}/Search/OnTypeCommunities/${query}`);
   }
 
-  fullSearch(query:string){
-    return this.http.get<{communities : Community[],posts: Post[]}>(`${this.url}/Search/GetCommunitiesAndPosts/${query}`);
+  fullSearch(query:string,page?:number){
+    if(!page)
+      return this.http.get<{communities : Community[],posts: Post[]}>(`${this.url}/Search/GetCommunitiesAndPosts/${query}`);
+    else{
+      return this.http.get<{communities : Community[],posts: Post[]}>(`${this.url}/Search/GetCommunitiesAndPosts/${query}/${page}`);
+    }
   }
 
   deletePost(postId:string){

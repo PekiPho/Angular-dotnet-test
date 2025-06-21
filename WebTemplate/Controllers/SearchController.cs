@@ -33,8 +33,8 @@ public class SearchController:ControllerBase{
     }
 
 
-    [HttpGet("GetCommunitiesAndPosts/{query}")]
-    public async Task<ActionResult> GetCommunitiesAndPosts(string query){
+    [HttpGet("GetCommunitiesAndPosts/{query}/{page?}")]
+    public async Task<ActionResult> GetCommunitiesAndPosts(string query,int page =1, int pageSize=50){
 
         var communities=await Context.Communities.Where(c=>c.Name.Contains(query))
                                     .Take(20)
@@ -42,17 +42,22 @@ public class SearchController:ControllerBase{
 
         //implement search on scroll
         
-        var posts=await Context.Posts.Where(c=>c.Title.Contains(query)).ToListAsync();
-        var hot= posts.Select(c=>new{
-            Post= c,
-            Hot=Math.Log(Math.Max(1, Math.Abs(c.Vote))) - (DateTime.UtcNow - c.DateOfPost).TotalSeconds / 45000
+        var posts=await Context.Posts
+                            .Include(c => c.Community)
+                            .Include(c=>c.User)
+                            .Where(c=>c.Title.Contains(query)).ToListAsync();
+        var hot= posts.Select(c => new
+        {
+            Post = c,
+            Hot = Math.Log(Math.Max(1, Math.Abs(c.Vote))) - (DateTime.UtcNow - c.DateOfPost).TotalSeconds / 45000
         })
-        .OrderByDescending(c=>c.Hot)
-        .Select(c=>c.Post)
-        .Take(50)
+        .OrderByDescending(c => c.Hot)
+        .Select(c => c.Post)
+        .Skip((page-1)*pageSize)
+        .Take(pageSize)
         .ToList();
 
-        var postsDto=Mapper.Map<List<PostDto>>(hot);
+        var postsDto=Mapper.Map<List<PostDto>>(hot ?? new List<Post>());
 
         return Ok(new{
             communities,

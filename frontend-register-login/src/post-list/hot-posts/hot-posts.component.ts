@@ -21,6 +21,9 @@ export class HotPostsComponent implements OnInit,OnDestroy {
   ){}
 
   public posts:Post[]=[];
+  public page:number=1;
+  public isLoading:boolean=false;
+  public hasMore:boolean=true;
 
   private user:User | null=null;
   private postsSub:Subscription= new Subscription();
@@ -30,16 +33,7 @@ export class HotPostsComponent implements OnInit,OnDestroy {
           if(user){
             this.user=user;
             //console.log(this.user?.username);
-            this.postsSub = this.postService.getHotPosts(this.user!.username).subscribe({
-              next:(data)=>{
-                this.posts=data;
-
-                this.loadMedia();
-              },
-              error:(err)=>{
-                console.log(err);
-              }
-            });
+            this.loadPosts();
           }
         });
 
@@ -49,6 +43,29 @@ export class HotPostsComponent implements OnInit,OnDestroy {
   ngOnDestroy(): void {
     if(this.postsSub)
         this.postsSub.unsubscribe();
+  }
+
+  loadPosts(){
+    if(this.isLoading || !this.hasMore) return;
+
+    this.isLoading=true;
+
+    this.postsSub = this.postService.getHotPosts(this.user!.username,this.page).subscribe({
+      next:(data)=>{
+        if(data.length<50)
+          this.hasMore=false;
+        this.posts=data;
+
+        this.loadMedia();
+        this.page++;
+
+        this.isLoading=false;
+      },
+      error:(err)=>{
+        console.log(err);
+        this.isLoading=false;
+      }
+    });
   }
 
   loadMedia(){
@@ -62,5 +79,17 @@ export class HotPostsComponent implements OnInit,OnDestroy {
         }
       })
     })
+  }
+
+  onScroll(event:Event){
+    const element = event.target as HTMLElement;
+    const threshold = 150;
+    const scrollTop = element.scrollTop;
+    const clientHeight = element.clientHeight;
+    const scrollHeight = element.scrollHeight;
+
+    if (scrollTop + clientHeight >= scrollHeight - threshold && !this.isLoading && this.hasMore) {
+      this.loadPosts();
+    }
   }
 }

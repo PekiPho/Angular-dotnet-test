@@ -4,6 +4,7 @@ using WebTemplate.Dtos;
 using System.IO;
 using System.Text.Json;
 using Microsoft.Extensions.ObjectPool;
+using Azure;
 
 namespace WebTemplate.Controllers;
 
@@ -264,8 +265,8 @@ public class PostController:ControllerBase{
         
     }
 
-    [HttpGet("GetHotPosts/{username}")]
-    public async Task<ActionResult> GetHotPosts(string username)
+    [HttpGet("GetHotPosts/{username}/{page?}")]
+    public async Task<ActionResult> GetHotPosts(string username, int page = 1)
     {
 
 
@@ -274,58 +275,91 @@ public class PostController:ControllerBase{
         if (user == null)
             return BadRequest("No user");
 
-        if (user.Subscribed != null && user.Subscribed.Any())
+        var query = Context.Posts.Include(c => c.Comments)
+                                .Include(c => c.User)
+                                .Include(c => c.Media)
+                                .Include(c => c.Votes)
+                                .Where(c => EF.Functions.DateDiffDay(c.DateOfPost, DateTime.UtcNow) < 120);
+
+        var subbed = user.Subscribed?.Select(c => c.Name).ToList();
+        if (subbed != null && subbed.Any())
         {
-
-            var comm = user.Subscribed.Select(c => c.Name).ToList();
-
-            //change the value on total days based on however popular the thing is (should be like 3-4)
-            var posts = await Context.Posts.Include(c => c.Community)
-                                            .Include(c => c.Media)
-                                            .Include(c => c.User)
-                                            .Include(c => c.Votes)
-                                            .Where(c => EF.Functions.DateDiffDay(c.DateOfPost,DateTime.UtcNow) < 120 && comm.Contains(c.Community!.Name))
-                                            .ToListAsync();
-
-            var sortEm = posts.Select(c => new
-            {
-                Post = c,
-                HotScore = (c.Vote == 0 ? 1 : c.Vote) / Math.Pow((DateTime.UtcNow - c.DateOfPost).TotalHours +1, 1.25)
-            })
-            .OrderByDescending(a => a.HotScore)
-            .Select(a => a.Post)
-            .ToList();
-
-            var postsDto = Mapper.Map<List<PostDto>>(sortEm);
-
-            return Ok(postsDto);
-        }
-        else{
-        
-
-            //adjust the day based on popularity (only for optimization, should be like 1 here)
-             var posts = await Context.Posts.Include(c => c.Community)
-                                            .Include(c => c.Media)
-                                            .Include(c => c.User)
-                                            .Include(c => c.Votes)
-                                            .Where(c => EF.Functions.DateDiffDay(c.DateOfPost,DateTime.UtcNow) < 120)
-                                            .ToListAsync();
-
-            var sortEm = posts.Select(c => new
-            {
-                Post = c,
-                HotScore = (c.Vote == 0 ? 1 : c.Vote) / Math.Pow((DateTime.UtcNow - c.DateOfPost).TotalHours +1, 1.25)
-            })
-            .OrderByDescending(a => a.HotScore)
-            .Select(a => a.Post)
-            .ToList();
-
-            var postsDto = Mapper.Map<List<PostDto>>(sortEm);
-
-            return Ok(postsDto);
+            query = query.Where(c => subbed.Contains(c.Community!.Name));
         }
 
-        
+        var hotPostsQ = query.Select(c => new
+        {
+            Post = c,
+            HotScore = (c.Vote == 0 ? 0.5 : c.Vote) / (double)Math.Pow(EF.Functions.DateDiffHour(c.DateOfPost, DateTime.UtcNow) + 1, 1.25)
+        })
+        .OrderByDescending(c => c.HotScore)
+        .Skip((page - 1) * 50)
+        .Take(50);
+
+        var hotPosts = await hotPostsQ
+        .ToListAsync();
+
+        var postsDto = Mapper.Map<List<PostDto>>(hotPosts.Select(c => c.Post).ToList());
+
+        return Ok(postsDto);
+
+        // if (user.Subscribed != null && user.Subscribed.Any())
+        // {
+
+        //     var comm = user.Subscribed.Select(c => c.Name).ToList();
+
+        //     //change the value on total days based on however popular the thing is (should be like 3-4)
+        //     var posts = await Context.Posts.Include(c => c.Community)
+        //                                     .Include(c => c.Media)
+        //                                     .Include(c => c.User)
+        //                                     .Include(c => c.Votes)
+        //                                     .Where(c => EF.Functions.DateDiffDay(c.DateOfPost,DateTime.UtcNow) < 120 && comm.Contains(c.Community!.Name))
+        //                                     .ToListAsync();
+
+        //     var sortEm = posts.Select(c => new
+        //     {
+        //         Post = c,
+        //         HotScore = (c.Vote == 0 ? 1 : c.Vote) / Math.Pow((DateTime.UtcNow - c.DateOfPost).TotalHours + 1, 1.25)
+        //     })
+        //     .OrderByDescending(a => a.HotScore)
+        //     .Select(a => a.Post)
+        //     .Skip((page - 1) * 50)
+        //     .Take(50)
+        //     .ToList();
+
+        //     var postsDto = Mapper.Map<List<PostDto>>(sortEm);
+
+        //     return Ok(postsDto);
+        // }
+        // else{
+
+
+        //     //adjust the day based on popularity (only for optimization, should be like 1 here)
+        //      var posts = await Context.Posts.Include(c => c.Community)
+        //                                     .Include(c => c.Media)
+        //                                     .Include(c => c.User)
+        //                                     .Include(c => c.Votes)
+        //                                     .Where(c => EF.Functions.DateDiffDay(c.DateOfPost,DateTime.UtcNow) < 120)
+        //                                     .ToListAsync();
+
+        //     var sortEm = posts.Select(c => new
+        //     {
+        //         Post = c,
+        //         HotScore = (c.Vote == 0 ? 1 : c.Vote) / Math.Pow((DateTime.UtcNow - c.DateOfPost).TotalHours + 1, 1.25)
+        //     })
+        //     .OrderByDescending(a => a.HotScore)
+        //     .Select(a => a.Post)
+        //     //pagination here
+        //     .Skip((page - 1) * 50)
+        //     .Take(50)
+        //     .ToList();
+
+        //     var postsDto = Mapper.Map<List<PostDto>>(sortEm);
+
+        //     return Ok(postsDto);
+        // }
+
+
     }
 
     [HttpGet("GetPostsBySort/{communityName}/{sort}/{page}/{limit}/{time}")]
@@ -426,14 +460,17 @@ public class PostController:ControllerBase{
 
 
     //need to add to laod 50 by 50 but its so late right now so ill do it tmrw
-    [HttpGet("GetPostsByUser/{username}")]
-    public async Task<ActionResult> GetPostsByUser(string username){
-        var posts=await Context.Posts.Include(c=>c.User)
-                                    .Include(c=>c.Media)
-                                    .Include(c=>c.Comments)
-                                    .Include(c=>c.Community)
-                                    .Include(c=>c.Votes)
-                                    .Where(c=>c.User.Username==username)
+    [HttpGet("GetPostsByUser/{username}/{page?}")]
+    public async Task<ActionResult> GetPostsByUser(string username,int page=1){
+
+        var posts=await Context.Posts.Include(c => c.User)
+                                    .Include(c => c.Media)
+                                    .Include(c => c.Comments)
+                                    .Include(c => c.Community)
+                                    .Include(c => c.Votes)
+                                    .Where(c => c.User.Username == username)
+                                    .Skip((page - 1) * 50)
+                                    .Take(50)
                                     .ToListAsync();
 
         var postsDto=Mapper.Map<List<PostDto>>(posts);
@@ -441,20 +478,22 @@ public class PostController:ControllerBase{
         return Ok(postsDto);
     }
 
-    [HttpGet("GetXVotedPostsByUser/{username}/{vote}")]
-    public async Task<ActionResult> GetXVotedPostByUser(string username,bool vote){
+    [HttpGet("GetXVotedPostsByUser/{username}/{vote}/{page?}")]
+    public async Task<ActionResult> GetXVotedPostByUser(string username,bool vote,int page=1){
 
         var v=-1;
         if(vote)
             v=1;
         else v=0;
 
-        var posts=await Context.Posts.Include(c=>c.Media)
-                                        .Include(c=>c.User)
-                                        .Include(c=>c.Community)
-                                        .Include(c=>c.Comments)
-                                        .Include(c=>c.Votes)
-                                        .Where(c=>c.Votes.Any(a=>a.User.Username==username && a.VoteValue==vote))
+        var posts = await Context.Posts.Include(c => c.Media)
+                                        .Include(c => c.User)
+                                        .Include(c => c.Community)
+                                        .Include(c => c.Comments)
+                                        .Include(c => c.Votes)
+                                        .Where(c => c.Votes.Any(a => a.User.Username == username && a.VoteValue == vote))
+                                        .Skip((page - 1) * 50)
+                                        .Take(50)
                                         .ToListAsync();
 
         // i need to load 50 by 50 as well here
