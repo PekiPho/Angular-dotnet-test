@@ -22,7 +22,7 @@ export class PostsComponent implements OnInit,OnChanges,OnDestroy{
 
   communityName:string='';
  
-  limit:number=2;
+  limit:number=50;
   page:number=1;
 
   public isLoading:boolean=false;
