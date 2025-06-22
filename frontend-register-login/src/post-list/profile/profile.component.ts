@@ -115,7 +115,7 @@ export class ProfileComponent implements OnInit,OnDestroy {
           this.hasMore=false;
         }
 
-        this.posts=data;
+        this.posts=[...this.posts,...data];
         this.loadMedia();
         this.page++;
         this.isLoading=false;
@@ -197,7 +197,7 @@ export class ProfileComponent implements OnInit,OnDestroy {
           this.hasMore=false;
         }
 
-        this.downVoted=data;
+        this.downVoted=[...this.downVoted,...data];
         this.page++;
         //console.log(data);
         this.loadMedia();

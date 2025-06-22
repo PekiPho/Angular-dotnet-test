@@ -21,12 +21,14 @@ export class PostsComponent implements OnInit,OnChanges,OnDestroy{
   public posts:Post[]=[];
 
   communityName:string='';
-  hasMorePosts:boolean=true;
-  didInitialLoad:boolean=false;
-  limit:number=50;
+ 
+  limit:number=2;
   page:number=1;
+
+  public isLoading:boolean=false;
+  public hasMore:boolean=true;
   
-  loading=signal(false);
+  
   @Input() sortBy:string="Hot";
   @Input() age:string="Today";
 
@@ -58,12 +60,11 @@ export class PostsComponent implements OnInit,OnChanges,OnDestroy{
         this.sortByChange.emit(this.sortBy);
         this.ageChange.emit(this.age);
 
-        this.page=1;
+        this.resetPosts();
         this.loadPosts();
       }
     })
 
-    this.scrollSubscription= this.scrollEventListener();
 
     if(this.communityName)
       this.loadPosts();
@@ -71,7 +72,7 @@ export class PostsComponent implements OnInit,OnChanges,OnDestroy{
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['age'] || changes['sortBy']){
-      this.page=1;
+      this.resetPosts();
       this.loadPosts();
     }
   }
@@ -80,38 +81,60 @@ export class PostsComponent implements OnInit,OnChanges,OnDestroy{
     if(this.routerSubscription){
       this.routerSubscription.unsubscribe();
     }
-
-    if(this.scrollSubscription){
-      this.scrollSubscription.unsubscribe();
-    }
   }
 
   loadComm(){
     const url=this.route.url.split('/');
-    this.communityName=url[url.length-1];
+    var newComm=url[url.length-1];
+
+    if(newComm!==this.communityName){
+      this.communityName=newComm;
+      this.resetPosts();
+    }
+  }
+
+  resetPosts(){
+    this.posts=[];
+    this.page=1;
+    this.hasMore=true;
+    this.isLoading=false;
   }
 
   loadPosts(){
     if(this.communityName=='')
       return;
+
+    
+
+    if(this.isLoading || !this.hasMore) return;
+    this.isLoading=true;
+
+    
+    //console.log(this.isLoading, this.hasMore);
+
     this.postService.getPostsBySort(this.communityName,this.sortBy,this.page,this.limit,this.age)
     //testing this
     
     //works until here
     .subscribe({
       next:(data)=>{
-        if(this.page==1)
-          this.posts=data;
-        else  
-          this.posts=[...this.posts,...data];
+        if(data.length<this.limit)
+          this.hasMore=false;
+
+        this.posts=[...this.posts,...data];
 
         // this.posts.forEach(post=>{
         //   console.log(post.vote);
         // });
+        this.page++;
+        //console.log(this.isLoading, this.hasMore);
         this.loadMedia();
+        this.isLoading=false;
+      },
+      error:(err)=>{
+        console.log(err);
+        this.isLoading=false;
       }
-
-      
     })
   }
 
@@ -129,25 +152,20 @@ export class PostsComponent implements OnInit,OnChanges,OnDestroy{
   }
 
   loadMorePosts(){
-    this.page++;
-
-    this.loadPosts();
+    
   }
 
-  scrollEventListener(){
-    const container=document.querySelector(".content") as HTMLElement;
+  onScroll(event:Event){
+    const element = event.target as HTMLElement;
+    const threshold = 150;
+    const scrollTop = element.scrollTop;
+    const clientHeight = element.clientHeight;
+    const scrollHeight = element.scrollHeight;
 
-    return new Subscription(()=>{
-      if(container){
-        container.addEventListener('scroll',()=>{
-          var bottom = container.scrollHeight === container.scrollTop + container.clientHeight;
-
-          if(bottom){
-            this.loadMorePosts();
-          }
-        })
-      }
-    })
+    //console.log(scrollTop + clientHeight >= scrollHeight - threshold)
+    if (scrollTop + clientHeight >= scrollHeight - threshold && !this.isLoading && this.hasMore) {
+      this.loadPosts();
+    }
   }
  
 }

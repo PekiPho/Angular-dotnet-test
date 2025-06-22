@@ -1,5 +1,5 @@
 <div class="parent">
-    <div class="content border-end border-light">
+    <div class="content border-end border-light" (scroll)="onScroll($event);">
         <div *ngIf="community!=null" class="card of text-white ps-4 comm-card">
                 <p class="card-text" style="font-size: 3rem;">{{community!.name}}</p>
                 <p class="card-text"style="font-size: 0.8rem;" *ngIf="community.description!=null">{{community!.description}}</p>
@@ -33,7 +33,7 @@
         </div>
 
         <div class="posts-section">
-            <posts [age]="selectedTime" [sortBy]="selectedSort" (sortByChange)="onSortChange($event);" (ageChange)="onAgeChange($event);"></posts>
+            <posts [age]="selectedTime" [sortBy]="selectedSort" (sortByChange)="onSortChange($event);" (ageChange)="onAgeChange($event);" #postsComp></posts>
         </div>
     </div>
     <div class="sidebar">

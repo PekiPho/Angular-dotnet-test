@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { PostsComponent } from '../posts/posts.component';
 import { CommunityInfoComponent } from "../community-info/community-info.component";
 import { Community, CommunityToSend } from '../../interfaces/community';
@@ -91,5 +91,26 @@ export class CommunityComponent implements OnInit{
   onAgeChange(newAge:string){
     this.sort=false;    
     this.selectedTime=newAge;
+  }
+
+  @ViewChild('postsComp') postsComponent!: PostsComponent;
+
+  onScroll(event:Event){
+    //console.log("haiii");
+    //console.log(event);
+
+    const element = event.target as HTMLElement;
+  const threshold = 150;
+  const scrollTop = element.scrollTop;
+  const clientHeight = element.clientHeight;
+  const scrollHeight = element.scrollHeight;
+
+  if (scrollTop + clientHeight >= scrollHeight - threshold) {
+    //console.log(!this.postsComponent.isLoading,this.postsComponent.hasMore);
+    if(this.postsComponent && !this.postsComponent.isLoading && this.postsComponent.hasMore) {
+
+      this.postsComponent.loadPosts();
+    }}
+
   }
 }

@@ -54,7 +54,8 @@ export class HotPostsComponent implements OnInit,OnDestroy {
       next:(data)=>{
         if(data.length<50)
           this.hasMore=false;
-        this.posts=data;
+        
+        this.posts=[...this.posts,...data];
 
         this.loadMedia();
         this.page++;
