@@ -14,6 +14,14 @@ public class CommunityController:ControllerBase{
     [HttpPost("CreateCommunity")]
     public async Task<ActionResult> CreateCommunity([FromBody] Community community){
 
+        var exists = await Context.Communities.AnyAsync(c=>c.Name == community.Name);
+
+        if(exists)
+            return BadRequest("Community with given name already exists");
+
+        if(string.IsNullOrEmpty(community.Name))
+            return BadRequest("Name cant be empty");
+
         if(community.Posts!=null && community.Posts.Any())
             community.Posts.Clear();
 
