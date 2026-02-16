@@ -24,11 +24,18 @@ public class SubscribeController:ControllerBase{
     [HttpPost("SubscribeUserToCommunity/{userID}/{communityID}")]
     public async Task<ActionResult> SubscribeUserToCommunity(int userID,int communityID){
 
-        var user=await Context.Users.FindAsync(userID);
+        var user=await Context.Users.Include(c=>c.Subscribed).FirstOrDefaultAsync(c=>c.Id==userID);
         var community=await Context.Communities.FindAsync(communityID);
 
+
         if(user!=null && community!=null){
-            user.Subscribed ??=new List<Community>();
+
+            user.Subscribed ??= new List<Community>();
+
+            if (user.Subscribed.Any(c => c.Id == communityID))
+            {
+                return BadRequest("User is already subscribed to this community");
+            }
             
             user.Subscribed.Add(community);
 
@@ -63,20 +70,30 @@ public class SubscribeController:ControllerBase{
     [HttpPost("AddUserToMod/{username}/{communityName}")]
     public async Task<ActionResult> AddUserToMod(string username,string communityName){
 
-        var user=await Context.Users.Include(c=>c.Moderator).Where(c=>c.Username==username).FirstOrDefaultAsync();
+        var user = await Context.Users
+        .Include(c => c.Moderator)
+        .Where(c => c.Username == username)
+        .FirstOrDefaultAsync();
 
-        var community=await Context.Communities.Where(c=>c.Name==communityName).FirstOrDefaultAsync();
+        var community = await Context.Communities
+            .Where(c => c.Name == communityName)
+            .FirstOrDefaultAsync();
 
-        if(user==null || community==null)
+        if (user == null || community == null)
             return BadRequest("User or Community don't exist");
 
-        user.Moderator ??=new List<Community>();
+        user.Moderator ??= new List<Community>();
+
+        if (user.Moderator.Any(c => c.Name == communityName))
+        {
+            return BadRequest("User is already a moderator");
+        }
 
         user.Moderator.Add(community);
 
         await Context.SaveChangesAsync();
 
-        var userDto= Mapper.Map<UserDto>(user);
+        var userDto = Mapper.Map<UserDto>(user);
 
         return Ok(userDto);
     }

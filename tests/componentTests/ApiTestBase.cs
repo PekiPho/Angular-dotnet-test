@@ -28,8 +28,11 @@ public class ApiTestBase
                 {
                     services.RemoveAll<DbContextOptions<IspitContext>>();
 
-                    services.AddDbContext<IspitContext>(options =>
-                        options.UseInMemoryDatabase("TestDb", dbRoot));
+                    services.AddDbContext<IspitContext>(options =>{
+                        options.UseInMemoryDatabase("TestDb", dbRoot);
+                        options.ConfigureWarnings(x => x.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.CoreEventId.ManyServiceProvidersCreatedWarning));
+                        });
+                        
                 });
             });
 

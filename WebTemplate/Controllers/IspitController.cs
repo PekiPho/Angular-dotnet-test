@@ -25,6 +25,15 @@ public class IspitController : ControllerBase
     [HttpPost("AddUser")]
     public async Task<ActionResult> AddUser([FromBody] User user){
 
+        var exists = await Context.Users.AnyAsync(u => u.Username == user.Username);
+        if (exists)
+        {
+            return BadRequest("Username already exists");
+        }
+
+        var hasher = new PasswordHasher<User>();
+        user.Password = hasher.HashPassword(user, user.Password);
+
         await Context.Users.AddAsync(user);
         await Context.SaveChangesAsync();
 
@@ -85,6 +94,7 @@ public class IspitController : ControllerBase
 
 
         Context.Users.Remove(user);
+        await Context.SaveChangesAsync();
         return Ok("User deleted");
     }
 

@@ -14,6 +14,9 @@ public class CommunityController:ControllerBase{
     [HttpPost("CreateCommunity")]
     public async Task<ActionResult> CreateCommunity([FromBody] Community community){
 
+        if (community == null)
+            return BadRequest("Invalid body");
+            
         var exists = await Context.Communities.AnyAsync(c=>c.Name == community.Name);
 
         if(exists)
@@ -73,10 +76,15 @@ public class CommunityController:ControllerBase{
     [HttpPut("UpdateCommInfo/{name}/{commInfo}")]
     public async Task<ActionResult> UpdateCommInfo(string name,string commInfo){
 
-        var community=await Context.Communities.Where(c=>c.Name==name).FirstOrDefaultAsync();
+        var community=await Context.Communities.Where(c=>c.Name.ToLower()==name.ToLower()).FirstOrDefaultAsync();
 
         if(community==null){
             return BadRequest("Community with given name does not exist");
+        }
+
+        if (string.IsNullOrWhiteSpace(commInfo) || commInfo == "null")
+        {
+            return BadRequest("Community info cannot be empty");
         }
 
         community.CommInfo=commInfo;
@@ -133,7 +141,7 @@ public class CommunityController:ControllerBase{
 
     [HttpGet("GetCommunityByName/{name}")]
     public async Task<ActionResult> GetCommunityByName(string name){
-        var community = await Context.Communities.Where(c=> c.Name == name).FirstOrDefaultAsync();
+        var community = await Context.Communities.Where(c=> c.Name.ToLower() == name.ToLower()).FirstOrDefaultAsync();
 
         if(community==null)
             return BadRequest("Community with given name does not exist");
@@ -145,7 +153,7 @@ public class CommunityController:ControllerBase{
     public async Task<ActionResult> GetSubscribers(string name){
         var community=await Context.Communities.Where(c=>c.Name==name).Include(c=>c.Subscribers).FirstOrDefaultAsync();
 
-        if(community==null && community?.Subscribers == null)
+        if(community==null || community?.Subscribers == null)
             return BadRequest("Community does not exist or has no subscribers");
         
         var subs=community!.Subscribers!.Count;
