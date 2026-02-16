@@ -45,5 +45,6 @@ public class Comment
     public int TotalVotes => Votes.Count;
 
     [NotMapped]
-    public double Ratio => TotalVotes == 0 ? 0 : (double)Upvotes/DownVotes;
+    public double Ratio => DownVotes == 0 ? Upvotes : (double)Upvotes / DownVotes;
+    
 }

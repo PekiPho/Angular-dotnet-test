@@ -213,7 +213,7 @@ public class SubscribeTests: ApiTestBase
 
 
     [Test]
-    public async Task RemoveModerator_Twice_ReturnsBadRequest()
+    public async Task RemoveModerator_Twice()
     {
         var user = new User { Username = "wasMod", Password = "Password123", Email = "was@test.com" };
         var community = new Community { Name = "groupp" };
@@ -231,7 +231,7 @@ public class SubscribeTests: ApiTestBase
     }
 
     [Test]
-    public async Task Unsubscribe_WhenNotSubscribed_ReturnsBadRequest()
+    public async Task Unsubscribe_WhenNotSubscribed()
     {
         var user = new User { Username = "noMember", Password = "Password123", Email = "not@test.com" };
         var community = new Community { Name = "group" };

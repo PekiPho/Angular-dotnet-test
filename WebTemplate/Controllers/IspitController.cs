@@ -183,10 +183,5 @@ public class IspitController : ControllerBase
         return Ok(user);
     }
 
-    // --- Everything to do with subscriptions
 
-
-    
-
-    
 }

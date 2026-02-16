@@ -48,18 +48,10 @@ public class CommentController:ControllerBase{
         comment.User=user;
         comment.DateOfComment=DateTime.Now;
 
-        var vote=new CommentVote{
-            VoteValue=true,
-            User=user,
-            Comment=comment
+        comment.Votes = new List<CommentVote>
+        {
+            new CommentVote { VoteValue = true, User = user, Comment = comment }
         };
-
-        if(comment.Votes==null)
-            comment.Votes= new List<CommentVote>();
-
-        comment.Votes.Add(vote);
-
-        await Context.CommentVotes.AddAsync(vote);
 
         await Context.Comments.AddAsync(comment);
         await Context.SaveChangesAsync();
@@ -97,7 +89,7 @@ public class CommentController:ControllerBase{
     [HttpDelete("DeleteComment/{commentId}")]
     public async Task<ActionResult> DeleteComment(Guid commentId){
 
-        var comment =await Context.Comments.Where(c=>c.Id==commentId).FirstOrDefaultAsync();
+        var comment =await Context.Comments.Include(c=>c.User).Where(c=>c.Id==commentId).FirstOrDefaultAsync();
 
         if(comment==null)
             return BadRequest("Comment does not exist");

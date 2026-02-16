@@ -29,7 +29,19 @@ public class PostController:ControllerBase{
         if(user==null || community ==null)
             return BadRequest("User or community not found");
         
-        var post=JsonConvert.DeserializeObject<Post>(postJson);
+        Post post;
+        try 
+        {
+            post = JsonConvert.DeserializeObject<Post>(postJson);
+        }
+        catch (Newtonsoft.Json.JsonSerializationException) 
+        {
+            return BadRequest("Invalid post data");
+        }
+
+        if(post == null)
+            return BadRequest("Invalid post data");
+
         if(post==null)
             return BadRequest("Invalid post data");
 
@@ -106,6 +118,12 @@ public class PostController:ControllerBase{
 
     [HttpPost("AddPostByName/{userName}/{communityName}")]
     public async Task<ActionResult> AddPostByName(string userName,string communityName,[FromBody] Post post){
+
+        if (await Context.Posts.AnyAsync(p => p.Title == post.Title))
+        {
+            return BadRequest("A post with this title already exists");
+        }
+
         var user=await Context.Users.Where(c=>c.Username == userName).FirstOrDefaultAsync();
         var community= await Context.Communities.Where(c=>c.Name==communityName).FirstOrDefaultAsync();
 
@@ -275,11 +293,13 @@ public class PostController:ControllerBase{
         if (user == null)
             return BadRequest("No user");
 
+        var cutOff = DateTime.UtcNow.AddDays(-120);
+
         var query = Context.Posts.Include(c => c.Comments)
                                 .Include(c => c.User)
                                 .Include(c => c.Media)
                                 .Include(c => c.Votes)
-                                .Where(c => EF.Functions.DateDiffDay(c.DateOfPost, DateTime.UtcNow) < 120);
+                                .Where(c => c.DateOfPost >= cutOff);
 
         var subbed = user.Subscribed?.Select(c => c.Name).ToList();
         if (subbed != null && subbed.Any())
@@ -290,7 +310,7 @@ public class PostController:ControllerBase{
         var hotPostsQ = query.Select(c => new
         {
             Post = c,
-            HotScore = (c.Vote == 0 ? 0.5 : c.Vote) / (double)Math.Pow(EF.Functions.DateDiffHour(c.DateOfPost, DateTime.UtcNow) + 1, 1.25)
+            HotScore = (c.Vote == 0 ? 0.5 : c.Vote) / (double)Math.Pow((DateTime.UtcNow - c.DateOfPost).TotalHours + 1, 1.25)
         })
         .OrderByDescending(c => c.HotScore)
         .Skip((page - 1) * 50)

@@ -184,7 +184,7 @@ public class CommunityTests : ApiTestBase
     }
 
     [Test]
-    public async Task UpdateDescription_WrongId_BadRequest()
+    public async Task UpdateDescription_WrongId()
     {
         var response = await client.PutAsync("/Community/UpdateDescription/9999/SomeDesc", null);
         

@@ -14,12 +14,12 @@ public class ApiTestBase
     protected HttpClient client;
     protected WebApplicationFactory<Program> factory;
 
-    private InMemoryDatabaseRoot dbRoot;
+    //private InMemoryDatabaseRoot dbRoot;
 
     [SetUp]
     public void SetUp()
     {
-        dbRoot = new InMemoryDatabaseRoot();
+        var dbRoot = new InMemoryDatabaseRoot();
 
         factory = new WebApplicationFactory<Program>()
             .WithWebHostBuilder(builder =>
@@ -48,7 +48,7 @@ public class ApiTestBase
     [TearDown]
     public void TearDown()
     {
-        client.Dispose();
-        factory.Dispose();
+        client?.Dispose();
+        factory?.Dispose();
     }
 }

@@ -36,9 +36,15 @@ public class SearchController:ControllerBase{
     [HttpGet("GetCommunitiesAndPosts/{query}/{page?}")]
     public async Task<ActionResult> GetCommunitiesAndPosts(string query,int page =1, int pageSize=50){
 
-        var communities=await Context.Communities.Where(c=>c.Name.Contains(query))
-                                    .Take(20)
-                                    .ToListAsync();
+        var communities = await Context.Communities
+        .Where(c => c.Name.Contains(query))
+        .Select(c => new {
+            c.Id,
+            c.Name,
+            c.Description,
+        })
+        .Take(20)
+        .ToListAsync();
 
         //implement search on scroll
         
