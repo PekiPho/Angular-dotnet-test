@@ -27,8 +27,8 @@ export class UserServiceService {
     return this.http.get<User>(this.url + '/Ispit/GetUsers');
   }
 
-   createUser(user:User){
-    return this.http.post(this.url+'/Ispit/AddUser',user,{responseType:'text'});
+  createUser(user: User) {
+    return this.http.post<{token: string, expiration: string}>(this.url + '/Ispit/AddUser', user);
   }
 
   deleteUser(id:number){
@@ -61,7 +61,7 @@ export class UserServiceService {
         'Authorization': `Bearer ${token}`
       });
 
-      return this.http.get(this.url+"/Ispit/GetEntry",{responseType:'text',headers});
+      return this.http.get<any>(this.url+"/Ispit/GetEntry",{headers});
     }
   }
 }

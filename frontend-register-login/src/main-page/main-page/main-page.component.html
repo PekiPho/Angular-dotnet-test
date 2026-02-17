@@ -5,7 +5,7 @@
         <nav-search [user]="user"></nav-search>
     </div>
     <div class="two">
-        <communities *ngIf="communities.length > 0" [communities]="communities" [userID]="id"></communities>
+        <communities [communities]="communities" [userID]="id"></communities>
     </div>
     <div class="three">
             <router-outlet></router-outlet>

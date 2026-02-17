@@ -35,6 +35,9 @@ export class CommunitiesComponent {
   }
 
   async createModal(){
+
+      console.log("userID is:", this.userID);
+
       var name=(document.querySelector("#name") as HTMLInputElement).value;
       var description=(document.querySelector("#description") as HTMLTextAreaElement).value;
 
@@ -51,9 +54,14 @@ export class CommunitiesComponent {
         const mod=await firstValueFrom(this.subscribeService.addToModerateCommunity(this.userID,comm.id));
 
         //console.log(comm,sub,mod);
-        window.location.reload();
+        this.modal = false;
+        setTimeout(() => window.location.reload(), 100);
+        //window.location.reload();
+        //this.communities = [...this.communities, comm];
+        //this.closeModal(); 
       }catch(err){
         console.log(err);
+        this.closeModal();
       }
 
   }

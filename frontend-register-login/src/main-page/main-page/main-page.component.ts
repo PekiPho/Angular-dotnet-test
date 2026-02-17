@@ -53,15 +53,14 @@ export class MainPageComponent implements OnInit {
   getUsername(){
     this.userService.getEntry().subscribe({
       next:(data)=>{
-        var dejta=JSON.parse(data);
-        this.id=dejta.id;
-        this.user=dejta.username;
-        this.UserSmall ={
-          username:dejta.username,
-          email:dejta.email,
-          password:dejta.password
-        };
-        this.userService.setUser(this.UserSmall);
+        this.id = data.id;
+        this.user = data.username;
+        this.UserSmall = {
+          username: data.username,
+          email: data.email,
+          password: data.password
+      };
+      this.userService.setUser(this.UserSmall);
         //console.log(this.id);
       },
       error:(err)=>{

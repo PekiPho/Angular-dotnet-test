@@ -293,12 +293,13 @@ public class PostController:ControllerBase{
         if (user == null)
             return BadRequest("No user");
 
-        var cutOff = DateTime.UtcNow.AddDays(-120);
+        var cutOff = DateTime.UtcNow.AddDays(-10);
 
         var query = Context.Posts.Include(c => c.Comments)
                                 .Include(c => c.User)
                                 .Include(c => c.Media)
                                 .Include(c => c.Votes)
+                                .Include(c=>c.Community)
                                 .Where(c => c.DateOfPost >= cutOff);
 
         var subbed = user.Subscribed?.Select(c => c.Name).ToList();
@@ -307,77 +308,36 @@ public class PostController:ControllerBase{
             query = query.Where(c => subbed.Contains(c.Community!.Name));
         }
 
-        var hotPostsQ = query.Select(c => new
-        {
-            Post = c,
-            HotScore = (c.Vote == 0 ? 0.5 : c.Vote) / (double)Math.Pow((DateTime.UtcNow - c.DateOfPost).TotalHours + 1, 1.25)
-        })
-        .OrderByDescending(c => c.HotScore)
-        .Skip((page - 1) * 50)
-        .Take(50);
+        var postsFromDb = await query.ToListAsync();
 
-        var hotPosts = await hotPostsQ
-        .ToListAsync();
+        // var hotPostsQ = query.Select(c => new
+        // {
+        //     Post = c,
+        //     HotScore = (c.Vote == 0 ? 0.5 : c.Vote) / (double)Math.Pow((DateTime.UtcNow - c.DateOfPost).TotalHours + 1, 1.25)
+        // })
+        // .OrderByDescending(c => c.HotScore)
+        // .Skip((page - 1) * 50)
+        // .Take(50);
 
-        var postsDto = Mapper.Map<List<PostDto>>(hotPosts.Select(c => c.Post).ToList());
+        // var hotPosts = await hotPostsQ
+        // .ToListAsync();
+
+        // var postsDto = Mapper.Map<List<PostDto>>(hotPosts.Select(c => c.Post).ToList());
+
+        var postsDto = postsFromDb
+            .Select(c => new
+            {
+                Post = c,
+                HotScore = (c.Vote == 0 ? 0.5 : (double)c.Vote) / 
+                        Math.Pow((DateTime.UtcNow - c.DateOfPost).TotalHours + 1, 1.25)
+            })
+            .OrderByDescending(x => x.HotScore)
+            .Skip((page - 1) * 50)
+            .Take(50)
+            .Select(x => Mapper.Map<PostDto>(x.Post))
+            .ToList();
 
         return Ok(postsDto);
-
-        // if (user.Subscribed != null && user.Subscribed.Any())
-        // {
-
-        //     var comm = user.Subscribed.Select(c => c.Name).ToList();
-
-        //     //change the value on total days based on however popular the thing is (should be like 3-4)
-        //     var posts = await Context.Posts.Include(c => c.Community)
-        //                                     .Include(c => c.Media)
-        //                                     .Include(c => c.User)
-        //                                     .Include(c => c.Votes)
-        //                                     .Where(c => EF.Functions.DateDiffDay(c.DateOfPost,DateTime.UtcNow) < 120 && comm.Contains(c.Community!.Name))
-        //                                     .ToListAsync();
-
-        //     var sortEm = posts.Select(c => new
-        //     {
-        //         Post = c,
-        //         HotScore = (c.Vote == 0 ? 1 : c.Vote) / Math.Pow((DateTime.UtcNow - c.DateOfPost).TotalHours + 1, 1.25)
-        //     })
-        //     .OrderByDescending(a => a.HotScore)
-        //     .Select(a => a.Post)
-        //     .Skip((page - 1) * 50)
-        //     .Take(50)
-        //     .ToList();
-
-        //     var postsDto = Mapper.Map<List<PostDto>>(sortEm);
-
-        //     return Ok(postsDto);
-        // }
-        // else{
-
-
-        //     //adjust the day based on popularity (only for optimization, should be like 1 here)
-        //      var posts = await Context.Posts.Include(c => c.Community)
-        //                                     .Include(c => c.Media)
-        //                                     .Include(c => c.User)
-        //                                     .Include(c => c.Votes)
-        //                                     .Where(c => EF.Functions.DateDiffDay(c.DateOfPost,DateTime.UtcNow) < 120)
-        //                                     .ToListAsync();
-
-        //     var sortEm = posts.Select(c => new
-        //     {
-        //         Post = c,
-        //         HotScore = (c.Vote == 0 ? 1 : c.Vote) / Math.Pow((DateTime.UtcNow - c.DateOfPost).TotalHours + 1, 1.25)
-        //     })
-        //     .OrderByDescending(a => a.HotScore)
-        //     .Select(a => a.Post)
-        //     //pagination here
-        //     .Skip((page - 1) * 50)
-        //     .Take(50)
-        //     .ToList();
-
-        //     var postsDto = Mapper.Map<List<PostDto>>(sortEm);
-
-        //     return Ok(postsDto);
-        // }
 
 
     }

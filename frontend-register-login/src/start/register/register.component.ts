@@ -35,9 +35,10 @@ export class RegisterComponent {
         console.log(data);
         this.used=true;
 
-        var fullData=JSON.parse(data);
-        localStorage.setItem('token',fullData.token);
-        localStorage.setItem('expiration',fullData.expiration);
+        //var fullData=JSON.parse(data);
+        localStorage.setItem('token',data.token);
+        localStorage.setItem('expiration',data.expiration);
+        this.router.navigate(['./login']);
       },
       error:(err)=>{
         if(err.status==500){
@@ -48,7 +49,7 @@ export class RegisterComponent {
         pass='';
       },
       complete:()=>{
-        this.router.navigate(['./login']);
+        
       }
     });
   }

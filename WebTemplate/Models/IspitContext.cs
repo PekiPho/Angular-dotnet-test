@@ -54,6 +54,8 @@ public class IspitContext : DbContext
             a => a.HasOne<User>().WithMany().HasForeignKey("UserID")
         );
 
+    
+
     //need to test this tmrw
     // modelBuilder.Entity<Comment>()
     //     .HasOne(c=>c.ReplyTo)
