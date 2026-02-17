@@ -62,7 +62,6 @@ Thumbs.db
 # npm-debug.log
 yarn-debug.log
 yarn-error.log
-package-lock.json
 npm-shrinkwrap.json
 
 # Ignore secret files (e.g., containing API keys)
